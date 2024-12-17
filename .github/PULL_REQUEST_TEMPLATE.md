@@ -1,6 +1,6 @@
 ## 개요
 
-Resolves: #(isuue Number)
+Resolves: #(issue Number)
 
 ## PR 유형
 
