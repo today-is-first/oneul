@@ -7,7 +7,9 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Header />
+      <section className="flex h-screen flex-col bg-black">
+        <Header />
+      </section>
     </QueryClientProvider>
   );
 }
