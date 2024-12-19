@@ -1,17 +1,11 @@
 function Header() {
   return (
     <header className="flex items-center justify-between p-4 text-white">
-      <p>
-        <h1>Oneul</h1>
-      </p>
-      <p>
-        <h2>홈</h2>
-      </p>
-      <p>
-        <button className="rounded-lg bg-white px-4 py-2 text-black">
-          로그인
-        </button>
-      </p>
+      <h1>Oneul</h1>
+      <h2 className="fixed left-1/2 -translate-x-1/2">홈</h2>
+      <button className="rounded-lg bg-white px-4 py-2 text-black">
+        로그인
+      </button>
     </header>
   );
 }
