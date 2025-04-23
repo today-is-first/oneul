@@ -10,3 +10,10 @@
 * {
   font-family: 'Pretendard-Regular', sans-serif;
 }
+
+@theme {
+  --color-point: #5f85f2;
+  --color-background: #17171c;
+  --color-text-white: #fbfbfb;
+  --color-gray-1: #2c2c35;
+}
