@@ -5,7 +5,7 @@ interface ButtonProps {
 
 function Button({ children, onClick }: ButtonProps) {
   return (
-    <button className="bg-gray-1 text-point p-2 rounded-md" onClick={onClick}>
+    <button className="bg-point text-white p-2 rounded-md" onClick={onClick}>
       {children}
     </button>
   );

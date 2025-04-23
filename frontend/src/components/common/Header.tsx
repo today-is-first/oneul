@@ -10,7 +10,7 @@ function Header({ left, center, right }: HeaderProps) {
   return (
     <div className="header">
       <div className="header-left">
-        <Button onClick={() => {}}>Left</Button>
+        <Button onClick={() => {}}>로그인</Button>
       </div>
       <div className="header-center">{center}</div>
       <div className="header-right">{right}</div>
