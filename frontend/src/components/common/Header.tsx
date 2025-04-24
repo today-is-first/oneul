@@ -6,10 +6,10 @@ interface HeaderProps {
 
 function Header({ left, center, right }: HeaderProps) {
   return (
-    <div className="header">
-      <div className="header-left">{left}</div>
-      <div className="header-center">{center}</div>
-      <div className="header-right">{right}</div>
+    <div className="flex justify-between items-center w-full h-16 px-12 py-8">
+      <div className="">{left}</div>
+      <div className="">{center}</div>
+      <div className="">{right}</div>
     </div>
   );
 }

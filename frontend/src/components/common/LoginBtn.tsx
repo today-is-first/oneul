@@ -1,7 +1,7 @@
 import Button from './Button';
 
 function LoginBtn() {
-  return <Button onClick={() => {}}>Login</Button>;
+  return <Button onClick={() => {}}>로그인</Button>;
 }
 
 export default LoginBtn;
