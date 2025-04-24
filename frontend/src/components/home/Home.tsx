@@ -5,7 +5,7 @@ import LoginBtn from '../common/LoginBtn';
 
 function Home() {
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full bg-background">
       <Header left={<Logo />} center={<NavBar />} right={<LoginBtn />} />
     </div>
   );
