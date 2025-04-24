@@ -1,6 +1,6 @@
 ## 개요
 
-<!---- Resolves: #(Isuue Number) -->
+Resolves: #(Issue Number)
 
 ## PR 유형
 
