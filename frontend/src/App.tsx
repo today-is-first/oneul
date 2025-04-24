@@ -5,7 +5,7 @@ import LoginBtn from './components/common/LoginBtn';
 
 function App() {
   return (
-    <div>
+    <div className="w-full h-full">
       <Header left={<Logo />} center={<div>Center</div>} right={<LoginBtn />} />
     </div>
   );
