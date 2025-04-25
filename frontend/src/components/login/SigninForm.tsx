@@ -2,25 +2,25 @@ import { Link } from 'react-router';
 
 function SigninForm() {
   return (
-    <section className="flex flex-col items-center justify-center mt-10 text-logo-white bg-background w-[400px] h-[460px] rounded-lg p-8">
-      <form className="flex flex-col items-center justify-center gap-12 text-logo-white w-full h-full">
-        <div className="flex flex-col justify-center gap-2 ">
+    <section className="flex flex-col items-center justify-center mt-10 text-logo-white bg-background w-[400px] h-[460px] rounded-2xl p-8">
+      <form className="flex flex-col items-center justify-center gap-12 text-logo-white w-full h-full p-4">
+        <div className="flex flex-col justify-center gap-2 w-full">
           <span className="text-lg font-bold">아이디</span>
           <input
             type="text"
-            className="pl-4 rounded-lg border-1 border-gray-1 focus:outline-none w-[300px] h-[40px]"
+            className="w-full px-4 py-3 rounded-lg bg-[#1B1B1E] border border-[#333] focus:outline-none focus:ring-2 focus:ring-point"
           />
         </div>
-        <div className="flex flex-col justify-center gap-2 ">
+        <div className="flex flex-col justify-center gap-2 w-full ">
           <span className="text-lg font-bold">비밀번호</span>
           <input
             type="password"
-            className="pl-4 rounded-lg border-1 border-gray-1 focus:outline-none w-[300px] h-[40px]"
+            className="w-full px-4 py-3 rounded-lg bg-[#1B1B1E] border border-[#333] focus:outline-none focus:ring-2 focus:ring-point"
           />
         </div>
         <button
           type="submit"
-          className="rounded-lg bg-point w-[300px] h-[40px]"
+          className="rounded-lg bg-point w-full h-[40px]"
         >
           로그인
         </button>
