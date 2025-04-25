@@ -1,5 +1,5 @@
-import { Link } from 'react-router';
-import Button from './Button';
+import { Link } from "react-router";
+import Button from "./Button";
 
 function LoginBtn() {
   return (

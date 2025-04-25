@@ -1,6 +1,6 @@
 function NavBar() {
   return (
-    <ul className="flex justify-between items-center w-full h-full text-logo-white gap-8 cursor-pointer">
+    <ul className="text-logo-white flex h-full w-full cursor-pointer items-center justify-between gap-8">
       <li>홈</li>
       <li>카테고리</li>
       <li>커뮤니티</li>

@@ -6,7 +6,7 @@ interface ButtonProps {
 function Button({ children, onClick }: ButtonProps) {
   return (
     <button
-      className="bg-point text-white rounded-lg w-[64px] h-[32px] flex justify-center items-center cursor-pointer"
+      className="bg-point flex h-[32px] w-[64px] cursor-pointer items-center justify-center rounded-lg text-white"
       onClick={onClick}
     >
       <span className="text-center text-sm">{children}</span>

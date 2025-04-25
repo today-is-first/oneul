@@ -6,7 +6,7 @@ interface HeaderProps {
 
 function Header({ left, center, right }: HeaderProps) {
   return (
-    <div className="flex justify-between items-center w-full h-16 px-12 py-10">
+    <div className="flex h-16 w-full items-center justify-between px-12 py-10">
       <div className="">{left}</div>
       <div className="">{center}</div>
       <div className="">{right}</div>
