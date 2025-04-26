@@ -2,9 +2,8 @@ name: Sync Issue Metadata to PR
 
 permissions:
   pull-requests: write
-  contents: read
+  contents: write
   issues: write
-  project-cards: write
 
 on:
   pull_request:
@@ -21,7 +20,7 @@ jobs:
           script: |
             const prNumber = context.payload.pull_request.number;
 
-            // PR 정보 가져오기
+            // PR 상세 정보 가져오기
             const { data: pr } = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -38,7 +37,7 @@ jobs:
 
             const issueNumber = parseInt(issueNumberMatch[1], 10);
 
-            // 이슈 정보 가져오기
+            // 이슈 상세 정보 가져오기
             const { data: issue } = await github.rest.issues.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -54,7 +53,7 @@ jobs:
             // 3️⃣ 어사이니 가져오기
             const assignees = issue.assignees.map(user => user.login);
 
-            // PR 업데이트: 라벨, 마일스톤, 어사이니 복사
+            // PR 업데이트 (라벨, 마일스톤, 어사이니 적용)
             await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -66,8 +65,8 @@ jobs:
 
             console.log(`✅ 이슈 #${issueNumber}의 라벨, 마일스톤, 어사이니를 PR #${prNumber}에 복사 완료.`);
 
-            // 4️⃣ 프로젝트 카드 복사
-            // 저장소 프로젝트 가져오기
+            // 4️⃣ 프로젝트 카드 추가
+
             const projects = await github.rest.projects.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -78,9 +77,8 @@ jobs:
               return;
             }
 
-            const project = projects.data[0]; // 첫 번째 프로젝트 사용 (필요하면 수정 가능)
+            const project = projects.data[0]; // 첫 번째 프로젝트 사용
 
-            // 프로젝트 칼럼 가져오기
             const columns = await github.rest.projects.listColumns({
               project_id: project.id,
             });
@@ -92,7 +90,7 @@ jobs:
 
             const columnId = columns.data[0].id; // 첫 번째 칼럼 사용
 
-            // PR이 이미 카드로 등록되어 있는지 체크
+            // 이미 프로젝트에 등록된 카드가 있는지 확인
             const cards = await github.rest.projects.listCards({
               column_id: columnId,
             });
@@ -104,7 +102,7 @@ jobs:
               return;
             }
 
-            // 카드로 추가
+            // 카드 생성
             await github.rest.projects.createCard({
               column_id: columnId,
               content_id: pr.id,
