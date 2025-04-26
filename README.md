@@ -1,3 +1,11 @@
+## 프론트엔드 시작하는 방법
+
+```
+cd /frontend
+npm i
+npm run dev
+```
+
 # SSAFIT
 
 🎯 함께 운동하고 성장하는 커뮤니티 기반 운동 플랫폼
