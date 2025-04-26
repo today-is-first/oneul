@@ -1,6 +1,6 @@
 import Header from "@components/common/Header";
 import Logo from "@components/common/Logo";
-import SigninForm from "./SigninForm";
+import OAuthBtn from "./OAuthBtn";
 
 function LoginPage() {
   return (
@@ -8,7 +8,7 @@ function LoginPage() {
       <Header left={<Logo />} center={<></>} right={<></>} />
       <section className="flex flex-col items-center justify-center">
         <span className="text-logo-white text-4xl font-bold">로그인</span>
-        <SigninForm />
+        <OAuthBtn />
       </section>
     </div>
   );
