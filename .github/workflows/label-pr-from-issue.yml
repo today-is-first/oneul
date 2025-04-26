@@ -44,16 +44,16 @@ jobs:
               issue_number: issueNumber,
             });
 
-            // 1️⃣ 라벨 가져오기
+            // 라벨 가져오기
             const labels = issue.labels.map(label => label.name);
 
-            // 2️⃣ 마일스톤 가져오기
+            // 마일스톤 가져오기
             const milestoneNumber = issue.milestone ? issue.milestone.number : null;
 
-            // 3️⃣ 어사이니 가져오기
+            // 어사이니 가져오기
             const assignees = issue.assignees.map(user => user.login);
 
-            // PR 업데이트 (라벨, 마일스톤, 어사이니 적용)
+            // PR 업데이트 (라벨, 마일스톤, 어사이니 복사)
             await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -64,50 +64,4 @@ jobs:
             });
 
             console.log(`✅ 이슈 #${issueNumber}의 라벨, 마일스톤, 어사이니를 PR #${prNumber}에 복사 완료.`);
-
-            // 4️⃣ 프로젝트 카드 추가
-
-            const projects = await github.rest.projects.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            });
-
-            if (projects.data.length === 0) {
-              console.log("❗ 저장소에 프로젝트가 없습니다.");
-              return;
-            }
-
-            const project = projects.data[0]; // 첫 번째 프로젝트 사용
-
-            const columns = await github.rest.projects.listColumns({
-              project_id: project.id,
-            });
-
-            if (columns.data.length === 0) {
-              console.log("❗ 프로젝트에 칼럼이 없습니다.");
-              return;
-            }
-
-            const columnId = columns.data[0].id; // 첫 번째 칼럼 사용
-
-            // 이미 프로젝트에 등록된 카드가 있는지 확인
-            const cards = await github.rest.projects.listCards({
-              column_id: columnId,
-            });
-
-            const prCardAlreadyExists = cards.data.some(card => card.content_url && card.content_url.includes(`/pulls/${prNumber}`));
-
-            if (prCardAlreadyExists) {
-              console.log(`✅ PR #${prNumber}은 이미 프로젝트에 카드로 추가되어 있습니다.`);
-              return;
-            }
-
-            // 카드 생성
-            await github.rest.projects.createCard({
-              column_id: columnId,
-              content_id: pr.id,
-              content_type: "PullRequest",
-            });
-
-            console.log(`✅ PR #${prNumber}을 프로젝트 '${project.name}'에 카드로 추가했습니다.`);
 
