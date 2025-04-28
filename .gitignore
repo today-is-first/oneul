@@ -7,16 +7,30 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Node modules
+node_modules/
+dist/
+dist-ssr/
 *.local
+
+# Java build artifacts
+*.class
+/bin/
+/target/
+/build/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
+.project
+.classpath
+.settings/
+.metadata/
+
+# Mac, Windows OS generated files
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
