@@ -1,0 +1,34 @@
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { ko } from "date-fns/locale";
+
+function CustomDateInput({
+  label,
+  selectedDate,
+  setSelectedDate,
+}: {
+  label: string;
+  selectedDate: Date | null;
+  setSelectedDate: (date: Date | null) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-lg font-bold">{label}</label>
+      <DatePicker
+        selected={selectedDate}
+        onChange={(date) => setSelectedDate(date)}
+        dateFormat="yyyy-MM-dd"
+        locale={ko}
+        placeholderText="연도-월-일"
+        className="focus:ring-point w-full appearance-none rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 text-white focus:outline-none focus:ring-2"
+        calendarClassName="!border-[#333] !rounded-xl !shadow-lg"
+        popperPlacement="bottom-start"
+        showYearDropdown
+        showMonthDropdown
+        dropdownMode="select"
+      />
+    </div>
+  );
+}
+
+export default CustomDateInput;
