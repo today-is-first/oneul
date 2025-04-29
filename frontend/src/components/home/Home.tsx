@@ -3,6 +3,7 @@ import Logo from '@components/common/Logo';
 import NavBar from '@components/common/NavBar';
 import LoginBtn from '@components/common/LoginBtn';
 import GoToChallengeCreateButton from '@components/challengeCreate/GoToChallengeCreateButton';
+import FeedCreateBtn from '@/feed/FeedCreateBtn';
 
 function Home() {
   return (
@@ -10,6 +11,9 @@ function Home() {
       <Header left={<Logo />} center={<NavBar />} right={<LoginBtn />} />
       <div className="flex flex-col items-center justify-center">
         <GoToChallengeCreateButton />
+      </div>
+      <div className="flex flex-col items-center justify-center">
+        <FeedCreateBtn />
       </div>
     </div>
   );
