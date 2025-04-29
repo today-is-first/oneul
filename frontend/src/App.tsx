@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router";
 import Home from "@components/home/Home";
 import LoginPage from "@components/login/LoginPage";
 import RegistPage from "@components/regist/RegistPage";
+import ChallengeCreatePage from "./components/challengeCreate/ChallengeCreatePage";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<RegistPage />} />
+        <Route path="/challenge/create" element={<ChallengeCreatePage />} />
       </Routes>
     </div>
   );

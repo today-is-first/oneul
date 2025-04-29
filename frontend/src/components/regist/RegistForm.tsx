@@ -24,7 +24,7 @@ function RegistForm() {
             placeholder="이메일"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="focus:ring-point w-full rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:ring-2 focus:outline-none"
+            className="focus:ring-point w-full rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:outline-none focus:ring-2"
           />
           <div className="flex gap-2">
             <input
@@ -32,14 +32,14 @@ function RegistForm() {
               placeholder="비밀번호"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="focus:ring-point w-1/2 rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:ring-2 focus:outline-none"
+              className="focus:ring-point w-1/2 rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:outline-none focus:ring-2"
             />
             <input
               type="password"
               placeholder="비밀번호 확인"
               value={passwordConfirm}
               onChange={(e) => setPasswordConfirm(e.target.value)}
-              className="focus:ring-point w-1/2 rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:ring-2 focus:outline-none"
+              className="focus:ring-point w-1/2 rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:outline-none focus:ring-2"
             />
           </div>
         </div>
@@ -48,7 +48,7 @@ function RegistForm() {
           placeholder="닉네임"
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
-          className="focus:ring-point w-full rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:ring-2 focus:outline-none"
+          className="focus:ring-point w-full rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:outline-none focus:ring-2"
         />
 
         <div className="flex justify-between gap-2">
