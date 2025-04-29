@@ -1,12 +1,16 @@
 import Header from '@components/common/Header';
 import Logo from '@components/common/Logo';
 import NavBar from '@components/common/NavBar';
-import LoginBtn from '../common/LoginBtn';
+import LoginBtn from '@components/common/LoginBtn';
+import GoToChallengeCreateButton from '@components/challengeCreate/GoToChallengeCreateButton';
 
 function Home() {
   return (
     <div className="w-full h-full bg-background">
       <Header left={<Logo />} center={<NavBar />} right={<LoginBtn />} />
+      <div className="flex flex-col items-center justify-center">
+        <GoToChallengeCreateButton />
+      </div>
     </div>
   );
 }
