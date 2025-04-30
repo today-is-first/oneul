@@ -3,9 +3,9 @@ import { Routes, Route } from "react-router";
 import Home from "@components/home/Home";
 import LoginPage from "@components/login/LoginPage";
 import RegistPage from "@components/regist/RegistPage";
-import ChallengeCreatePage from "./components/challengeCreate/ChallengeCreatePage";
-import ChallengeRoomPage from "./components/challenge/roomDetail/ChallengeRoomPage";
-import ChallengeDetailPage from "./components/challengeDetail/challengeDetailPage";
+import ChallengeCreatePage from "@components/challengeCreate/ChallengeCreatePage";
+import ChallengeRoomPage from "@components/challenge/roomDetail/ChallengeRoomPage";
+import ChallengeDetailPage from "@components/challengeDetail/ChallengeDetailPage";
 
 function App() {
   return (
