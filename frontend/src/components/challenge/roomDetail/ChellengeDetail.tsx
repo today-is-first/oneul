@@ -13,7 +13,7 @@ interface ChallengeDetailProps {
     is_public: boolean;
     room_password: string | null;
     start_date: string; // "2025-03-22"
-    end_date: string;   // "2025-05-23"
+    end_date: string; // "2025-05-23"
     created_at: string; // "2025-03-12 14:30:00"
   };
 }
@@ -30,39 +30,45 @@ function calculateSuccessRate(goalDay: number, totalDay: number): number {
 
 function ChallengeDetail({ data }: ChallengeDetailProps) {
   return (
-    <section className="flex flex-col py-9 px-8 gap-8 rounded-2xl border border-white w-[365px]">
+    <section className="flex flex-col gap-8 rounded-2xl border border-[#2d2d2d] bg-[#1A1A1F] px-8 py-9">
       {/* 상단 뱃지 + 제목 */}
       <div className="flex items-center gap-2">
         <Badge type={data.is_challenge ? "challenge" : "normal"}>
           {data.is_challenge ? "챌린지" : "일반"}
         </Badge>
-        <h3 className="text-xl font-bold text-white mt-1">{data.name}</h3>
+        <h3 className="mt-1 text-xl font-bold text-gray-200">{data.name}</h3>
       </div>
 
       {/* 세부 정보 */}
       <div className="flex flex-col gap-y-4">
         {/* 기간 정보 */}
-        <div className="text-base flex flex-col gap-1">
-          <span className="font-medium text-text-white">챌린지 기간</span>
-          <span className="text-text-white opacity-70 leading-relaxed">{formatDate(data.start_date)} ~ {formatDate(data.end_date)}</span>
+        <div className="flex flex-col gap-1 text-base">
+          <span className="font-medium text-gray-300">챌린지 기간</span>
+          <span className="leading-relaxed text-gray-400">
+            {formatDate(data.start_date)} ~ {formatDate(data.end_date)}
+          </span>
         </div>
 
         {/* 매니저 정보 */}
-        <div className="text-base flex flex-col gap-1">
-          <span className="font-medium text-text-white">챌린지 매니저</span>
-          <span className="text-text-white opacity-70 leading-relaxed">{data.owner_id}</span>
+        <div className="flex flex-col gap-1 text-base">
+          <span className="font-medium text-gray-300">챌린지 매니저</span>
+          <span className="leading-relaxed text-gray-400">{data.owner_id}</span>
         </div>
 
         {/* 설명 */}
-        <div className="text-base flex flex-col gap-1">
-          <span className="font-medium text-text-white">챌린지 목표</span>
-          <span className="text-text-white opacity-70 leading-relaxed">{data.description}</span>
+        <div className="flex flex-col gap-1 text-base">
+          <span className="font-medium text-gray-300">챌린지 목표</span>
+          <span className="leading-relaxed text-gray-400">
+            {data.description}
+          </span>
         </div>
 
         {/* 목표 달성률 */}
-        <div className="text-base flex flex-col gap-1">
-          <span className="font-medium text-text-white">목표 달성률</span>
-          <span className="text-text-white opacity-70 leading-relaxed">{calculateSuccessRate(data.goal_day, data.total_day)}% 이상</span>
+        <div className="flex flex-col gap-1 text-base">
+          <span className="font-medium text-gray-300">목표 달성률</span>
+          <span className="leading-relaxed text-gray-400">
+            {calculateSuccessRate(data.goal_day, data.total_day)}% 이상
+          </span>
         </div>
       </div>
     </section>
