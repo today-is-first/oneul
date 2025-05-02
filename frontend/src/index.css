@@ -48,3 +48,28 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 input[type="date"]::-moz-calendar-picker-indicator {
   display: none;
 }
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #484857;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5a5a64;
+}
+
+/* firefox */
+.scroll-container {
+  scrollbar-width: thin; /* auto | thin | none */
+  scrollbar-color: #484857 transparent;
+}
