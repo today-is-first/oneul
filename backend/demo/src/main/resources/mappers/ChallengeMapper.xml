@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="store.oneul.mvc.challenge.dao.ChallengeDAO">
+
+    <!-- SELECT ONE -->
+    <select id="getChallenge" parameterType="long" resultType="store.oneul.mvc.challenge.dto.ChallengeDTO">
+        SELECT * FROM challenge
+        WHERE challenge_id = #{challengeId}
+    </select>
+
+    <!-- SELECT ALL -->
+    <select id="getChallenges" resultType="store.oneul.mvc.challenge.dto.ChallengeDTO">
+        SELECT * FROM challenge
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- INSERT -->
+    <insert id="insertChallenge" parameterType="store.oneul.mvc.challenge.dto.ChallengeDTO">
+        INSERT INTO challenge (
+            name, owner_id, category_id, description,
+            total_day, goal_day, is_challenge, is_public,
+            room_password, start_date, end_date, entry_fee
+        ) VALUES (
+            #{name}, #{ownerId}, #{categoryId}, #{description},
+            #{totalDay}, #{goalDay}, #{isChallenge}, #{isPublic},
+            #{roomPassword}, #{startDate}, #{endDate}, #{entryFee}
+        )
+    </insert>
+
+    <!-- UPDATE -->
+    <update id="updateChallenge" parameterType="store.oneul.mvc.challenge.dto.ChallengeDTO">
+        UPDATE challenge
+        SET name = #{name},
+            category_id = #{categoryId},
+            description = #{description},
+            total_day = #{totalDay},
+            goal_day = #{goalDay},
+            is_challenge = #{isChallenge},
+            is_public = #{isPublic},
+            room_password = #{roomPassword},
+            start_date = #{startDate},
+            end_date = #{endDate},
+            entry_fee = #{entryFee}
+        WHERE challenge_id = #{challengeId}
+    </update>
+
+    <!-- DELETE -->
+    <delete id="deleteChallenge" parameterType="long">
+        DELETE FROM challenge
+        WHERE challenge_id = #{challengeId}
+    </delete>
+
+</mapper>
