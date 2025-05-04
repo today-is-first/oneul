@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="store.oneul.mvc.feed.dao.FeedDAO">
+
+    <!-- SELECT ONE -->
+    <select id="getFeed" parameterType="long" resultType="store.oneul.mvc.feed.dto.FeedDTO">
+        SELECT * FROM feed
+        WHERE challenge_id = #{challengeId} AND id = #{id}
+    </select>
+
+    <!-- SELECT ALL -->
+    <select id="getFeeds" resultType="store.oneul.mvc.feed.dto.FeedDTO">
+        SELECT * FROM feed
+        WHERE challenge_id = #{challengeId}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- INSERT -->
+    <insert id="createFeed" parameterType="store.oneul.mvc.feed.dto.FeedDTO">
+        INSERT INTO feed (user_id, challenge_id, image_url, content, like_count, created_at, check_status, checked_at)
+        VALUES (#{userId}, #{challengeId}, #{imageUrl}, #{content}, #{likeCount}, #{createdAt}, #{checkStatus}, #{checkedAt})
+    </insert>
+
+    <!-- UPDATE -->
+    <update id="updateFeed" parameterType="store.oneul.mvc.feed.dto.FeedDTO">
+        UPDATE feed
+        SET user_id = #{userId}, challenge_id = #{challengeId}, image_url = #{imageUrl}, content = #{content}, like_count = #{likeCount}, created_at = #{createdAt}, check_status = #{checkStatus}, checked_at = #{checkedAt}
+        WHERE challenge_id = #{challengeId} AND id = #{id}
+    </update>
+    
+    <!-- DELETE -->
+    <delete id="deleteFeed" parameterType="long">
+        DELETE FROM feed
+        WHERE challenge_id = #{challengeId} AND id = #{id}
+    </delete>
+
+</mapper>
