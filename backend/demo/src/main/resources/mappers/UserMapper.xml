@@ -13,12 +13,13 @@
 
 	<insert id="insertUser" parameterType="store.oneul.mvc.model.dto.UserDTO">
 	    INSERT INTO user (
-	        username, email, oauth_provider, profile_img
+	        username, email, oauth_provider
 	    )
 	    VALUES (
-	        #{username}, #{email}, #{oauthProvider}, #{profileImg}
+	        #{username}, #{email}, #{oauthProvider}
 	    )
 	</insert>
+
 
     
    <select id="findById" resultType="UserDTO">
