@@ -17,8 +17,10 @@ public class JwtProvider {
     @Value("${jwt.secret}")
     private String secretKeyStr;
 
+    private static final long ACCESS_TOKEN_VALIDITY = 15 * 60 * 1000L;
+    
     private SecretKey getSecretKey() {
-        byte[] keyBytes = secretKeyStr.getBytes(); // 또는 Base64 디코딩: Base64.getDecoder().decode(secretKeyStr);
+    	byte[] keyBytes = Base64.getDecoder().decode(secretKeyStr);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -26,7 +28,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(String.valueOf(userId)) // userId를 문자열로 변환해 subject에 저장
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
                 .signWith(getSecretKey())
                 .compact();
     }
