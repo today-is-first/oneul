@@ -15,9 +15,11 @@ import store.oneul.mvc.user.service.UserService;
 @RequestMapping("/oauth")
 public class OAuthController {
 	
-	
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public OAuthController(UserService userService) {
+        this.userService = userService;
+    }
 
     // 1. 회원가입 추가 정보 입력
     @PutMapping("/signup")
