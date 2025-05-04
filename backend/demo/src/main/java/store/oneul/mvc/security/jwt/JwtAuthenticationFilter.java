@@ -20,11 +20,14 @@ import store.oneul.mvc.user.service.UserService;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtProvider jwtProvider;
+	private final JwtProvider jwtProvider;
+	private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+	public JwtAuthenticationFilter(JwtProvider jwtProvider, UserService userService) {
+	    this.jwtProvider = jwtProvider;
+	    this.userService = userService;
+	}
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
