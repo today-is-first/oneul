@@ -1,8 +1,8 @@
 import { useState } from "react";
-import MateFeedList from "./MateFeedList";
-import MyFeedCard from "./MyFeedCard";
-import FeedDetailModal from "@/feed/FeedDetailModal";
-import FeedCreateModal from "@/feed/FeedCreateModal";
+import MateFeedList from "../feed/MateFeedList";
+import MyFeedCard from "../feed/MyFeedCard";
+import FeedDetailModal from "@/components/feed/FeedDetailModal";
+import FeedCreateModal from "@/components/feed/FeedCreateModal";
 export interface CheckInLog {
   id: number;
   userId: number;

@@ -1,5 +1,24 @@
 import { useRef, useState } from "react";
 import ChatRoom from "@components/chat/ChatRoom";
+import ChallengeFeed from "./ChallengeFeed";
+import ChallengeDetail from "./ChellengeDetail";
+import ChallengeStatus from "./ChallengeStatus";
+
+const mockData = {
+  room_id: 1,
+  name: "득근합시다",
+  owner_id: 33,
+  category_id: 1,
+  description: "하루에 30분씩 무산소 근력 운동 하기",
+  total_day: 56,
+  goal_day: 45,
+  is_challenge: true,
+  is_public: false,
+  room_password: "1234",
+  start_date: "2025-03-22", // DATE
+  end_date: "2025-05-23", // DATE
+  created_at: "2025-03-12 14:30:00", // DATETIME
+};
 
 function ChallengeDetailPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -26,10 +45,13 @@ function ChallengeDetailPage() {
         <h1 className="mb-6 text-2xl font-bold text-white">
           챌린지 상세 페이지
         </h1>
-        <p className="max-w-2xl text-center text-gray-300">
-          챌린지에 대한 설명이 이곳에 들어갑니다. 목표, 일정, 참가비 등의 정보를
-          보여줄 수 있습니다.
-        </p>
+        <div className="w-7xl mx-auto flex gap-6 text-white">
+          <ChallengeFeed />
+          <div className="min-w-sm flex flex-col gap-8">
+            <ChallengeDetail data={mockData} />
+            <ChallengeStatus />
+          </div>
+        </div>
 
         {/* 채팅 열기/닫기 버튼 */}
         <button

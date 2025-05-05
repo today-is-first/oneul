@@ -1,4 +1,4 @@
-import { CheckInLog } from "./ChallengeFeed";
+import { CheckInLog } from "../challengeDetail/ChallengeFeed";
 
 export interface MateFeedItemProps {
   log: CheckInLog;
