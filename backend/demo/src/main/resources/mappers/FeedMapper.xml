@@ -6,33 +6,33 @@
 <mapper namespace="store.oneul.mvc.feed.dao.FeedDAO">
 
     <!-- SELECT ONE -->
-    <select id="getFeed" parameterType="long" resultType="FeedDTO">
+    <select id="getFeed" parameterType="map" resultType="FeedDTO">
         SELECT * FROM feed
         WHERE challenge_id = #{challengeId} AND id = #{id}
     </select>
 
     <!-- SELECT ALL -->
-    <select id="getFeeds" resultType="FeedDTO">
+    <select id="getFeeds" parameterType="map" resultType="FeedDTO">
         SELECT * FROM feed
         WHERE challenge_id = #{challengeId}
         ORDER BY created_at DESC
     </select>
 
     <!-- INSERT -->
-    <insert id="createFeed" parameterType="FeedDTO">
+    <insert id="createFeed" parameterType="map">
         INSERT INTO feed (user_id, challenge_id, image_url, content, like_count, created_at, check_status, checked_at)
         VALUES (#{userId}, #{challengeId}, #{imageUrl}, #{content}, #{likeCount}, #{createdAt}, #{checkStatus}, #{checkedAt})
     </insert>
 
     <!-- UPDATE -->
-    <update id="updateFeed" parameterType="FeedDTO">
+    <update id="updateFeed" parameterType="map">
         UPDATE feed
         SET user_id = #{userId}, challenge_id = #{challengeId}, image_url = #{imageUrl}, content = #{content}, like_count = #{likeCount}, created_at = #{createdAt}, check_status = #{checkStatus}, checked_at = #{checkedAt}
         WHERE challenge_id = #{challengeId} AND id = #{id}
     </update>
     
     <!-- DELETE -->
-    <delete id="deleteFeed" parameterType="long">
+    <delete id="deleteFeed" parameterType="map">
         DELETE FROM feed
         WHERE challenge_id = #{challengeId} AND id = #{id}
     </delete>
