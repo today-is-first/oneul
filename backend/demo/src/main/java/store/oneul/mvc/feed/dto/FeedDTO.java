@@ -24,4 +24,5 @@ public class FeedDTO {
     private LocalDateTime createdAt;
     private CheckStatus checkStatus;
     private LocalDateTime checkedAt;
+    private LocalDateTime updatedAt;
 }
