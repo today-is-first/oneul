@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import store.oneul.mvc.feed.enums.CheckStatus;
 
 @Getter
 @Setter
@@ -21,6 +22,6 @@ public class FeedDTO {
     private String content;
     private int likeCount;
     private LocalDateTime createdAt;
-    private String checkStatus;
+    private CheckStatus checkStatus;
     private LocalDateTime checkedAt;
 }
