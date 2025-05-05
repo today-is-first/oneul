@@ -12,17 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.feed.dto.FeedDTO;
 import store.oneul.mvc.feed.service.FeedService;
 
 @RestController
 @RequestMapping("api/challenges/{challengeId}/feeds")
+@RequiredArgsConstructor
 public class FeedController {
     private final FeedService feedService;
-
-    public FeedController(FeedService feedService) {
-        this.feedService = feedService;
-    }
 
     @GetMapping
     public ResponseEntity<List<FeedDTO>> getFeeds(@PathVariable Long challengeId) {

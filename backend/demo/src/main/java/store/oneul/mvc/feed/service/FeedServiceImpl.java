@@ -4,17 +4,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.feed.dao.FeedDAO;
 import store.oneul.mvc.feed.dto.FeedDTO;
 
 @Service
+@RequiredArgsConstructor
 public class FeedServiceImpl implements FeedService {
-
     private final FeedDAO feedDAO;
-
-    public FeedServiceImpl(FeedDAO feedDAO) {
-        this.feedDAO = feedDAO;
-    }
 
     @Override
     public void createFeed(Long challengeId, FeedDTO feedDTO) {
