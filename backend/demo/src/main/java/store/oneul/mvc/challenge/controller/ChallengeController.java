@@ -1,8 +1,11 @@
 package store.oneul.mvc.challenge.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.challenge.dto.ChallengeDTO;
 import store.oneul.mvc.challenge.service.ChallengeService;
+import store.oneul.mvc.user.dto.UserDTO;
 
 @RestController
 @RequestMapping("/api/challenges")
@@ -42,9 +46,19 @@ public class ChallengeController {
     }
 
     @GetMapping("/{challengeId}")
-    public ResponseEntity<ChallengeDTO> getChallenge(@PathVariable Long challengeId) {
-        ChallengeDTO challengeDTO = challengeService.getChallenge(challengeId);
-        return ResponseEntity.ok(challengeDTO);
+    public ResponseEntity<ChallengeDTO> getChallenge(
+            @PathVariable Long challengeId,
+            @AuthenticationPrincipal UserDTO loginUser) {
+        
+        Long loginUserId = loginUser.getUserId();
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("challengeId", challengeId);
+        paramMap.put("loginUserId", loginUserId);
+
+        ChallengeDTO dto = challengeService.getChallenge(paramMap);
+
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping
