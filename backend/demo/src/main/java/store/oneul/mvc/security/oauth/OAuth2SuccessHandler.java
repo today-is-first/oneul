@@ -3,7 +3,6 @@ package store.oneul.mvc.security.oauth;
 import java.io.IOException;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -12,16 +11,20 @@ import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.security.jwt.JwtProvider;
+import store.oneul.mvc.security.rtr.RefreshTokenService;
 import store.oneul.mvc.user.dto.UserDTO;
 import store.oneul.mvc.user.service.UserService;
 // 실제 ID Token 받아서 처리하는 진짜 로그인 후처리 담당
 @Component
+@RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    @Autowired private GoogleIdTokenVerifier tokenVerifier;
-    @Autowired private JwtProvider jwtProvider;
-    @Autowired private UserService userService;
+    private final GoogleIdTokenVerifier tokenVerifier;
+    private final JwtProvider jwtProvider;
+    private final UserService userService;
+    private final RefreshTokenService refreshTokenService; // 🔥 추가
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -40,7 +43,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         String idToken = oidcUser.getIdToken().getTokenValue();
-        // System.out.println("[OAuth2SuccessHandler] ID TOKEN: " + idToken);
 
         try {
             Map<String, Object> claims = tokenVerifier.verify(idToken);
@@ -49,8 +51,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             String name = (String) claims.get("name");
             String picture = (String) claims.get("picture");
 
-            // System.out.println("사용자: " + email + ", 이름: " + name);
-            
             UserDTO user = userService.findByEmail(email);
             if (user == null) {
                 user = UserDTO.builder()
@@ -60,12 +60,16 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                         .oauthProvider("google")
                         .build();
                 userService.insertUser(user);
-                user = userService.findByEmail(email); // user_id 다시 조회
+                user = userService.findByEmail(email);
             }
 
-            String jwt = jwtProvider.createToken(user.getUserId());
+            // 🔹 Access + Refresh Token 발급
+            String accessToken = jwtProvider.createToken(user.getUserId());
+            String refreshToken = refreshTokenService.createAndSaveRefreshToken(user.getUserId());
 
-            System.out.println("JWT 생성 완료: " + jwt);
+
+            System.out.println("✅ AccessToken: " + accessToken);
+            System.out.println("✅ RefreshToken (Redis 저장됨): " + refreshToken);
 
             boolean signupCompleted = Boolean.TRUE.equals(user.getSignupCompleted());
 
@@ -73,15 +77,15 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             response.setCharacterEncoding("UTF-8");
 
             String json = String.format(
-                "{\"token\":\"%s\", \"signupCompleted\":%s}",
-                jwt,
+                "{\"token\":\"%s\", \"refresh\":\"%s\", \"signupCompleted\":%s}",
+                accessToken,
+                refreshToken,
                 signupCompleted ? "true" : "false"
             );
             response.getWriter().write(json);
 
         } catch (Exception e) {
-//            System.out.println("❌ 예외 발생! 메시지:");
-            e.printStackTrace();  //  예외 전체 로그 찍기
+            e.printStackTrace();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid ID Token");
         }
     }
