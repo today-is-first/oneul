@@ -1,6 +1,7 @@
 package store.oneul.mvc.challenge.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -29,8 +30,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public ChallengeDTO getChallenge(Long challengeId) {
-        return challengeDAO.getChallenge(challengeId);
+    public ChallengeDTO getChallenge(Map<String, Object> paramMap) {
+        return challengeDAO.getChallenge(paramMap);
     }
 
     @Override
