@@ -12,7 +12,7 @@ import store.oneul.mvc.user.dto.UserDTO;
 import store.oneul.mvc.user.service.UserService;
 
 @RestController
-@RequestMapping("/oauth")
+@RequestMapping("/api/oauth")
 public class OAuthController {
 	
     private final UserService userService;
