@@ -28,4 +28,7 @@ public class ChallengeDTO {
     private LocalDate endDate;
     private int entryFee;
     private LocalDateTime createdAt;
+    private String ownerNickname;
+    private Integer successDay;
+
 }
