@@ -6,7 +6,8 @@ const OAuthRedirectPage = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const signupCompleted = params.get("signupCompleted");
+    const signupCompletedStr = params.get("signupCompleted");
+    const signupCompleted = signupCompletedStr === "true";
     signupCompleted ? navigate("/") : navigate("/signup");
   }, [navigate]);
 
