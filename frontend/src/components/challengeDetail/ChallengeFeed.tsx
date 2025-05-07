@@ -3,6 +3,7 @@ import MateFeedList from "../feed/MateFeedList";
 import MyFeedCard from "../feed/MyFeedCard";
 import FeedDetailModal from "@/components/feed/FeedDetailModal";
 import FeedCreateModal from "@/components/feed/FeedCreateModal";
+import FeedUpdateModal from "../feed/FeedUpdateModal";
 export interface CheckInLog {
   id: number;
   userId: number;
@@ -141,7 +142,7 @@ function ChallengeFeed() {
       )}
 
       {modalState?.kind === "edit" && (
-        <FeedCreateModal isOpen onClose={closeAll} />
+        <FeedUpdateModal isOpen onClose={closeAll} initialData={mockLog} />
       )}
 
       {modalState?.kind === "detail" && (
