@@ -28,6 +28,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = (String) attributes.get("email");
         String name = (String) attributes.get("name");
+        String picture = (String) attributes.get("picture");
 
         // DB에 사용자 있는지 확인
         UserDTO user = userService.findByEmail(email);
@@ -37,6 +38,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .username(name)
                     .email(email)
                     .oauthProvider("google")
+                    .profileImg(picture)
                     .userDelFl(false)
                     .authority(false)
                     .build();

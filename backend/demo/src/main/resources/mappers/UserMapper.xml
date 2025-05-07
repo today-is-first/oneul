@@ -13,10 +13,10 @@
 
 	<insert id="insertUser" parameterType="UserDTO">
 	    INSERT INTO user (
-	        username, email, oauth_provider
+	        username, email, oauth_provider, profile_img
 	    )
 	    VALUES (
-	        #{username}, #{email}, #{oauthProvider}
+	        #{username}, #{email}, #{oauthProvider}, #{profileImg}
 	    )
 	</insert>
 

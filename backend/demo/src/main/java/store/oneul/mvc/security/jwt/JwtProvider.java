@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
+
 //email 기반 JWT 발급 + 검증
 @Component
 public class JwtProvider {
@@ -26,7 +28,17 @@ public class JwtProvider {
 
     public String createToken(Long userId) {
         return Jwts.builder()
-                .setSubject(String.valueOf(userId)) // userId를 문자열로 변환해 subject에 저장
+                .setSubject(String.valueOf(userId))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
+                .signWith(getSecretKey())
+                .compact();
+    }
+
+    public String createToken(Long userId, Map<String, Object> claims) {
+        return Jwts.builder()
+                .setSubject(String.valueOf(userId))
+                .addClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
                 .signWith(getSecretKey())

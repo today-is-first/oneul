@@ -1,87 +1,95 @@
-import { useState } from "react";
+import { useUserStore } from "@stores/userStore";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function RegistForm() {
+  const { user } = useUserStore();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
-  const [gender, setGender] = useState("");
+  const [tel, setTel] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== passwordConfirm) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return;
-    }
+    const accessToken = useUserStore.getState().accessToken;
+    await axios
+      .patch(
+        "http://localhost:8080/api/users",
+        {
+          username: name,
+          email: email,
+          nickname: nickname,
+          userTel: tel,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true, // 쿠키도 같이 보낼 경우
+        },
+      )
+      .then((_) => {
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate("/signup");
+      });
   };
+
+  useEffect(() => {
+    useUserStore.getState().initializeFromToken();
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    setEmail(user.email || "");
+    setName(user.name || "");
+  }, [user]);
 
   return (
     <section className="bg-background mt-10 flex items-center justify-center rounded-2xl">
-      <form className="w-full max-w-md space-y-6 p-8 text-white shadow-lg">
-        <div className="space-y-3">
-          <input
-            type="email"
-            placeholder="이메일"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="focus:ring-point w-full rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:outline-none focus:ring-2"
-          />
-          <div className="flex gap-2">
-            <input
-              type="password"
-              placeholder="비밀번호"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="focus:ring-point w-1/2 rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:outline-none focus:ring-2"
-            />
-            <input
-              type="password"
-              placeholder="비밀번호 확인"
-              value={passwordConfirm}
-              onChange={(e) => setPasswordConfirm(e.target.value)}
-              className="focus:ring-point w-1/2 rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:outline-none focus:ring-2"
-            />
-          </div>
-        </div>
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md space-y-4 p-8 text-white shadow-lg"
+      >
+        <input
+          type="email"
+          placeholder="이메일"
+          value={email}
+          disabled
+          className="w-full rounded-lg border border-[#333] bg-[#2a2a2d] px-4 py-3 text-gray-400"
+        />
+
+        <input
+          type="text"
+          placeholder="이름"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="focus:ring-point w-full rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 text-white focus:outline-none focus:ring-2"
+        />
+
         <input
           type="text"
           placeholder="닉네임"
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
-          className="focus:ring-point w-full rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 focus:outline-none focus:ring-2"
+          className="focus:ring-point w-full rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 text-white focus:outline-none focus:ring-2"
         />
 
-        <div className="flex justify-between gap-2">
-          {[
-            { label: "여성", value: "female" },
-            { label: "남성", value: "male" },
-            { label: "비공개", value: "private" },
-          ].map(({ label, value }) => (
-            <label
-              key={value}
-              className={`flex-1 cursor-pointer rounded-lg border py-2 text-center transition ${
-                gender === value
-                  ? "bg-point border-point text-white"
-                  : "hover:border-point border-[#333] bg-[#1B1B1E] text-white"
-              }`}
-            >
-              <input
-                type="radio"
-                name="gender"
-                value={value}
-                checked={gender === value}
-                onChange={(e) => setGender(e.target.value)}
-                className="hidden"
-              />
-              {label}
-            </label>
-          ))}
-        </div>
+        <input
+          type="tel"
+          placeholder="전화번호"
+          value={tel}
+          onChange={(e) => setTel(e.target.value)}
+          className="focus:ring-point w-full rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 text-white focus:outline-none focus:ring-2"
+        />
 
         <button
           type="submit"
-          onClick={handleSubmit}
-          className="bg-point w-full rounded-lg py-3 font-semibold text-white"
+          className="bg-point w-full rounded-lg py-3 font-semibold text-white hover:opacity-90"
         >
           회원가입
         </button>
