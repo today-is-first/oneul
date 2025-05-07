@@ -1,6 +1,7 @@
 package store.oneul.mvc.challenge.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -9,7 +10,7 @@ import store.oneul.mvc.challenge.dto.ChallengeDTO;
 @Mapper
 public interface ChallengeDAO {
 
-    ChallengeDTO getChallenge(Long challengeId);
+	ChallengeDTO getChallenge(Map<String, Object> paramMap);
 
     List<ChallengeDTO> getChallenges();
 
