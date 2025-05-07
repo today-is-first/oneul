@@ -2,12 +2,11 @@ import { CheckInLog } from "../challengeDetail/ChallengeFeed";
 import CheckStatus from "../common/CheckStatus";
 
 export interface MateFeedItemProps {
-  status: "PENDING" | "APPROVED" | "REJECTED";
   log: CheckInLog;
   onClick?: () => void;
 }
 
-function FeedCheckItem({ status, log, onClick }: MateFeedItemProps) {
+function FeedCheckItem({ log, onClick }: MateFeedItemProps) {
   return (
     <li
       onClick={onClick}
@@ -16,17 +15,17 @@ function FeedCheckItem({ status, log, onClick }: MateFeedItemProps) {
       <a href="#" className="flex items-center gap-4">
         <img
           className="w-26 h-20 rounded-sm"
-          src={log.imageUrl}
+          src={log.image_url}
           alt="챌린지메이트 인증"
         />
         <div className="flex h-[76px] w-[130px] flex-1 flex-col items-baseline justify-between">
-          <CheckStatus type={status} />
+          <CheckStatus type={log.check_status} />
           <div className="line-clamp-1 text-sm font-normal text-gray-400">
             {log.content}
           </div>
           <div className="flex justify-between gap-4 text-sm">
-            <div className="text-gray-500">{log.userId}</div>
-            <div className="text-gray-500">{log.date}</div>
+            <div className="text-gray-500">{log.user_id}</div>
+            <div className="text-gray-500">{log.created_at}</div>
           </div>
         </div>
       </a>
