@@ -10,17 +10,16 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.user.dto.UserDTO;
 import store.oneul.mvc.user.service.UserService;
 // OAuth 로그인 성공 후 유저 정보 꺼내주는 서비스
 @Service
+@RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserService userService;
 
-    public CustomOAuth2UserService(UserService userService) {
-        this.userService = userService;
-    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
