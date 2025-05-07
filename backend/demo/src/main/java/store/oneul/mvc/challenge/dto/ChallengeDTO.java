@@ -30,5 +30,6 @@ public class ChallengeDTO {
     private LocalDateTime createdAt;
     private String ownerNickname;
     private Integer successDay;
+    private Integer participantCount;
 
 }
