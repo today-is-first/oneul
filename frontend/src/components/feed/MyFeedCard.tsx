@@ -1,12 +1,13 @@
-import { CheckInLog } from "./ChallengeFeed";
+import { CheckInLog } from "../challengeDetail/ChallengeFeed";
 
 interface MyFeedCardProps {
   log: CheckInLog | null;
-  onEdit?: (log: CheckInLog) => void;
   onCreate?: () => void;
+  onEdit?: (log: CheckInLog) => void;
+  onDetail?: (log: CheckInLog) => void;
 }
 
-function MyFeedCard({ log, onEdit, onCreate }: MyFeedCardProps) {
+function MyFeedCard({ log, onCreate, onEdit, onDetail }: MyFeedCardProps) {
   if (!log) {
     return (
       <>
@@ -24,11 +25,17 @@ function MyFeedCard({ log, onEdit, onCreate }: MyFeedCardProps) {
   }
 
   return (
-    <div className="flex max-w-md flex-col">
+    <div
+      className="flex max-w-md cursor-pointer flex-col"
+      onClick={() => onDetail?.(log)}
+    >
       <div className="mb-3 flex items-start justify-between">
         <p className="font-medium text-gray-400">오늘의 인증 완료 💪🔥</p>
         <button
-          onClick={() => onEdit && onEdit(log)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit?.(log);
+          }}
           className="cursor-pointer p-1 text-gray-500 hover:text-gray-200"
           aria-label="인증 수정"
         >

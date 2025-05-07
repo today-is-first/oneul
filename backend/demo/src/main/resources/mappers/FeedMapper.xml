@@ -31,6 +31,13 @@
         WHERE challenge_id = #{challengeId} AND id = #{id}
     </update>
     
+    <!-- UPDATE CHECK STATUS -->
+    <update id="evaluateFeed" parameterType="FeedEvaluationRequest">
+        UPDATE feed
+        SET check_status = #{checkStatus}, checked_at = NOW()
+        WHERE challenge_id = #{challengeId} AND id = #{id}
+    </update>
+    
     <!-- DELETE -->
     <delete id="deleteFeed" parameterType="map">
         DELETE FROM feed

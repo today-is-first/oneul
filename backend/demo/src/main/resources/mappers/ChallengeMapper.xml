@@ -6,9 +6,29 @@
 <mapper namespace="store.oneul.mvc.challenge.dao.ChallengeDAO">
 
     <!-- SELECT ONE -->
-    <select id="getChallenge" parameterType="long" resultType="store.oneul.mvc.challenge.dto.ChallengeDTO">
-        SELECT * FROM challenge
-        WHERE challenge_id = #{challengeId}
+    <!-- 챌린지 상세 조회 + 방장 nickname + 로그인 유저의 success_day -->
+    <select id="getChallenge" parameterType="map" resultType="store.oneul.mvc.challenge.dto.ChallengeDTO">
+        SELECT 
+            c.challenge_id,
+            c.name,
+            c.owner_id,
+            c.category_id,
+            c.description,
+            c.total_day,
+            c.goal_day,
+            c.is_challenge,
+            c.is_public,
+            c.room_password,
+            c.start_date,
+            c.end_date,
+            c.entry_fee,
+            c.created_at,
+            u.nickname AS owner_nickname,
+            cu.success_day
+        FROM challenge c
+        JOIN user u ON c.owner_id = u.user_id
+        JOIN challenge_user cu ON cu.challenge_id = c.challenge_id AND cu.user_id = #{loginUserId}
+        WHERE c.challenge_id = #{challengeId}
     </select>
 
     <!-- SELECT ALL -->

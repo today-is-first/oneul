@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.feed.dao.FeedDAO;
 import store.oneul.mvc.feed.dto.FeedDTO;
+import store.oneul.mvc.feed.dto.FeedEvaluationRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -37,5 +38,10 @@ public class FeedServiceImpl implements FeedService {
     public List<FeedDTO> getFeeds(Long challengeId) {
         return feedDAO.getFeeds(challengeId);
     }
+
+	@Override
+	public void evaluateFeed(FeedEvaluationRequest feedEvaluationRequest) {
+		feedDAO.evaluateFeed(feedEvaluationRequest);
+	}
 
 }

@@ -1,5 +1,9 @@
-import MateFeedList from "./MateFeedList";
-import MyFeedCard from "./MyFeedCard";
+import { useState } from "react";
+import MateFeedList from "../feed/MateFeedList";
+import MyFeedCard from "../feed/MyFeedCard";
+import FeedDetailModal from "@/components/feed/FeedDetailModal";
+import FeedCreateModal from "@/components/feed/FeedCreateModal";
+import FeedUpdateModal from "../feed/FeedUpdateModal";
 export interface CheckInLog {
   id: number;
   userId: number;
@@ -10,15 +14,29 @@ export interface CheckInLog {
   date: string; // YYYY-MM-DD
 }
 
+type ModalState =
+  | { kind: "create" }
+  | { kind: "edit"; log: CheckInLog }
+  | { kind: "detail"; log: CheckInLog }
+  | null;
+
 function ChallengeFeed() {
-  const myLog = null;
+  const [modalState, setModalState] = useState<ModalState>(null);
+
+  const openCreate = () => setModalState({ kind: "create" });
+  const openEdit = (log: CheckInLog) => setModalState({ kind: "edit", log });
+  const openDetail = (log: CheckInLog) =>
+    setModalState({ kind: "detail", log });
+  const closeAll = () => setModalState(null);
+
   const mockLog = {
     id: 1,
     userId: 22,
-    imageUrl: "test",
+    imageUrl:
+      "https://moneystory-phinf.pstatic.net/MjAyNTA0MzBfMTc4/MDAxNzQ1OTk5ODQ3NDEy.KFSsu5btM2b85Fbh5L19eRjuAJfHjEJK1Y6L92BOCW0g.-Kgt-2Za_nS5gvnyHdAN4BytLPsrGod77at3LzLcbRog.JPEG/4.30.1.jpeg",
     challengeId: 33,
     content:
-      "test message nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
+      "test message nnnnnnnnnnnnnnnnnnnnnnnnnnasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
     likeCount: 0,
     date: "2025-05-01",
   };
@@ -96,12 +114,7 @@ function ChallengeFeed() {
       date: "2025-05-01",
     },
   ];
-  const handleCreate = () => {
-    // 생성 모달 연결
-  };
-  const handleEdit = (log: CheckInLog) => {
-    // 수정 모달 연결
-  };
+
   return (
     <section className="flex w-full flex-col gap-3 rounded-2xl border border-[#2d2d2d] bg-[#1A1A1F] px-8 py-9">
       <h2 className="mb-3 text-xl font-semibold text-gray-200">챌린지 피드</h2>
@@ -109,8 +122,9 @@ function ChallengeFeed() {
         <div className="flex-1">
           <MyFeedCard
             log={mockLog}
-            onCreate={handleCreate}
-            onEdit={handleEdit}
+            onCreate={openCreate}
+            onEdit={openEdit}
+            onDetail={openDetail}
           />
         </div>
 
@@ -118,9 +132,33 @@ function ChallengeFeed() {
           <h2 className="mb-3 text-base font-semibold text-gray-300">
             챌린지 메이트 인증 현황
           </h2>
-          <MateFeedList logs={logs} />
+          <MateFeedList logs={logs} onItemClick={openDetail} />
         </div>
       </div>
+
+      {/* --- 모달 분기 --- */}
+      {modalState?.kind === "create" && (
+        <FeedCreateModal isOpen onClose={closeAll} />
+      )}
+
+      {modalState?.kind === "edit" && (
+        <FeedUpdateModal isOpen onClose={closeAll} initialData={mockLog} />
+      )}
+
+      {modalState?.kind === "detail" && (
+        <FeedDetailModal
+          isOpen
+          onClose={closeAll}
+          feed={{
+            id: modalState.log.id,
+            image_url: modalState.log.imageUrl,
+            content: modalState.log.content,
+            like_count: modalState.log.likeCount,
+            created_at: modalState.log.date,
+            user: { nickname: `User ${modalState.log.userId}` },
+          }}
+        />
+      )}
     </section>
   );
 }

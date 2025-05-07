@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "Pretendard-Regular";
-  src: url("@src/assets/fonts/PretendardVariable.woff2") format("woff2");
+  src: url("/src/assets/fonts/PretendardVariable.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
 }

@@ -1,6 +1,7 @@
 package store.oneul.mvc.challenge.service;
 
 import java.util.List;
+import java.util.Map;
 
 import store.oneul.mvc.challenge.dto.ChallengeDTO;
 
@@ -11,7 +12,7 @@ public interface ChallengeService {
 
     public void deleteChallenge(Long challengeId);
 
-    public ChallengeDTO getChallenge(Long challengeId);
+    public ChallengeDTO getChallenge(Map<String, Object> paramMap);
 
     public List<ChallengeDTO> getChallenges();
 }
