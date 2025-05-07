@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.feed.dto.FeedDTO;
+import store.oneul.mvc.feed.dto.FeedEvaluationRequest;
 import store.oneul.mvc.feed.service.FeedService;
 
 @RestController
@@ -42,6 +44,15 @@ public class FeedController {
     public ResponseEntity<FeedDTO> updateFeed(@PathVariable Long challengeId, @RequestBody FeedDTO feedDTO) {
         feedService.updateFeed(challengeId, feedDTO);
         return ResponseEntity.ok(feedDTO);
+    }
+    
+    @PatchMapping("/{id}/checks")
+    public ResponseEntity<FeedDTO> evaluateFeed(@PathVariable Long challengeId, @PathVariable Long id, @RequestBody FeedEvaluationRequest feedEvaluationRequest) {
+    	feedEvaluationRequest.setChallengeId(challengeId);
+    	feedEvaluationRequest.setId(id);
+    	feedService.evaluateFeed(feedEvaluationRequest);
+    	FeedDTO feedDTO = feedService.getFeed(challengeId, feedEvaluationRequest.getId());
+    	return ResponseEntity.ok(feedDTO);
     }
 
     @DeleteMapping

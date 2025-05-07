@@ -11,7 +11,7 @@
         WHERE email = #{email}
     </select>
 
-	<insert id="insertUser" parameterType="store.oneul.mvc.model.dto.UserDTO">
+	<insert id="insertUser" parameterType="UserDTO">
 	    INSERT INTO user (
 	        username, email, oauth_provider
 	    )
