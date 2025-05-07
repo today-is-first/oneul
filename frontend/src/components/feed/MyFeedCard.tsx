@@ -1,4 +1,6 @@
+import { formatTimeAgo } from "@/utils/date";
 import { CheckInLog } from "../challengeDetail/ChallengeFeed";
+import CheckStatus from "../common/CheckStatus";
 
 interface MyFeedCardProps {
   log: CheckInLog | null;
@@ -56,16 +58,22 @@ function MyFeedCard({ log, onCreate, onEdit, onDetail }: MyFeedCardProps) {
         </button>
       </div>
 
-      <div className="mb-3 aspect-square w-full overflow-hidden rounded-lg bg-[#24242c]">
+      <div className="relative mb-3 aspect-square w-full overflow-hidden rounded-lg bg-[#24242c]">
         <img
-          src={log.imageUrl}
+          src={log.image_url}
           alt="내 오늘 인증 사진"
           className="h-full w-full object-cover"
         />
+        {/* 상태 뱃지 추가 */}
+        <div className="absolute right-2 top-2">
+          <CheckStatus type={log.check_status} />
+        </div>
       </div>
 
       <p className="line-clamp-2 text-gray-500">{log.content}</p>
-      <span className="text-right text-sm text-gray-600">{log.date}</span>
+      <span className="text-right text-sm text-gray-600">
+        {formatTimeAgo(log.created_at)}
+      </span>
     </div>
   );
 }
