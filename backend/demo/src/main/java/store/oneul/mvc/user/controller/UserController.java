@@ -30,13 +30,13 @@ public class UserController {
     }
 
     @PatchMapping()
-    public ResponseEntity<> updateUserInfo(@AuthenticationPrincipal UserDTO user, @RequestBody UserDTO input) {
+    public ResponseEntity<Void> updateUserInfo(@AuthenticationPrincipal UserDTO user, @RequestBody UserDTO input) {
         user.setSignupCompleted(true);
         user.setUserTel(input.getUserTel());
         user.setNickname(input.getNickname());
         user.setUsername(input.getUsername());
         userService.updateUserInfo(user);
-        return ResponseEntity.ok();
+        return ResponseEntity.ok().build();
     }
 
 }
