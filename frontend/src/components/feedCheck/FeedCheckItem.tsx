@@ -1,3 +1,4 @@
+import { formatTimeAgo } from "@/utils/date";
 import { CheckInLog } from "../challengeDetail/ChallengeFeed";
 import CheckStatus from "../common/CheckStatus";
 
@@ -25,7 +26,7 @@ function FeedCheckItem({ log, onClick }: MateFeedItemProps) {
           </div>
           <div className="flex justify-between gap-4 text-sm">
             <div className="text-gray-500">{log.user_id}</div>
-            <div className="text-gray-500">{log.created_at}</div>
+            <div className="text-gray-500">{formatTimeAgo(log.created_at)}</div>
           </div>
         </div>
       </a>
