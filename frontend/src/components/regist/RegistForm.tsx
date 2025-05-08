@@ -11,7 +11,6 @@ function RegistForm() {
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [tel, setTel] = useState("");
-  const { connect } = useSocketStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +32,6 @@ function RegistForm() {
         },
       )
       .then((_) => {
-        connect();
         navigate("/");
       })
       .catch((err) => {
