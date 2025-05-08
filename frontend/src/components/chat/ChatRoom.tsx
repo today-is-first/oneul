@@ -4,7 +4,7 @@ import ChatMessageList from "./ChatMessageList";
 
 function ChatRoom() {
   return (
-    <div className="bg-background flex min-h-screen select-none flex-col">
+    <div className="bg-black-chat flex min-h-screen select-none flex-col border-r border-gray-700">
       <ChatHeader />
       <ChatMessageList />
       <ChatInput />
