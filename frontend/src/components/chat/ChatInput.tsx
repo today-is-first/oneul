@@ -1,12 +1,21 @@
 import { useState } from "react";
+import { useSocketStore } from "@stores/socketStore";
 
 function ChatInput() {
   const [message, setMessage] = useState("");
+  const { sendMessage } = useSocketStore();
 
   const handleSend = () => {
     if (message.trim()) {
-      console.log("보낸 메시지:", message);
+      sendMessage(message);
       setMessage("");
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
     }
   };
 
@@ -16,6 +25,7 @@ function ChatInput() {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyPress}
         placeholder="메시지를 입력하세요"
         className="focus:ring-point flex-1 rounded-full bg-[#2A2A2D] px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2"
       />

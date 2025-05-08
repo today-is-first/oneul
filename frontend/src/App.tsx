@@ -8,10 +8,20 @@ import ChallengeDetailPage from "@components/challengeDetail/ChallengeDetailPage
 import OAuthRedirectPage from "@components/login/OAuthRedirectPage";
 import { useEffect } from "react";
 import { useUserStore } from "@stores/userStore";
+import { useSocketStore } from "./stores/socketStore";
 
 function App() {
+  const { connect, disconnect } = useSocketStore();
   useEffect(() => {
     useUserStore.getState().initializeFromToken();
+  }, []);
+
+  useEffect(() => {
+    connect();
+
+    return () => {
+      disconnect();
+    };
   }, []);
 
   return (
