@@ -20,8 +20,26 @@
 
     <!-- INSERT -->
     <insert id="createFeed" parameterType="map">
-        INSERT INTO feed (user_id, challenge_id, image_url, content, like_count, created_at, check_status, checked_at)
-        VALUES (#{userId}, #{challengeId}, #{imageUrl}, #{content}, #{likeCount}, #{createdAt}, #{checkStatus}, #{checkedAt})
+        INSERT INTO feed (
+            user_id,
+            challenge_id,
+            image_url,
+            content,
+            like_count,
+            created_at,
+            check_status,
+            checked_at
+        )
+        VALUES (
+            #{feedDTO.userId},
+            #{challengeId},
+            #{feedDTO.imageUrl},
+            #{feedDTO.content},
+            #{feedDTO.likeCount},
+            #{feedDTO.createdAt},
+            #{feedDTO.checkStatus},
+            #{feedDTO.checkedAt}
+        )
     </insert>
 
     <!-- UPDATE -->

@@ -17,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.feed.dto.FeedDTO;
 import store.oneul.mvc.feed.dto.FeedEvaluationRequest;
 import store.oneul.mvc.feed.service.FeedService;
+import store.oneul.mvc.user.dto.UserDTO;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @RestController
 @RequestMapping("api/challenges/{challengeId}/feeds")
@@ -35,9 +38,15 @@ public class FeedController {
     }
 
     @PostMapping
-    public ResponseEntity<FeedDTO> createFeed(@PathVariable Long challengeId, @RequestBody FeedDTO feedDTO) {
+    public ResponseEntity<Void> createFeed(
+            @PathVariable Long challengeId,
+            @RequestBody FeedDTO feedDTO,
+            @AuthenticationPrincipal UserDTO user
+    ) {
+        feedDTO.setChallengeId(challengeId);
+        feedDTO.setUserId(user.getUserId());
         feedService.createFeed(challengeId, feedDTO);
-        return ResponseEntity.ok(feedDTO);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping
