@@ -14,8 +14,6 @@ function App() {
     useUserStore.getState().initializeFromToken();
   }, []);
 
-  console.log(useUserStore.getState().user);
-
   return (
     <div className="h-full w-full">
       <Routes>
