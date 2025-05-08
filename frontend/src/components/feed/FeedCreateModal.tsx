@@ -62,12 +62,26 @@ function FeedCreateModal({
       )
       .then((res) => {
         const { presignedUrl, objectKey } = res.data;
-        console.log(presignedUrl, objectKey);
-        axios.put(presignedUrl, image, {
-          headers: {
-            "Content-Type": image.type,
-          },
-        });
+        axios
+          .put(presignedUrl, image, {
+            headers: {
+              "Content-Type": image.type,
+            },
+          })
+          .then(() => {
+            axios.post(
+              "http://localhost:8080/api/feeds",
+              {
+                //TODO : 챌린지 아이디 변경하기
+                challengeId: 1,
+                content: content,
+                imageUrl: objectKey,
+              },
+              {
+                headers: { Authorization: `Bearer ${accessToken}` },
+              },
+            );
+          });
       });
 
     // 등록 완료 후 초기화 + 모달 닫기
