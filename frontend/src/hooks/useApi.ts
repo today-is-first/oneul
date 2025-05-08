@@ -1,3 +1,4 @@
+import { useUserStore } from "@/stores/userStore";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const api = axios.create({
@@ -7,9 +8,9 @@ export const api = axios.create({
 
 // 요청 인터셉터 (토큰 자동 주입)
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken"); // 또는 recoil, zustand 등
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const accessToken = useUserStore.getState().accessToken;
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
