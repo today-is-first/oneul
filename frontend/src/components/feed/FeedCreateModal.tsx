@@ -69,11 +69,10 @@ function FeedCreateModal({
             },
           })
           .then(() => {
+            //TODO : 챌린지 아이디 변경하기
             axios.post(
-              "http://localhost:8080/api/feeds",
+              "http://localhost:8080/api/challenges/1/feeds",
               {
-                //TODO : 챌린지 아이디 변경하기
-                challengeId: 1,
                 content: content,
                 imageUrl: objectKey,
               },
