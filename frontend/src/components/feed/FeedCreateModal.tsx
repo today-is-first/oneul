@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-
+import { useUserStore } from "@/stores/userStore";
 function FeedCreateModal({
   isOpen,
   onClose,
@@ -43,13 +43,23 @@ function FeedCreateModal({
       alert("이미지와 내용을 모두 입력해주세요.");
       return;
     }
-
+    const accessToken = useUserStore.getState().accessToken;
+    console.log(accessToken);
     // API 요청 보내는 부분 (여기 추가)
     axios
-      .post("http://localhost:8080/api/feeds/presigned-url", {
-        filename: image.name,
-        contentType: image.type,
-      })
+      .post(
+        "http://localhost:8080/api/upload/presigned-url",
+        {
+          filename: image.name,
+          contentType: image.type,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        },
+      )
       .then((res) => {
         const { presignedUrl, objectKey } = res.data;
         console.log(presignedUrl, objectKey);
