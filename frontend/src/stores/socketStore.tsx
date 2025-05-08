@@ -20,7 +20,7 @@ export const useSocketStore = create<SocketState>((set) => ({
       console.error("Access token is not available");
       return;
     }
-    socket.auth = {
+    socket.io.opts.query = {
       token: `Bearer ${accessToken}`,
     };
     socket.connect();
