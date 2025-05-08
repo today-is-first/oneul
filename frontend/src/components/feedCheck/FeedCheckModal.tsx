@@ -1,42 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-
-interface Feed {
-  id: number;
-  image_url: string;
-  content: string;
-  like_count: number;
-  created_at: string;
-  checkStatus: "PENDING" | "APPROVED" | "REJECTED";
-  user: {
-    nickname: string;
-  };
-}
+import { CheckInLog } from "../challengeDetail/ChallengeFeed";
 
 function FeedCheckModal({
   isOpen,
   onClose,
-  feed,
+  log,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  feed: Feed;
+  log: CheckInLog;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<Feed["checkStatus"]>(
-    feed.checkStatus,
-  );
+  const [selectedStatus, setSelectedStatus] = useState<
+    CheckInLog["check_status"]
+  >(log.check_status);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
-      setSelectedStatus(feed.checkStatus);
+      setSelectedStatus(log.check_status);
       setTimeout(() => setShowAnimation(true), 10);
     } else {
       setShowAnimation(false);
     }
-  }, [isOpen, feed.checkStatus]);
+  }, [isOpen, log.check_status]);
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -92,7 +81,7 @@ function FeedCheckModal({
       >
         {/* 헤더 */}
         <div className="flex items-center justify-between">
-          <span className="font-bold">{feed.user.nickname}</span>
+          <span className="font-bold">{log.user_id}</span>
           <button
             onClick={onClose}
             className="cursor-pointer text-gray-400 hover:text-gray-200"
@@ -103,16 +92,16 @@ function FeedCheckModal({
 
         {/* 이미지 & 내용 */}
         <div className="max-h-[400px] overflow-y-auto">
-          {feed.image_url && (
+          {log.image_url && (
             <img
-              src={feed.image_url}
+              src={log.image_url}
               alt="Feed"
               className="mb-4 h-64 w-full rounded-lg object-cover"
             />
           )}
-          <p className="mb-4 whitespace-normal break-words">{feed.content}</p>
+          <p className="mb-4 whitespace-normal break-words">{log.content}</p>
           <span className="text-sm text-gray-400">
-            {formatTimeAgo(feed.created_at)}
+            {formatTimeAgo(log.created_at)}
           </span>
         </div>
 
@@ -121,7 +110,7 @@ function FeedCheckModal({
           <select
             value={selectedStatus}
             onChange={(e) =>
-              setSelectedStatus(e.target.value as Feed["checkStatus"])
+              setSelectedStatus(e.target.value as CheckInLog["check_status"])
             }
             className="focus:border-point w-32 rounded-lg border border-gray-700 bg-[#2A2A2D] px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none"
           >

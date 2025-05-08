@@ -17,7 +17,7 @@ const textContent: Record<BadgeProps["type"], string> = {
 function CheckStatus({ type }: BadgeProps) {
   return (
     <span
-      className={`inline-flex rounded-md px-2 py-1 align-baseline text-xs font-medium ${badgeStyles[type]}`}
+      className={`inline-flex rounded-md px-2 py-1 align-baseline text-xs font-semibold ${badgeStyles[type]}`}
     >
       {textContent[type]}
     </span>

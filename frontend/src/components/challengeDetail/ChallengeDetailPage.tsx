@@ -6,9 +6,9 @@ import ChallengeStatus from "./ChallengeStatus";
 import FeedCheckTab from "../feedCheck/FeedCheckTab";
 
 const mockData = {
-  room_id: 1,
   name: "득근합시다",
   owner_id: 33,
+  owner_nickname: "이찬",
   category_id: 1,
   description: "하루에 30분씩 무산소 근력 운동 하기",
   total_day: 56,
@@ -19,6 +19,9 @@ const mockData = {
   start_date: "2025-03-22", // DATE
   end_date: "2025-05-23", // DATE
   created_at: "2025-03-12 14:30:00", // DATETIME
+  success_day: 3,
+  challenge_id: 1,
+  entry_fee: 1000,
 };
 
 function ChallengeDetailPage() {
@@ -74,7 +77,11 @@ function ChallengeDetailPage() {
           <ChallengeFeed />
           <div className="min-w-sm flex flex-col gap-8">
             <ChallengeDetail data={mockData} />
-            <ChallengeStatus />
+            <ChallengeStatus
+              success={mockData.success_day}
+              goal={mockData.goal_day}
+              endDate={mockData.end_date}
+            />
           </div>
         </div>
 

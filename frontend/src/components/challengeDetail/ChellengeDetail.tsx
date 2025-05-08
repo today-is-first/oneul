@@ -2,19 +2,21 @@ import Badge from "@/components/common/Badge";
 
 interface ChallengeDetailProps {
   data: {
-    room_id: number;
+    challenge_id: number;
     name: string;
     owner_id: number;
+    owner_nickname: string;
     category_id: number;
-    description: string;
-    total_day: number;
-    goal_day: number;
-    is_challenge: boolean;
-    is_public: boolean;
-    room_password: string | null;
+    description: string; // 챌린지 목표 설명
+    entry_fee: number;
     start_date: string; // "2025-03-22"
     end_date: string; // "2025-05-23"
-    created_at: string; // "2025-03-12 14:30:00"
+    goal_day: number; // 목표 달성 일수
+    total_day: number; // 전체 챌린지 일수
+    success_day: number; // 현재까지 성공한 일수
+    is_challenge: boolean;
+    is_public: boolean;
+    created_at: string;
   };
 }
 
@@ -29,14 +31,44 @@ function calculateSuccessRate(goalDay: number, totalDay: number): number {
 }
 
 function ChallengeDetail({ data }: ChallengeDetailProps) {
+  const {
+    start_date,
+    end_date,
+    description,
+    goal_day,
+    total_day,
+    is_challenge,
+    owner_nickname,
+    name,
+  } = data;
   return (
     <section className="flex flex-col gap-8 rounded-2xl border border-[#2d2d2d] bg-[#1A1A1F] px-8 py-9">
       {/* 상단 뱃지 + 제목 */}
       <div className="flex items-center gap-2">
-        <Badge type={data.is_challenge ? "challenge" : "normal"}>
-          {data.is_challenge ? "챌린지" : "일반"}
+        <Badge type={is_challenge ? "challenge" : "normal"}>
+          {is_challenge ? "챌린지" : "일반"}
         </Badge>
-        <h3 className="mt-1 text-xl font-bold text-gray-200">{data.name}</h3>
+        <div className="mt-1 flex items-center gap-2">
+          <h3 className="text-xl font-bold text-gray-200">{name}</h3>
+          <button
+            onClick={() => {
+              /** TODO: 모달 등록 */
+            }}
+            className="flex cursor-pointer items-center p-1 text-gray-500 hover:text-gray-200"
+            aria-label="인원수 보기"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="20px"
+              viewBox="0 -960 960 960"
+              width="20px"
+              fill="currentColor"
+            >
+              <path d="M96-192v-92q0-25.78 12.5-47.39T143-366q54-32 114.5-49T384-432q66 0 126.5 17T625-366q22 13 34.5 34.61T672-284v92H96Zm648 0v-92q0-42-19.5-78T672-421q39 8 75.5 21.5T817-366q22 13 34.5 34.67Q864-309.65 864-284v92H744ZM384-480q-60 0-102-42t-42-102q0-60 42-102t102-42q60 0 102 42t42 102q0 60-42 102t-102 42Zm336-144q0 60-42 102t-102 42q-8 0-15-.5t-15-2.5q25-29 39.5-64.5T600-624q0-41-14.5-76.5T546-765q8-2 15-2.5t15-.5q60 0 102 42t42 102ZM168-264h432v-20q0-6.47-3.03-11.76-3.02-5.3-7.97-8.24-47-27-99-41.5T384-360q-54 0-106 14t-99 42q-4.95 2.83-7.98 7.91-3.02 5.09-3.02 12V-264Zm216.21-288Q414-552 435-573.21t21-51Q456-654 434.79-675t-51-21Q354-696 333-674.79t-21 51Q312-594 333.21-573t51 21ZM384-264Zm0-360Z" />
+            </svg>
+            <span>{4}</span>
+          </button>
+        </div>
       </div>
 
       {/* 세부 정보 */}
@@ -45,29 +77,29 @@ function ChallengeDetail({ data }: ChallengeDetailProps) {
         <div className="flex flex-col gap-1 text-base">
           <span className="font-medium text-gray-300">챌린지 기간</span>
           <span className="leading-relaxed text-gray-400">
-            {formatDate(data.start_date)} ~ {formatDate(data.end_date)}
+            {formatDate(start_date)} ~ {formatDate(end_date)}
           </span>
         </div>
 
         {/* 매니저 정보 */}
         <div className="flex flex-col gap-1 text-base">
           <span className="font-medium text-gray-300">챌린지 매니저</span>
-          <span className="leading-relaxed text-gray-400">{data.owner_id}</span>
+          <span className="leading-relaxed text-gray-400">
+            {owner_nickname}
+          </span>
         </div>
 
         {/* 설명 */}
         <div className="flex flex-col gap-1 text-base">
           <span className="font-medium text-gray-300">챌린지 목표</span>
-          <span className="leading-relaxed text-gray-400">
-            {data.description}
-          </span>
+          <span className="leading-relaxed text-gray-400">{description}</span>
         </div>
 
         {/* 목표 달성률 */}
         <div className="flex flex-col gap-1 text-base">
           <span className="font-medium text-gray-300">목표 달성률</span>
           <span className="leading-relaxed text-gray-400">
-            {calculateSuccessRate(data.goal_day, data.total_day)}% 이상
+            {calculateSuccessRate(goal_day, total_day)}% 이상
           </span>
         </div>
       </div>

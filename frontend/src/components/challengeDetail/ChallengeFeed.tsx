@@ -4,14 +4,17 @@ import MyFeedCard from "../feed/MyFeedCard";
 import FeedDetailModal from "@/components/feed/FeedDetailModal";
 import FeedCreateModal from "@/components/feed/FeedCreateModal";
 import FeedUpdateModal from "../feed/FeedUpdateModal";
+import { useUserStore } from "@/stores/userStore";
 export interface CheckInLog {
   id: number;
-  userId: number;
-  imageUrl: string;
-  challengeId: number;
+  user_id: number;
+  challenge_id: number;
+  image_url: string;
   content: string;
-  likeCount: number;
-  date: string; // YYYY-MM-DD
+  like_count: number;
+  created_at: string; // ISO 8601 형식 문자열 (예: "2025-05-07T12:34:56.000Z")
+  check_status: "PENDING" | "APPROVED" | "REJECTED";
+  checked_at: string | null; // 검수 전이면 null일 수 있음
 }
 
 type ModalState =
@@ -20,8 +23,59 @@ type ModalState =
   | { kind: "detail"; log: CheckInLog }
   | null;
 
+// mock data
+const myCheckInLog: CheckInLog = {
+  id: 1001,
+  user_id: 1,
+  challenge_id: 10,
+  image_url: "https://picsum.photos/seed/1/400/400",
+  content: "오늘은 등운동을 했습니다! 💪",
+  like_count: 3,
+  created_at: "2025-05-07T08:30:00.000Z",
+  check_status: "APPROVED",
+  checked_at: "2025-05-07T10:00:00.000Z",
+};
+
+const checkInLogs: CheckInLog[] = [
+  {
+    id: 1001,
+    user_id: 1,
+    challenge_id: 10,
+    image_url: "https://picsum.photos/seed/1/400/400",
+    content: "오늘은 등운동을 했습니다! 💪",
+    like_count: 3,
+    created_at: "2025-05-07T08:30:00.000Z",
+    check_status: "APPROVED",
+    checked_at: "2025-05-07T10:00:00.000Z",
+  },
+  {
+    id: 1002,
+    user_id: 2,
+    challenge_id: 10,
+    image_url: "https://picsum.photos/seed/3/400/400",
+    content: "아침 러닝 완료했습니다 🏃",
+    like_count: 5,
+    created_at: "2025-05-07T07:50:00.000Z",
+    check_status: "APPROVED",
+    checked_at: "2025-05-07T09:00:00.000Z",
+  },
+  {
+    id: 1003,
+    user_id: 3,
+    challenge_id: 10,
+    image_url: "https://picsum.photos/seed/4/400/400",
+    content: "헬스장 가는 길 인증 ✌️",
+    like_count: 2,
+    created_at: "2025-05-07T08:10:00.000Z",
+    check_status: "PENDING",
+    checked_at: null,
+  },
+];
+
 function ChallengeFeed() {
   const [modalState, setModalState] = useState<ModalState>(null);
+
+  // const { user } = useUserStore();
 
   const openCreate = () => setModalState({ kind: "create" });
   const openEdit = (log: CheckInLog) => setModalState({ kind: "edit", log });
@@ -29,99 +83,13 @@ function ChallengeFeed() {
     setModalState({ kind: "detail", log });
   const closeAll = () => setModalState(null);
 
-  const mockLog = {
-    id: 1,
-    userId: 22,
-    imageUrl:
-      "https://moneystory-phinf.pstatic.net/MjAyNTA0MzBfMTc4/MDAxNzQ1OTk5ODQ3NDEy.KFSsu5btM2b85Fbh5L19eRjuAJfHjEJK1Y6L92BOCW0g.-Kgt-2Za_nS5gvnyHdAN4BytLPsrGod77at3LzLcbRog.JPEG/4.30.1.jpeg",
-    challengeId: 33,
-    content:
-      "test message nnnnnnnnnnnnnnnnnnnnnnnnnnasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
-    likeCount: 0,
-    date: "2025-05-01",
-  };
-  const logs: CheckInLog[] = [
-    {
-      id: 1,
-      userId: 201,
-      imageUrl: "https://picsum.photos/seed/1/200/200",
-      challengeId: 5,
-      content: "오운완입니다~^^ 오늘도 화이팅!",
-      likeCount: 3,
-      date: "2025-05-01",
-    },
-    {
-      id: 2,
-      userId: 202,
-      imageUrl: "https://picsum.photos/seed/2/200/200",
-      challengeId: 5,
-      content: "스포애니에서 쇠질완료~ 뿌듯하네요 💪",
-      likeCount: 5,
-      date: "2025-05-01",
-    },
-    {
-      id: 3,
-      userId: 203,
-      imageUrl: "https://picsum.photos/seed/3/200/200",
-      challengeId: 5,
-      content: "운동하다 회전근개 파열… 다들 조심하세요 😭",
-      likeCount: 1,
-      date: "2025-05-01",
-    },
-    {
-      id: 4,
-      userId: 204,
-      imageUrl: "https://picsum.photos/seed/4/200/200",
-      challengeId: 5,
-      content: "인증합니다 💪🔥",
-      likeCount: 0,
-      date: "2025-05-01",
-    },
-    {
-      id: 5,
-      userId: 205,
-      imageUrl: "https://picsum.photos/seed/5/200/200",
-      challengeId: 5,
-      content: "아침 조깅 5km 달렸어요!",
-      likeCount: 4,
-      date: "2025-05-01",
-    },
-    {
-      id: 6,
-      userId: 206,
-      imageUrl: "https://picsum.photos/seed/6/200/200",
-      challengeId: 5,
-      content: "홈트 30분 끝~ 땀 뻘뻘",
-      likeCount: 2,
-      date: "2025-05-01",
-    },
-    {
-      id: 7,
-      userId: 207,
-      imageUrl: "https://picsum.photos/seed/7/200/200",
-      challengeId: 5,
-      content: "오늘은 스트레칭 위주로!",
-      likeCount: 1,
-      date: "2025-05-01",
-    },
-    {
-      id: 8,
-      userId: 208,
-      imageUrl: "https://picsum.photos/seed/8/200/200",
-      challengeId: 5,
-      content: "요가 20분 인증합니다🧘‍♀️",
-      likeCount: 6,
-      date: "2025-05-01",
-    },
-  ];
-
   return (
     <section className="flex w-full flex-col gap-3 rounded-2xl border border-[#2d2d2d] bg-[#1A1A1F] px-8 py-9">
       <h2 className="mb-3 text-xl font-semibold text-gray-200">챌린지 피드</h2>
       <div className="flex gap-6">
         <div className="flex-1">
           <MyFeedCard
-            log={mockLog}
+            log={myCheckInLog}
             onCreate={openCreate}
             onEdit={openEdit}
             onDetail={openDetail}
@@ -132,7 +100,7 @@ function ChallengeFeed() {
           <h2 className="mb-3 text-base font-semibold text-gray-300">
             챌린지 메이트 인증 현황
           </h2>
-          <MateFeedList logs={logs} onItemClick={openDetail} />
+          <MateFeedList logs={checkInLogs} onItemClick={openDetail} />
         </div>
       </div>
 
@@ -142,22 +110,11 @@ function ChallengeFeed() {
       )}
 
       {modalState?.kind === "edit" && (
-        <FeedUpdateModal isOpen onClose={closeAll} initialData={mockLog} />
+        <FeedUpdateModal isOpen onClose={closeAll} initialData={myCheckInLog} />
       )}
 
       {modalState?.kind === "detail" && (
-        <FeedDetailModal
-          isOpen
-          onClose={closeAll}
-          feed={{
-            id: modalState.log.id,
-            image_url: modalState.log.imageUrl,
-            content: modalState.log.content,
-            like_count: modalState.log.likeCount,
-            created_at: modalState.log.date,
-            user: { nickname: `User ${modalState.log.userId}` },
-          }}
-        />
+        <FeedDetailModal isOpen onClose={closeAll} feed={modalState.log} />
       )}
     </section>
   );
