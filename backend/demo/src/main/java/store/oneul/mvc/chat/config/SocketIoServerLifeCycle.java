@@ -1,4 +1,4 @@
-package store.oneul.mvc.config.chat;
+package store.oneul.mvc.chat.config;
 
 import org.springframework.stereotype.Component;
 
