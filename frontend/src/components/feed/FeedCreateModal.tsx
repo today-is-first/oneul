@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 
 function FeedCreateModal({
@@ -44,8 +45,15 @@ function FeedCreateModal({
     }
 
     // API 요청 보내는 부분 (여기 추가)
-    console.log("이미지:", image);
-    console.log("내용:", content);
+    axios
+      .post("http://localhost:8080/api/feeds/presigned-url", {
+        filename: image.name,
+        contentType: image.type,
+      })
+      .then((res) => {
+        const { presignedUrl, objectKey } = res.data;
+        console.log(presignedUrl, objectKey);
+      });
 
     // 등록 완료 후 초기화 + 모달 닫기
     setImage(null);
