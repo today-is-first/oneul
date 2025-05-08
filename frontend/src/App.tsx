@@ -30,6 +30,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<RegistPage />} />
+        <Route
+          path="/challenge/:challengeId"
+          element={<ChallengeDetailPage />}
+        />
         <Route path="/challenge/create" element={<ChallengeCreatePage />} />
         <Route path="/challenge/detail" element={<ChallengeDetailPage />} />
         <Route path="/oauth/redirect" element={<OAuthRedirectPage />} />
