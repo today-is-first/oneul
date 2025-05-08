@@ -4,6 +4,7 @@ import NavBar from "@components/common/NavBar";
 import LoginBtn from "@components/common/LoginBtn";
 import GoToChallengeCreateButton from "@components/challengeCreate/GoToChallengeCreateButton";
 import FeedCreateBtn from "@/components/feed/FeedCreateBtn";
+import ChallengeList from "../challenge/challengeList";
 
 function Home() {
   return (
@@ -14,6 +15,9 @@ function Home() {
       </div>
       <div className="flex flex-col items-center justify-center">
         <FeedCreateBtn />
+      </div>
+      <div>
+        <ChallengeList />
       </div>
     </div>
   );
