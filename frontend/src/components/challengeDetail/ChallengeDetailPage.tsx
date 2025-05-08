@@ -4,6 +4,7 @@ import ChallengeFeed from "./ChallengeFeed";
 import ChallengeDetail from "./ChellengeDetail";
 import ChallengeStatus from "./ChallengeStatus";
 import FeedCheckTab from "../feedCheck/FeedCheckTab";
+import { useParams } from "react-router";
 
 const mockData = {
   name: "득근합시다",
@@ -29,6 +30,8 @@ function ChallengeDetailPage() {
   const [isCheckOpen, setIsCheckOpen] = useState(false); // 체크탭 상태
   const chatRef = useRef<HTMLDivElement>(null);
   const checkRef = useRef<HTMLDivElement>(null); // 체크탭 r
+
+  const { challengeId } = useParams();
 
   // 둘 중 하나만 열리게 함
   const toggleChat = () => {
@@ -71,7 +74,7 @@ function ChallengeDetailPage() {
       {/* 챌린지 상세 정보 영역 */}
       <section className="flex flex-col items-center justify-center px-6 py-12">
         <h1 className="mb-6 text-2xl font-bold text-white">
-          챌린지 상세 페이지
+          챌린지 상세 페이지 - {challengeId}
         </h1>
         <div className="w-7xl mx-auto flex gap-6 text-white">
           <ChallengeFeed />
