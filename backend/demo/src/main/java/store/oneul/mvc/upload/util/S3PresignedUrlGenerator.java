@@ -25,18 +25,22 @@ public class S3PresignedUrlGenerator {
         String extension = filename.substring(filename.lastIndexOf('.'));
         String objectKey = "uploads/" + uuid + extension;
 
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(awsProperties.getBucketName())
-                .key(objectKey)
-                .contentType(contentType)
-                .build();
+        try{
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(awsProperties.getBucketName())
+                    .key(objectKey)
+                    .contentType(contentType)
+                    .build();
 
-        PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
-                .signatureDuration(signatureDuration)
-                .putObjectRequest(putObjectRequest)
-                .build();
+            PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
+                    .signatureDuration(signatureDuration)
+                    .putObjectRequest(putObjectRequest)
+                    .build();
 
-        URL presignedUrl = presigner.presignPutObject(presignRequest).url();
-        return new PresignedUrlResponse(presignedUrl.toString(), objectKey);
+            URL presignedUrl = presigner.presignPutObject(presignRequest).url();
+           return new PresignedUrlResponse(presignedUrl.toString(), objectKey);
+        } catch (Exception e) {
+            throw new ImageUploadException("이미지 업로드 실패: " + e.getMessage(), e);
+        }
     }
 }
