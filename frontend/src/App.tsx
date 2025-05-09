@@ -26,7 +26,7 @@ function App() {
   }, []);
 
   return (
-    <div className="h-full w-full">
+    <div className="bg-background h-full w-full">
       <Routes>
         {/* MainLayout이 필요한 라우트들 */}
         <Route element={<MainLayout />}>
@@ -35,13 +35,13 @@ function App() {
             path="/challenge/:challengeId"
             element={<ChallengeDetailPage />}
           />
-          <Route path="/challenge/create" element={<ChallengeCreatePage />} />
           <Route path="/challenge/detail" element={<ChallengeDetailPage />} />
         </Route>
 
         {/* MainLayout이 필요없는 라우트들 */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<RegistPage />} />
+        <Route path="/challenge/create" element={<ChallengeCreatePage />} />
         <Route path="/oauth/redirect" element={<OAuthRedirectPage />} />
       </Routes>
     </div>

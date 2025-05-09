@@ -5,16 +5,15 @@ import NavBar from "@components/common/NavBar";
 import LoginBtn from "@components/common/LoginBtn";
 
 function ChallengeCreatePage() {
-    return (
-      <div className="min-h-screen flex flex-col items-center bg-gradient-to-bl from-[#21414F] via-[#10212b] to-[#17171C] select-none">
-        <Header left={<Logo />} center={<NavBar />} right={<LoginBtn />} />
-  
-        <div className="flex flex-1 w-full items-center justify-center">
-          <ChallengeRoomForm />
-        </div>
+  return (
+    <div className="flex min-h-screen select-none flex-col items-center bg-gradient-to-bl from-[#21414F] via-[#10212b] to-[#17171C]">
+      <Header left={<Logo />} center={<NavBar />} right={<LoginBtn />} />
+
+      <div className="flex w-full flex-1 items-center justify-center">
+        <ChallengeRoomForm />
       </div>
-    );
-  }
-  
-  export default ChallengeCreatePage;
-  
+    </div>
+  );
+}
+
+export default ChallengeCreatePage;
