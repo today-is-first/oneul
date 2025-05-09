@@ -9,5 +9,4 @@ public interface UserDAO {
     void insertUser(UserDTO user);
     void updateUserInfo(UserDTO user); // 닉네임, 전화번호 입력용
     UserDTO findById(Long userId);
-
 }

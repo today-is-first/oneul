@@ -16,12 +16,12 @@ import java.util.Map;
 public class UploadController {
     private final S3PresignedUrlGenerator s3PresignedUrlGenerator;
 
-@PostMapping("/presigned-url")
-public PresignedUrlResponse getPresignedUrl(@RequestBody Map<String, String> request) {   
-    return s3PresignedUrlGenerator.generatePresignedUrl(
-        request.get("filename"), 
-        request.get("contentType")
-    );
-}
+    @PostMapping("/presigned-url")
+    public PresignedUrlResponse getPresignedUrl(@RequestBody Map<String, String> request) {   
+        return s3PresignedUrlGenerator.generatePresignedUrl(
+            request.get("filename"), 
+            request.get("contentType")
+        );
+    }
 }
 

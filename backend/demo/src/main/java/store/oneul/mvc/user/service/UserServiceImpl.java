@@ -1,16 +1,16 @@
 package store.oneul.mvc.user.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.user.dao.UserDAO;
 import store.oneul.mvc.user.dto.UserDTO;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
-    @Autowired
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
 
     @Override
     public boolean existsByEmail(String email) {
