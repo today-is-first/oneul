@@ -104,7 +104,7 @@ function SideBar() {
       </div>
 
       {/* 채팅창 바깥 클릭 감지를 위한 오버레이 */}
-      {isChatOpen && (
+      {(isChatOpen || isCheckOpen) && (
         <div className="fixed inset-0 z-30" onClick={handleBackgroundClick} />
       )}
 
