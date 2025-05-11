@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.util.UUID;
 import store.oneul.mvc.upload.config.AwsProperties;
 import store.oneul.mvc.upload.dto.PresignedUrlResponse;
+import store.oneul.mvc.upload.exception.ImageUploadException;
 
 @Component
 @Data
