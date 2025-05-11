@@ -17,7 +17,7 @@ function RegistForm() {
     const accessToken = useUserStore.getState().accessToken;
     await axios
       .patch(
-        "http://localhost:8080/api/users",
+        `${import.meta.env.VITE_API_URL}/users`,
         {
           username: name,
           email: email,
