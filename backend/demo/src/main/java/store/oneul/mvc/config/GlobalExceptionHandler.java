@@ -6,6 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import store.oneul.mvc.user.exception.UserNotFoundException;
+import store.oneul.mvc.upload.exception.ImageUploadException;   
+import store.oneul.mvc.common.exception.InvalidParameterException;
+import store.oneul.mvc.user.exception.DuplicateEmailException;
+
+
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)

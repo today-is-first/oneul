@@ -11,6 +11,8 @@ import java.time.Duration;
 import java.util.UUID;
 import store.oneul.mvc.upload.config.AwsProperties;
 import store.oneul.mvc.upload.dto.PresignedUrlResponse;
+import store.oneul.mvc.upload.exception.ImageUploadException;
+import store.oneul.mvc.common.exception.InvalidParameterException;
 
 @Component
 @Data
@@ -41,6 +43,12 @@ public class S3PresignedUrlGenerator {
            return new PresignedUrlResponse(presignedUrl.toString(), objectKey);
         } catch (Exception e) {
             throw new ImageUploadException("이미지 업로드 실패: " + e.getMessage(), e);
+        }
+    }
+
+    private void validateFilename(String filename) {
+        if (filename == null || filename.isEmpty()) {
+            throw new InvalidParameterException("파일명이 없습니다.");
         }
     }
 }
