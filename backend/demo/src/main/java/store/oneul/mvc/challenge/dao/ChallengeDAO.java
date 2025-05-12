@@ -10,7 +10,7 @@ import store.oneul.mvc.challenge.dto.ChallengeDTO;
 @Mapper
 public interface ChallengeDAO {
 
-	ChallengeDTO getChallenge(Map<String, Object> paramMap);
+    ChallengeDTO getChallenge(Map<String, Object> paramMap);
 
     List<ChallengeDTO> getChallenges();
 
@@ -19,4 +19,6 @@ public interface ChallengeDAO {
     void updateChallenge(ChallengeDTO challengeDTO);
 
     void deleteChallenge(Long challengeId);
+
+    List<ChallengeDTO> getSubscribedChallenges(Long userId);
 }

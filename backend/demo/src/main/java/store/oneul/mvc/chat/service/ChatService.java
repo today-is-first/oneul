@@ -1,14 +1,17 @@
 package store.oneul.mvc.chat.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
+
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import lombok.extern.slf4j.Slf4j;
-import store.oneul.mvc.chat.dto.ChatMessage;
 import com.corundumstudio.socketio.annotation.OnEvent;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import store.oneul.mvc.chat.dao.ChatDAO;
-import java.util.List;
+import store.oneul.mvc.chat.dto.ChatMessage;
 
 @Component
 @RequiredArgsConstructor
@@ -20,20 +23,15 @@ public class ChatService {
 
     @OnEvent("chat")
     public void onChat(SocketIOClient client, ChatMessage message) {
-        log.info("[chat] {}: {} - {}", client.getSessionId(), message.getNickname(), message.getContent());
-        chatDAO.createChat(message.getChallengeId(), message);
-        server.getRoomOperations(message.getChallengeId().toString()).sendEvent("chat", message);        
-
+        log.info("[chat] {}: {} - {}", client.getSessionId(), message.getUserId(), message.getContent());
+        server.getRoomOperations(String.valueOf(message.getChallengeId())).sendEvent("chat", message);
     }
 
     @OnEvent("messages")
     public void onMessages(SocketIOClient client) {
-        System.out.println("🔄 onMessages");
-        Long userId = (Long) client.get("userId");
-        System.out.println("🔄 userId: " + userId);
+        Long userId = client.get("userId");
         log.info("[messages] {}", userId);
-        List<ChatMessage> chats = chatDAO.getChats(userId);
-        System.out.println("🔄 chats: " + chats);
-        client.sendEvent("messages", chats);
+        List<ChatMessage> chatMessages = chatDAO.getChats(userId);
+        client.sendEvent("messages", chatMessages);
     }
 }

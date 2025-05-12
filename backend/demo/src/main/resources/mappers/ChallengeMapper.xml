@@ -81,4 +81,11 @@
         WHERE challenge_id = #{challengeId}
     </delete>
 
+    <select id="getSubscribedChallenges" parameterType="long" resultType="ChallengeDTO">
+        SELECT c.*
+        FROM challenge c
+        JOIN challenge_user cu ON c.challenge_id = cu.challenge_id
+        WHERE cu.user_id = #{userId}
+    </select>
+
 </mapper>

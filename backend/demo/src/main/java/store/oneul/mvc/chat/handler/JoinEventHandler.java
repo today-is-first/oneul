@@ -15,7 +15,7 @@ public class JoinEventHandler {
         this.roomService = roomService;
 
         server.addEventListener("join", String.class, (client, roomId, ackSender) -> {
-            this.roomService.handleJoin(client.getSessionId().toString(), roomId);
+            this.roomService.handleJoin(client);
         });
     }
 }
