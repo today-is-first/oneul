@@ -11,8 +11,6 @@ import store.oneul.mvc.upload.exception.ImageUploadException;
 import store.oneul.mvc.common.exception.InvalidParameterException;
 import store.oneul.mvc.user.exception.DuplicateEmailException;
 
-
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
