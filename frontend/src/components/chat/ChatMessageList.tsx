@@ -12,7 +12,7 @@ function ChatMessageList({ messages }: { messages: ChatMessage[] }) {
             key={index}
             nickname={message.nickname}
             content={message.content}
-            createdAt={message.createdAt ?? new Date().toISOString()}
+            createdAt={message.createdAt}
             id={message.id ?? 0}
           />
         );

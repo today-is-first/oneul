@@ -1,7 +1,7 @@
 type ChatMessage = {
   id: number | null;
   content: string;
-  createdAt: string | null;
+  createdAt: string;
   challengeId: number;
   nickname: string;
   userId: number;

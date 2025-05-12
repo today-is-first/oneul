@@ -92,24 +92,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         id: null,
         content: content,
         challengeId: challengeId,
-        createdAt: null,
+        createdAt: new Date().toISOString(),
         nickname: user.nickname,
         userId: user.id,
       };
 
-      socket.emit("chat", message); // 서버 전송
-
-      // 낙관적 UI 업데이트
-      set((state) => {
-        const prev = state.messages[challengeId] || [];
-        console.log("🔄 prev", prev);
-        return {
-          messages: {
-            ...state.messages,
-            [challengeId]: [...prev, message],
-          },
-        };
-      });
+      socket.emit("chat", message);
 
       console.log("📤 Sent:", content);
     }
