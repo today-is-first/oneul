@@ -48,6 +48,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on("chat", (data: ChatMessage) => {
       set((state) => {
         const challengeMessages = state.messages[data.challengeId] || [];
+        console.log("🔄 challengeMessages", challengeMessages);
         return {
           messages: {
             ...state.messages,
@@ -101,6 +102,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       // 낙관적 UI 업데이트
       set((state) => {
         const prev = state.messages[challengeId] || [];
+        console.log("🔄 prev", prev);
         return {
           messages: {
             ...state.messages,

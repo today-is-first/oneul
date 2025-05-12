@@ -25,6 +25,11 @@ function ChatMessageItem({
         {isMe ? "나" : nickname}
       </span>
       <div className="flex items-end gap-2">
+        {isMe && (
+          <span className="text-xs text-gray-400">
+            {formatTimeHHMM(createdAt)}
+          </span>
+        )}
         <div
           className={`max-w-[70%] rounded-2xl px-4 py-2 text-sm ${
             isMe ? "bg-point text-white" : "bg-[#2A2A2D] text-white"
@@ -32,9 +37,11 @@ function ChatMessageItem({
         >
           {content}
         </div>
-        <span className="text-xs text-gray-400">
-          {formatTimeHHMM(createdAt)}
-        </span>
+        {!isMe && (
+          <span className="text-xs text-gray-400">
+            {formatTimeHHMM(createdAt)}
+          </span>
+        )}
       </div>
     </div>
   );

@@ -2,7 +2,6 @@ import { useUserStore } from "@stores/userStore";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSocketStore } from "@stores/socketStore";
 
 function RegistForm() {
   const { user } = useUserStore();

@@ -7,14 +7,13 @@ function ChatMessageList({ messages }: { messages: ChatMessage[] }) {
     <div className="flex-1 space-y-4 overflow-y-auto px-4 py-6">
       <ChatSystemMessage message="홍길동님이 입장했습니다." />
       {messages.map((message, index) => {
-        if (message.id === null) return;
         return (
           <ChatMessageItem
             key={index}
             nickname={message.nickname}
             content={message.content}
             createdAt={message.createdAt ?? new Date().toISOString()}
-            id={message.id}
+            id={message.id ?? 0}
           />
         );
       })}
