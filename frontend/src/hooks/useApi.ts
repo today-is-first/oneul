@@ -2,7 +2,7 @@ import { useUserStore } from "@/stores/userStore";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true, // 쿠키 인증 등에 필요
 });
 

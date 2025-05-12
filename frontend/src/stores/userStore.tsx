@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 interface User {
+  id: number;
   name: string;
   email: string;
   nickname: string;
@@ -52,11 +53,13 @@ export const useUserStore = create<UserStore>((set) => ({
       const payload = parseJwt(token);
       if (payload) {
         const user: User = {
+          id: payload.userId,
           nickname: payload.userNickname,
           name: payload.userName,
           email: payload.userEmail,
           profile: payload.userProfile,
         };
+        console.log(`user: ${JSON.stringify(user, null, 2)}`);
         set({ user, accessToken: token });
       } else {
         set({ user: null, accessToken: null });

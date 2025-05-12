@@ -19,5 +19,10 @@ public class ChatEventHandler {
             System.out.println("chat event received");
             this.chatService.onChat(client, data);
         });
+
+        server.addEventListener("messages",ChatMessage.class, (client, data, ackSender) -> {
+            System.out.println("messages event received");
+            this.chatService.onMessages(client);
+        });
     }
 }

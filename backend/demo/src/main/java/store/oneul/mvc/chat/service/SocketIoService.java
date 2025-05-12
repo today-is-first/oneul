@@ -6,6 +6,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 
 @Service
 public class SocketIoService {
+
     public void onConnect(SocketIOClient client) {
         System.out.println("Connected to socket server");
     }

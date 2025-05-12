@@ -1,16 +1,14 @@
 package store.oneul.mvc.chat.service;
 
-import org.springframework.stereotype.Service;
-
+import org.springframework.stereotype.Component;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-
 import lombok.extern.slf4j.Slf4j;
 import store.oneul.mvc.chat.dto.ChatMessage;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
+import store.oneul.mvc.chat.dao.ChatDAO;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -18,13 +16,24 @@ import org.springframework.stereotype.Component;
 public class ChatService {
 
     private final SocketIOServer server;
-
+    private final ChatDAO chatDAO;
 
     @OnEvent("chat")
     public void onChat(SocketIOClient client, ChatMessage message) {
-        log.info("[chat] {}: {} - {}", client.getSessionId(), message.getSender(), message.getContent());
+        log.info("[chat] {}: {} - {}", client.getSessionId(), message.getNickname(), message.getContent());
+        chatDAO.createChat(message.getChallengeId(), message);
+        server.getRoomOperations(message.getChallengeId().toString()).sendEvent("chat", message);        
 
-        // 브로드캐스트 (원하면 sender 빼고 content만 보낼 수도 있음)
-        server.getBroadcastOperations().sendEvent("chat", message);
+    }
+
+    @OnEvent("messages")
+    public void onMessages(SocketIOClient client) {
+        System.out.println("🔄 onMessages");
+        Long userId = (Long) client.get("userId");
+        System.out.println("🔄 userId: " + userId);
+        log.info("[messages] {}", userId);
+        List<ChatMessage> chats = chatDAO.getChats(userId);
+        System.out.println("🔄 chats: " + chats);
+        client.sendEvent("messages", chats);
     }
 }
