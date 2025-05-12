@@ -20,7 +20,7 @@ function FeedUpdateModal({
 
   useEffect(() => {
     if (isOpen) {
-      setPreviewUrl(initialData.imageUrl);
+      setPreviewUrl(initialData.image_url);
       setContent(initialData.content);
       setImageFile(null);
       setTimeout(() => setShowAnimation(true), 10);
@@ -38,7 +38,7 @@ function FeedUpdateModal({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
     setImageFile(file);
-    setPreviewUrl(file ? URL.createObjectURL(file) : initialData.imageUrl);
+    setPreviewUrl(file ? URL.createObjectURL(file) : initialData.image_url);
   };
 
   const handleUpdate = async () => {
