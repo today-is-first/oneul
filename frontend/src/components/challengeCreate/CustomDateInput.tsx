@@ -1,6 +1,5 @@
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { ko } from "date-fns/locale";
 
 function CustomDateInput({
   label,
@@ -18,7 +17,6 @@ function CustomDateInput({
         selected={selectedDate}
         onChange={(date) => setSelectedDate(date)}
         dateFormat="yyyy-MM-dd"
-        locale={ko}
         placeholderText="연도-월-일"
         className="focus:ring-point w-full appearance-none rounded-lg border border-[#333] bg-[#1B1B1E] px-4 py-3 text-white focus:outline-none focus:ring-2"
         calendarClassName="!border-[#333] !rounded-xl !shadow-lg"
