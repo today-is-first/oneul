@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="store.oneul.mvc.chat.dao.ChatDAO">
+
+    <resultMap id="ChatMessageResultMap" type="store.oneul.mvc.chat.dto.ChatMessage">
+        <id property="id" column="id"/>
+        <result property="challengeId" column="challenge_id"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="nickname" column="nickname"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <insert id="createChat">
+        INSERT INTO challenge_chat (challenge_id, content, user_id)
+        VALUES (#{challengeId}, #{chatMessage.content}, #{chatMessage.userId})
+    </insert>
+
+    <update id="updateChat">
+        UPDATE challenge_chat
+        SET content = #{chatMessage.content}
+        WHERE challenge_id = #{challengeId} AND id = #{chatMessage.id}
+    </update>
+
+    <delete id="deleteChat">
+        DELETE FROM challenge_chat
+        WHERE challenge_id = #{challengeId} AND id = #{id}
+    </delete>
+
+    <select id="getChat" resultMap="ChatMessageResultMap">
+        SELECT id, challenge_id, content, created_at, user_id
+        FROM challenge_chat
+        WHERE challenge_id = #{challengeId} AND id = #{id}
+    </select>
+
+    <select id="getChats" resultMap="ChatMessageResultMap">
+        SELECT cc.id, cc.challenge_id, cc.content, cc.created_at, u.nickname
+        FROM challenge_chat cc
+        JOIN user u ON cc.user_id = u.user_id
+        WHERE cc.challenge_id IN (
+            SELECT challenge_id
+            FROM challenge_user
+            WHERE user_id = #{userId}
+        )
+        ORDER BY cc.created_at ASC;
+    </select>
+
+</mapper>

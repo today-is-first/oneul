@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useSocketStore } from "@stores/socketStore";
 
-function ChatInput() {
+function ChatInput({ challengeId }: { challengeId: number }) {
   const [message, setMessage] = useState("");
   const { sendMessage } = useSocketStore();
 
   const handleSend = () => {
     if (message.trim()) {
-      sendMessage(message);
+      sendMessage(message, challengeId);
       setMessage("");
     }
   };

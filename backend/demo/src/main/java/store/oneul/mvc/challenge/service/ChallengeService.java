@@ -15,4 +15,6 @@ public interface ChallengeService {
     public ChallengeDTO getChallenge(Map<String, Object> paramMap);
 
     public List<ChallengeDTO> getChallenges();
+
+    public List<ChallengeDTO> getSubscribedChallenges(Long userId);
 }

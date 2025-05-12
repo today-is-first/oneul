@@ -2,35 +2,32 @@ import { create } from "zustand";
 import { Socket } from "socket.io-client";
 import { socket } from "../utils/socket";
 import { useUserStore } from "./userStore";
-
-type Message = {
-  sender: string;
-  content: string;
-  isMe: boolean;
-};
+import ChatMessage from "@/types/ChatMessage";
 
 type SocketState = {
   socket: Socket;
   isConnected: boolean;
-  messages: Message[];
+  messages: Record<number, ChatMessage[]>;
   connect: () => void;
   disconnect: () => void;
-  sendMessage: (content: string) => void;
+  sendMessage: (content: string, challengeId: number) => void;
 };
 
 export const useSocketStore = create<SocketState>((set, get) => ({
   socket,
   isConnected: false,
-  messages: [],
+  messages: {},
 
   connect: () => {
     const { isConnected } = get();
     if (isConnected) return;
+
     const accessToken = useUserStore.getState().accessToken;
     if (!accessToken) {
       console.error("Access token is not available");
       return;
     }
+
     socket.io.opts.query = {
       token: `Bearer ${accessToken}`,
     };
@@ -39,6 +36,8 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on("connect", () => {
       console.log("🟢 Socket connected:", socket.id);
       set({ isConnected: true });
+      socket.emit("messages", {});
+      console.log("🔄 messages");
     });
 
     socket.on("disconnect", () => {
@@ -46,18 +45,31 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       set({ isConnected: false });
     });
 
-    // 채팅 메시지 수신
-    socket.on("chat", (data: { sender: string; content: string }) => {
-      const currentUser = useUserStore.getState().user;
-      set((state) => ({
-        messages: [
-          ...state.messages,
-          {
-            sender: data.sender,
-            content: data.content,
-            isMe: data.sender === currentUser?.name,
+    socket.on("chat", (data: ChatMessage) => {
+      set((state) => {
+        const challengeMessages = state.messages[data.challengeId] || [];
+        console.log("🔄 challengeMessages", challengeMessages);
+        return {
+          messages: {
+            ...state.messages,
+            [data.challengeId]: [...challengeMessages, data],
           },
-        ],
+        };
+      });
+    });
+
+    socket.on("messages", (history: ChatMessage[]) => {
+      console.log("🔄 messages", history);
+      const grouped: Record<number, ChatMessage[]> = {};
+      for (const msg of history) {
+        if (!grouped[msg.challengeId]) grouped[msg.challengeId] = [];
+        grouped[msg.challengeId].push(msg);
+      }
+      set((state) => ({
+        messages: {
+          ...state.messages,
+          ...grouped,
+        },
       }));
     });
   },
@@ -67,15 +79,27 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     set({ isConnected: false });
   },
 
-  sendMessage: (content: string) => {
+  sendMessage: (content: string, challengeId: number) => {
     const { socket } = get();
     const user = useUserStore.getState().user;
+    if (!user) {
+      console.error("User is not available");
+      return;
+    }
+
     if (content.trim()) {
-      socket.emit("chat", {
-        sender: user?.name || "나",
+      const message: ChatMessage = {
+        id: null,
         content: content,
-      });
-      console.log("content", content);
+        challengeId: challengeId,
+        createdAt: new Date().toISOString(),
+        nickname: user.nickname,
+        userId: user.id,
+      };
+
+      socket.emit("chat", message);
+
+      console.log("📤 Sent:", content);
     }
   },
 }));

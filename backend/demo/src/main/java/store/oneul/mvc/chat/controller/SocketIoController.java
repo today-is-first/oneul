@@ -1,9 +1,7 @@
 package store.oneul.mvc.chat.controller;
 
 import org.springframework.stereotype.Controller;
-
 import com.corundumstudio.socketio.SocketIOServer;
-
 import store.oneul.mvc.chat.service.SocketIoService;
 
 @Controller

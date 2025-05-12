@@ -1,9 +1,9 @@
 import { Outlet } from "react-router-dom";
-import SideBar from "@components/common/SideBar";
+import SideBar from "@components/sideBar/SideBar";
 import Logo from "@components/common/Logo";
 import NavBar from "@components/common/NavBar";
 import LoginBtn from "@components/common/LoginBtn";
-import Header from "@/components/common/Header";
+import Header from "@components/common/Header";
 
 function MainLayout() {
   return (
