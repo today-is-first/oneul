@@ -3,8 +3,10 @@ import MateFeedList from "../feed/MateFeedList";
 import MyFeedCard from "../feed/MyFeedCard";
 import FeedDetailModal from "@/components/feed/FeedDetailModal";
 import FeedCreateModal from "@/components/feed/FeedCreateModal";
-import FeedUpdateModal from "../feed/FeedUpdateModal";
+import FeedUpdateModal from "@/components/feed/FeedUpdateModal";
 import { useUserStore } from "@/stores/userStore";
+import FeedCreateBtn from "@/components/feed/FeedCreateBtn";
+
 export interface CheckInLog {
   id: number;
   user_id: number;
@@ -85,7 +87,12 @@ function ChallengeFeed() {
 
   return (
     <section className="flex w-full flex-col gap-3 rounded-2xl border border-[#2d2d2d] bg-[#1A1A1F] px-8 py-9">
-      <h2 className="mb-3 text-xl font-semibold text-gray-200">챌린지 피드</h2>
+      <div className="flex items-center gap-4">
+        <span className="text-center text-xl font-semibold text-gray-200">
+          챌린지 피드
+        </span>
+        <FeedCreateBtn />
+      </div>
       <div className="flex gap-6">
         <div className="flex-1">
           <MyFeedCard
