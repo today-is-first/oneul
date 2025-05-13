@@ -1,4 +1,4 @@
-import { get } from "@/hooks/useApi";
+import { get } from "@/api/api";
 
 export interface Challenge {
   challengeId: number;
