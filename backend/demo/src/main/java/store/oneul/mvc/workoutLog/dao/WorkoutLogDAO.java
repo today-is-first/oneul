@@ -7,5 +7,5 @@ import store.oneul.mvc.workoutLog.dto.WorkoutLogInsertRequestDTO;
 
 @Mapper
 public interface WorkoutLogDAO {
-	WorkoutLogDTO insertWorkoutLog(WorkoutLogInsertRequestDTO workoutLogInsertRequestDto);
+	void insertWorkoutLog(WorkoutLogInsertRequestDTO workoutLogInsertRequestDto);
 }
