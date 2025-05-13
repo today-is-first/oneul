@@ -7,9 +7,9 @@
 
 	<!-- INSERT -->
 	<insert id="insertWorkoutLog" parameterType="WorkoutLogInsertRequestDTO">
-		INSERT IGNORE INTO workout_log (user_id, challenge_id, feed_id, comment)
+		INSERT IGNORE INTO workout_log (user_id, challenge_id, feed_id)
 		VALUES (
-			#{userId}, #{challengeId}, #{feedId}, #{comment}
+			#{userId}, #{challengeId}, #{feedId}}
 		);
 	</insert>
 	

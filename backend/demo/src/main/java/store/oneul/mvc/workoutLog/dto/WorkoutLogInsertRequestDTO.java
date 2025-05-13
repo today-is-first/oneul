@@ -13,5 +13,4 @@ public class WorkoutLogInsertRequestDTO {
 	private Long userId;
 	private Long challengeId;
 	private Long feedId;
-	private String comment;
 }
