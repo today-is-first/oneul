@@ -1,5 +1,5 @@
 import { Challenge } from "@/api/challenge";
-import { get } from "@/hooks/useApi";
+import { get } from "@/api/api";
 import { useQuery } from "@tanstack/react-query";
 import { useChallengeStore } from "@/stores/challengeStore";
 
