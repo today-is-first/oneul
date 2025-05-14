@@ -6,6 +6,7 @@ import WorkoutModal from "./WorkoutModal";
 import { feedData } from "@/constants/homeConstants";
 import MyFeedCard from "@/components/feed/MyFeedCard";
 import { CheckInLog } from "@/components/challengeDetail/ChallengeFeed";
+import CommunityFeed from "@/components/home/CommunityFeed";
 
 export const getContributionColor = (count: number) => {
   if (count >= 4) return "bg-[#8B5CF6]"; // 진한 보라색
@@ -95,6 +96,8 @@ const MyWorkoutDashboard = () => {
           setSelectedDate={setSelectedDate}
         />
       </div>
+
+      <CommunityFeed />
     </div>
   );
 };
