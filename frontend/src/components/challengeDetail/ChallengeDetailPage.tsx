@@ -41,12 +41,18 @@ function ChallengeDetailPage() {
         <div className="w-7xl mx-auto flex gap-6 text-white">
           <ChallengeFeed />
           <div className="min-w-sm flex flex-col gap-8">
-            <ChallengeDetail data={challenge!} />
-            <ChallengeStatus
-              success={challenge!.successDay}
-              goal={challenge!.goalDay}
-              endDate={challenge!.endDate}
-            />
+            {challenge ? (
+              <>
+                <ChallengeDetail data={challenge} />
+                <ChallengeStatus
+                  success={challenge.successDay}
+                  goal={challenge.goalDay}
+                  endDate={challenge.endDate}
+                />
+              </>
+            ) : (
+              <p>데이터를 불러오는데 실패했습니다.</p>
+            )}
           </div>
         </div>
       </section>
