@@ -60,7 +60,7 @@ export const patch = async <T>(
   body?: any,
   config?: AxiosRequestConfig,
 ): Promise<T> => {
-  const res: AxiosResponse<T> = await api.put(url, body, config);
+  const res: AxiosResponse<T> = await api.patch(url, body, config);
   return res.data;
 };
 

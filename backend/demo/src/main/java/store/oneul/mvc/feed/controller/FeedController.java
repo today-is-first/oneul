@@ -56,10 +56,16 @@ public class FeedController {
     }
     
     @PatchMapping("/{id}/checks")
-    public ResponseEntity<FeedDTO> evaluateFeed(@PathVariable Long challengeId, @PathVariable Long id, @RequestBody FeedEvaluationRequest feedEvaluationRequest) {
+    public ResponseEntity<FeedDTO> evaluateFeed(
+    		@PathVariable Long challengeId, 
+    		@PathVariable Long id, 
+    		@RequestBody FeedEvaluationRequest feedEvaluationRequest,
+    		@AuthenticationPrincipal UserDTO user
+    ) {
     	feedEvaluationRequest.setChallengeId(challengeId);
     	feedEvaluationRequest.setId(id);
-    	feedService.evaluateFeed(feedEvaluationRequest);
+    	Long userId = user.getUserId();
+    	feedService.evaluateFeed(feedEvaluationRequest, userId);
     	FeedDTO feedDTO = feedService.getFeed(challengeId, feedEvaluationRequest.getId());
     	return ResponseEntity.ok(feedDTO);
     }

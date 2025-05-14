@@ -8,11 +8,15 @@ import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.feed.dao.FeedDAO;
 import store.oneul.mvc.feed.dto.FeedDTO;
 import store.oneul.mvc.feed.dto.FeedEvaluationRequest;
+import store.oneul.mvc.feed.enums.CheckStatus;
+import store.oneul.mvc.workoutLog.dao.WorkoutLogDAO;
+import store.oneul.mvc.workoutLog.dto.WorkoutLogInsertRequestDTO;
 
 @Service
 @RequiredArgsConstructor
 public class FeedServiceImpl implements FeedService {
     private final FeedDAO feedDAO;
+    private final WorkoutLogDAO workoutLogDAO;
 
     @Override
     public void createFeed(Long challengeId, FeedDTO feedDTO) {
@@ -40,8 +44,15 @@ public class FeedServiceImpl implements FeedService {
     }
 
 	@Override
-	public void evaluateFeed(FeedEvaluationRequest feedEvaluationRequest) {
+	public void evaluateFeed(FeedEvaluationRequest feedEvaluationRequest, Long userId) {
 		feedDAO.evaluateFeed(feedEvaluationRequest);
+		if(CheckStatus.APPROVED == feedEvaluationRequest.getCheckStatus()) {
+			WorkoutLogInsertRequestDTO workoutLogRequest = new WorkoutLogInsertRequestDTO();
+			workoutLogRequest.setChallengeId(feedEvaluationRequest.getChallengeId());
+			workoutLogRequest.setFeedId(feedEvaluationRequest.getId());
+			workoutLogRequest.setUserId(userId);
+			workoutLogDAO.insertWorkoutLog(workoutLogRequest);
+		}
 	}
 
 }

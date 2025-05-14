@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/stores/userStore";
+import { useParams } from "react-router-dom";
 function FeedCreateModal({
   isOpen,
   onClose,
@@ -14,6 +15,7 @@ function FeedCreateModal({
 
   const modalRef = useRef<HTMLDivElement>(null);
   const [showAnimation, setShowAnimation] = useState(false);
+  const { challengeId } = useParams<{ challengeId: string }>();
 
   useEffect(() => {
     if (isOpen) {
@@ -43,8 +45,9 @@ function FeedCreateModal({
       alert("이미지와 내용을 모두 입력해주세요.");
       return;
     }
+
     const accessToken = useUserStore.getState().accessToken;
-    console.log(accessToken);
+    const userId = useUserStore.getState().user?.id;
     // API 요청 보내는 부분 (여기 추가)
     axios
       .post(
@@ -62,6 +65,7 @@ function FeedCreateModal({
       )
       .then((res) => {
         const { presignedUrl, objectKey } = res.data;
+
         axios
           .put(presignedUrl, image, {
             headers: {
@@ -71,10 +75,11 @@ function FeedCreateModal({
           .then(() => {
             //TODO : 챌린지 아이디 변경하기
             axios.post(
-              `${import.meta.env.VITE_API_URL}/challenges/1/feeds`,
+              `${import.meta.env.VITE_API_URL}/challenges/${challengeId}/feeds`,
               {
                 content: content,
                 imageUrl: objectKey,
+                userId: userId,
               },
               {
                 headers: { Authorization: `Bearer ${accessToken}` },
@@ -99,7 +104,7 @@ function FeedCreateModal({
     >
       <div
         ref={modalRef}
-        className={`text-logo-white w-[400px] transform rounded-2xl p-8 transition-all duration-300 ${
+        className={`bg-background text-logo-white w-[400px] transform rounded-2xl p-8 transition-all duration-300 ${
           showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
         }`}
         style={{
