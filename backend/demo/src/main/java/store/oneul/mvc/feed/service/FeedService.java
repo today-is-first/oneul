@@ -16,5 +16,5 @@ public interface FeedService {
 
     public List<FeedDTO> getFeeds(Long challengeId);
     
-    public void evaluateFeed(FeedEvaluationRequest feedEvaluationRequest);
+    public void evaluateFeed(FeedEvaluationRequest feedEvaluationRequest, Long userId);
 }
