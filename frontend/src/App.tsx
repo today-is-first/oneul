@@ -9,8 +9,9 @@ import ChallengeDetailPage from "@components/challengeDetail/ChallengeDetailPage
 import OAuthRedirectPage from "@components/login/OAuthRedirectPage";
 import { useEffect } from "react";
 import { useUserStore } from "@stores/userStore";
-import { useSocketStore } from "./stores/socketStore";
+import { useSocketStore } from "@stores/socketStore";
 import "./chart";
+import ChallengeSearchPage from "@components/challengeSearch/ChallengeSearchPage";
 
 function App() {
   const { connect, disconnect } = useSocketStore();
@@ -37,6 +38,7 @@ function App() {
             element={<ChallengeDetailPage />}
           />
           <Route path="/challenge/detail" element={<ChallengeDetailPage />} />
+          <Route path="/challenge/search" element={<ChallengeSearchPage />} />
         </Route>
 
         {/* MainLayout이 필요없는 라우트들 */}
