@@ -1,12 +1,12 @@
+import { CheckInLog } from "@/components/challengeDetail/ChallengeFeed";
+import MyFeedCard from "@/components/feed/MyFeedCard";
+import CommunityFeed from "@/components/home/CommunityFeed";
+import { feedData } from "@/constants/homeConstants";
 import { eachDayOfInterval, endOfYear, startOfYear } from "date-fns";
 import { useState } from "react";
 import MonthlyStats from "./MonthlyStats";
 import StreakCalendar from "./StreakCalendar";
 import WorkoutModal from "./WorkoutModal";
-import { feedData } from "@/constants/homeConstants";
-import MyFeedCard from "@/components/feed/MyFeedCard";
-import { CheckInLog } from "@/components/challengeDetail/ChallengeFeed";
-import CommunityFeed from "@/components/home/CommunityFeed";
 
 export const getContributionColor = (count: number) => {
   if (count >= 4) return "bg-[#8B5CF6]"; // 진한 보라색
@@ -65,9 +65,10 @@ const MyWorkoutDashboard = () => {
 
   return (
     <div className="flex flex-col gap-8 p-6">
+      <CommunityFeed />
       <div className="flex justify-between gap-8">
         {/* 오늘의 인증 섹션 */}
-        <div className="w-1/3 rounded-lg bg-neutral-800 p-6">
+        <div className="w-1/3 rounded-lg bg-[#1A1A1E] p-6">
           <h2 className="mb-6 text-xl font-semibold text-white">오늘의 인증</h2>
           <MyFeedCard
             log={todayLog}
@@ -76,7 +77,7 @@ const MyWorkoutDashboard = () => {
             onDetail={handleDetailLog}
           />
         </div>
-        <div className="w-2/3 rounded-lg bg-neutral-800 p-6">
+        <div className="w-2/3 rounded-lg bg-[#1A1A1E] p-6">
           <h2 className="mb-6 text-xl font-semibold text-white">월간 통계</h2>
           <MonthlyStats monthAchievementRate={monthAchievementRate} />
         </div>
@@ -87,7 +88,7 @@ const MyWorkoutDashboard = () => {
         setSelectedDate={setSelectedDate}
       />
 
-      <div className="rounded-lg bg-neutral-800 p-6">
+      <div className="rounded-lg bg-[#1A1A1E] p-6">
         <h2 className="mb-6 text-xl font-semibold text-white">스트릭 캘린더</h2>
         <StreakCalendar
           currentYear={currentYear}
@@ -96,8 +97,6 @@ const MyWorkoutDashboard = () => {
           setSelectedDate={setSelectedDate}
         />
       </div>
-
-      <CommunityFeed />
     </div>
   );
 };
