@@ -1,5 +1,3 @@
-import { get } from "@/api/api";
-
 export interface Challenge {
   challengeId: number;
   name: string;
@@ -18,5 +16,3 @@ export interface Challenge {
   successDay: number; // 삭제 예정
   roomPassword: string; // 삭제 예정
 }
-
-export const fetchChallengeList = () => get<Challenge[]>("/challenges");

@@ -1,23 +1,8 @@
 import Badge from "@/components/common/Badge";
+import { Challenge } from "@/types/Challenge";
 
 interface ChallengeDetailProps {
-  data: {
-    challenge_id: number;
-    name: string;
-    owner_id: number;
-    owner_nickname: string;
-    category_id: number;
-    description: string; // 챌린지 목표 설명
-    entry_fee: number;
-    start_date: string; // "2025-03-22"
-    end_date: string; // "2025-05-23"
-    goal_day: number; // 목표 달성 일수
-    total_day: number; // 전체 챌린지 일수
-    success_day: number; // 현재까지 성공한 일수
-    is_challenge: boolean;
-    is_public: boolean;
-    created_at: string;
-  };
+  data: Challenge;
 }
 
 function formatDate(dateString: string) {
@@ -32,21 +17,21 @@ function calculateSuccessRate(goalDay: number, totalDay: number): number {
 
 function ChallengeDetail({ data }: ChallengeDetailProps) {
   const {
-    start_date,
-    end_date,
+    startDate,
+    endDate,
     description,
-    goal_day,
-    total_day,
-    is_challenge,
-    owner_nickname,
+    goalDay,
+    totalDay,
+    isChallenge,
+    ownerNickname,
     name,
   } = data;
   return (
     <section className="flex flex-col gap-8 rounded-2xl border border-[#2d2d2d] bg-[#1A1A1F] px-8 py-9">
       {/* 상단 뱃지 + 제목 */}
       <div className="flex items-center gap-2">
-        <Badge type={is_challenge ? "challenge" : "normal"}>
-          {is_challenge ? "챌린지" : "일반"}
+        <Badge type={isChallenge ? "challenge" : "normal"}>
+          {isChallenge ? "챌린지" : "일반"}
         </Badge>
         <div className="mt-1 flex items-center gap-2">
           <h3 className="text-xl font-bold text-gray-200">{name}</h3>
@@ -77,16 +62,14 @@ function ChallengeDetail({ data }: ChallengeDetailProps) {
         <div className="flex flex-col gap-1 text-base">
           <span className="font-medium text-gray-300">챌린지 기간</span>
           <span className="leading-relaxed text-gray-400">
-            {formatDate(start_date)} ~ {formatDate(end_date)}
+            {formatDate(startDate)} ~ {formatDate(endDate)}
           </span>
         </div>
 
         {/* 매니저 정보 */}
         <div className="flex flex-col gap-1 text-base">
           <span className="font-medium text-gray-300">챌린지 매니저</span>
-          <span className="leading-relaxed text-gray-400">
-            {owner_nickname}
-          </span>
+          <span className="leading-relaxed text-gray-400">{ownerNickname}</span>
         </div>
 
         {/* 설명 */}
@@ -99,7 +82,7 @@ function ChallengeDetail({ data }: ChallengeDetailProps) {
         <div className="flex flex-col gap-1 text-base">
           <span className="font-medium text-gray-300">목표 달성률</span>
           <span className="leading-relaxed text-gray-400">
-            {calculateSuccessRate(goal_day, total_day)}% 이상
+            {calculateSuccessRate(goalDay, totalDay)}% 이상
           </span>
         </div>
       </div>
