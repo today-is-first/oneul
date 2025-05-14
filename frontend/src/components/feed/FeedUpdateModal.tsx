@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { CheckInLog } from "../challengeDetail/ChallengeFeed";
+import { Feed } from "@/types/Feed";
 
 interface FeedUpdateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialData: CheckInLog;
+  initialData: Feed;
 }
 
 function FeedUpdateModal({
@@ -20,7 +20,7 @@ function FeedUpdateModal({
 
   useEffect(() => {
     if (isOpen) {
-      setPreviewUrl(initialData.image_url);
+      setPreviewUrl(initialData.imageUrl);
       setContent(initialData.content);
       setImageFile(null);
       setTimeout(() => setShowAnimation(true), 10);
@@ -38,7 +38,7 @@ function FeedUpdateModal({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
     setImageFile(file);
-    setPreviewUrl(file ? URL.createObjectURL(file) : initialData.image_url);
+    setPreviewUrl(file ? URL.createObjectURL(file) : initialData.imageUrl);
   };
 
   const handleUpdate = async () => {
