@@ -7,6 +7,10 @@ export function useChallenge(challengeId: string) {
   return useGet<Challenge>(
     ["challenge", challengeId],
     `/challenges/${challengeId}`,
-    { staleTime: 1000 * 60 * 10, gcTime: 1000 * 60 * 30 },
+    {
+      staleTime: 1000 * 60 * 10,
+      gcTime: 1000 * 60 * 30,
+      enabled: Boolean(challengeId),
+    },
   );
 }

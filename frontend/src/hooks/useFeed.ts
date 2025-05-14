@@ -5,6 +5,10 @@ export function useChallengeFeeds(challengeId: string) {
   return useGet<Feed[]>(
     ["feeds", challengeId],
     `/challenges/${challengeId}/feeds`,
-    { staleTime: 1000 * 60 * 1, gcTime: 1000 * 60 * 5 },
+    {
+      staleTime: 1000 * 60 * 1,
+      gcTime: 1000 * 60 * 5,
+      enabled: Boolean(challengeId),
+    },
   );
 }
