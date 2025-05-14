@@ -10,6 +10,7 @@ import OAuthRedirectPage from "@components/login/OAuthRedirectPage";
 import { useEffect } from "react";
 import { useUserStore } from "@stores/userStore";
 import { useSocketStore } from "./stores/socketStore";
+import "./chart";
 
 function App() {
   const { connect, disconnect } = useSocketStore();
