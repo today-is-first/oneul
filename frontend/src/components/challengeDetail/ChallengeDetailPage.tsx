@@ -6,14 +6,14 @@ import { useChallenge } from "@/hooks/useChallenge";
 
 function ChallengeDetailPage() {
   const { challengeId } = useParams<{ challengeId: string }>();
-  if (!challengeId) return <p>잘못된 경로입니다.</p>;
-
   const {
     data: challenge,
     isLoading,
     isError,
     error,
-  } = useChallenge(challengeId);
+  } = useChallenge(challengeId ?? "");
+
+  if (!challengeId) return <p>잘못된 경로입니다.</p>;
 
   // 로딩 또는 에러시
   if (isLoading) {
