@@ -30,7 +30,7 @@ const dummyFeeds = [
 
 const CommunityFeed = () => {
   return (
-    <div className="rounded-lg bg-neutral-800 p-6">
+    <div className="rounded-lg bg-[#1A1A1E] p-6">
       <h2 className="mb-6 text-xl font-semibold text-white">
         다른 유저들의 인증 피드
       </h2>
@@ -39,7 +39,7 @@ const CommunityFeed = () => {
         {dummyFeeds.map((feed) => (
           <div
             key={feed.id}
-            className="overflow-hidden rounded-lg bg-neutral-700 shadow-sm transition hover:shadow-md"
+            className="overflow-hidden rounded-lg bg-[#222227] shadow-sm transition hover:shadow-md"
           >
             <img
               src={feed.image}
