@@ -81,7 +81,7 @@ function FeedCheckModal({
       >
         {/* 헤더 */}
         <div className="flex items-center justify-between">
-          <span className="font-bold">{feed.userId}</span>
+          <span className="font-bold">{feed.nickname}</span>
           <button
             onClick={onClose}
             className="cursor-pointer text-gray-400 hover:text-gray-200"
@@ -101,7 +101,7 @@ function FeedCheckModal({
           )}
           <p className="mb-4 whitespace-normal break-words">{feed.content}</p>
           <span className="text-sm text-gray-400">
-            {formatTimeAgo(feed.created_at)}
+            {formatTimeAgo(feed.createdAt)}
           </span>
         </div>
 

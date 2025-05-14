@@ -25,7 +25,7 @@ function FeedCheckItem({ feed, onClick }: MateFeedItemProps) {
             {feed.content}
           </div>
           <div className="flex justify-between gap-4 text-sm">
-            <div className="text-gray-500">{feed.userId}</div>
+            <div className="text-gray-500">{feed.nickname}</div>
             <div className="text-gray-500">{formatTimeAgo(feed.createdAt)}</div>
           </div>
         </div>
