@@ -1,11 +1,11 @@
-import { CheckInLog } from "../challengeDetail/ChallengeFeed";
+import { Feed } from "@/types/Feed";
 import FeedCheckItem from "./FeedCheckItem";
 
 interface FeedCheckListProps {
-  onLogSelect: (log: CheckInLog) => void;
+  onFeedSelect: (feed: Feed) => void;
 }
 
-const mockData: CheckInLog[] = [
+const mockData: Feed[] = [
   {
     id: 1,
     user_id: 201,
@@ -41,14 +41,14 @@ const mockData: CheckInLog[] = [
   },
 ];
 
-function FeedCheckList({ onLogSelect }: FeedCheckListProps) {
+function FeedCheckList({ onFeedSelect }: FeedCheckListProps) {
   return (
     <div className="flex-1 space-y-4 overflow-y-auto px-4 py-6">
       {mockData.map((item) => (
         <FeedCheckItem
           key={item.id}
-          log={item}
-          onClick={() => onLogSelect(item)}
+          feed={item}
+          onClick={() => onFeedSelect(item)}
         />
       ))}
     </div>

@@ -1,31 +1,31 @@
+import { Feed } from "@/types/Feed";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { CheckInLog } from "../challengeDetail/ChallengeFeed";
 
 function FeedCheckModal({
   isOpen,
   onClose,
-  log,
+  feed,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  log: CheckInLog;
+  feed: Feed;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<
-    CheckInLog["check_status"]
-  >(log.check_status);
+  const [selectedStatus, setSelectedStatus] = useState<Feed["checkStatus"]>(
+    feed.checkStatus,
+  );
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
-      setSelectedStatus(log.check_status);
+      setSelectedStatus(feed.checkStatus);
       setTimeout(() => setShowAnimation(true), 10);
     } else {
       setShowAnimation(false);
     }
-  }, [isOpen, log.check_status]);
+  }, [isOpen, feed.checkStatus]);
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -81,7 +81,7 @@ function FeedCheckModal({
       >
         {/* 헤더 */}
         <div className="flex items-center justify-between">
-          <span className="font-bold">{log.user_id}</span>
+          <span className="font-bold">{feed.userId}</span>
           <button
             onClick={onClose}
             className="cursor-pointer text-gray-400 hover:text-gray-200"
@@ -92,16 +92,16 @@ function FeedCheckModal({
 
         {/* 이미지 & 내용 */}
         <div className="max-h-[400px] overflow-y-auto">
-          {log.image_url && (
+          {feed.imageUrl && (
             <img
-              src={log.image_url}
+              src={feed.imageUrl}
               alt="Feed"
               className="mb-4 h-64 w-full rounded-lg object-cover"
             />
           )}
-          <p className="mb-4 whitespace-normal break-words">{log.content}</p>
+          <p className="mb-4 whitespace-normal break-words">{feed.content}</p>
           <span className="text-sm text-gray-400">
-            {formatTimeAgo(log.created_at)}
+            {formatTimeAgo(feed.created_at)}
           </span>
         </div>
 
@@ -110,7 +110,7 @@ function FeedCheckModal({
           <select
             value={selectedStatus}
             onChange={(e) =>
-              setSelectedStatus(e.target.value as CheckInLog["check_status"])
+              setSelectedStatus(e.target.value as Feed["checkStatus"])
             }
             className="focus:border-point w-32 rounded-lg border border-gray-700 bg-[#2A2A2D] px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none"
           >
