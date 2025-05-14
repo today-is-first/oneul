@@ -8,9 +8,9 @@ function FeedCreateBtn() {
     <div>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-point font-lg text-semibold h-12 w-40 rounded-lg text-white shadow-md transition-all hover:opacity-90"
+        className="bg-point rounded-lg px-4 py-2 text-sm text-white shadow-md transition-all hover:opacity-90"
       >
-        오운완 생성
+        작성하기
       </button>
       <FeedCreateModal
         isOpen={isModalOpen}
