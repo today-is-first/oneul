@@ -32,14 +32,13 @@ function ChallengeDetailPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen select-none flex-col overflow-hidden bg-gradient-to-bl from-[#21414F] via-[#10212B] to-[#17171C]">
+    <div className="relative flex min-h-screen select-none flex-col overflow-hidden bg-[#0E0E11]">
       {/* 챌린지 상세 정보 영역 */}
       <section className="flex flex-col items-center justify-center px-6 py-12">
         <h1 className="mb-6 text-2xl font-bold text-white">
           챌린지 상세 페이지 - {challengeId}
         </h1>
         <div className="w-7xl mx-auto flex gap-6 text-white">
-          <ChallengeFeed />
           <div className="min-w-sm flex flex-col gap-8">
             {challenge ? (
               <>
@@ -54,6 +53,7 @@ function ChallengeDetailPage() {
               <p>데이터를 불러오는데 실패했습니다.</p>
             )}
           </div>
+          <ChallengeFeed />
         </div>
       </section>
     </div>

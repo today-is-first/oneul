@@ -56,7 +56,7 @@ function ChallengeFeed() {
   const closeAll = () => setModalState(null);
 
   return (
-    <section className="flex w-full flex-col gap-3 rounded-2xl border border-[#2d2d2d] bg-[#1A1A1F] px-8 py-9">
+    <section className="flex w-full flex-col gap-3 rounded-2xl bg-[#1A1A1F] px-8 py-9">
       <div className="flex items-center gap-4">
         <span className="text-center text-xl font-semibold text-gray-200">
           챌린지 피드
