@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import MateFeedList from "../feed/MateFeedList";
 import MyFeedCard from "../feed/MyFeedCard";
 import FeedDetailModal from "@/components/feed/FeedDetailModal";
@@ -6,83 +6,53 @@ import FeedCreateModal from "@/components/feed/FeedCreateModal";
 import FeedUpdateModal from "@/components/feed/FeedUpdateModal";
 import { useUserStore } from "@/stores/userStore";
 import FeedCreateBtn from "@/components/feed/FeedCreateBtn";
-
-export interface CheckInLog {
-  id: number;
-  user_id: number;
-  challenge_id: number;
-  image_url: string;
-  content: string;
-  like_count: number;
-  created_at: string; // ISO 8601 형식 문자열 (예: "2025-05-07T12:34:56.000Z")
-  check_status: "PENDING" | "APPROVED" | "REJECTED";
-  checked_at: string | null; // 검수 전이면 null일 수 있음
-}
+import { useParams } from "react-router";
+import { useChallengeFeeds } from "@/hooks/useFeed";
+import { Feed } from "@/types/Feed";
 
 type ModalState =
   | { kind: "create" }
-  | { kind: "edit"; log: CheckInLog }
-  | { kind: "detail"; log: CheckInLog }
+  | { kind: "edit"; feed: Feed }
+  | { kind: "detail"; feed: Feed }
   | null;
 
-// mock data
-const myCheckInLog: CheckInLog = {
-  id: 1001,
-  user_id: 1,
-  challenge_id: 10,
-  image_url: "https://picsum.photos/seed/1/400/400",
-  content: "오늘은 등운동을 했습니다! 💪",
-  like_count: 3,
-  created_at: "2025-05-07T08:30:00.000Z",
-  check_status: "APPROVED",
-  checked_at: "2025-05-07T10:00:00.000Z",
-};
-
-const checkInLogs: CheckInLog[] = [
-  {
-    id: 1001,
-    user_id: 1,
-    challenge_id: 10,
-    image_url: "https://picsum.photos/seed/1/400/400",
-    content: "오늘은 등운동을 했습니다! 💪",
-    like_count: 3,
-    created_at: "2025-05-07T08:30:00.000Z",
-    check_status: "APPROVED",
-    checked_at: "2025-05-07T10:00:00.000Z",
-  },
-  {
-    id: 1002,
-    user_id: 2,
-    challenge_id: 10,
-    image_url: "https://picsum.photos/seed/3/400/400",
-    content: "아침 러닝 완료했습니다 🏃",
-    like_count: 5,
-    created_at: "2025-05-07T07:50:00.000Z",
-    check_status: "APPROVED",
-    checked_at: "2025-05-07T09:00:00.000Z",
-  },
-  {
-    id: 1003,
-    user_id: 3,
-    challenge_id: 10,
-    image_url: "https://picsum.photos/seed/4/400/400",
-    content: "헬스장 가는 길 인증 ✌️",
-    like_count: 2,
-    created_at: "2025-05-07T08:10:00.000Z",
-    check_status: "PENDING",
-    checked_at: null,
-  },
-];
-
 function ChallengeFeed() {
+  const { challengeId } = useParams<{ challengeId: string }>();
   const [modalState, setModalState] = useState<ModalState>(null);
 
-  // const { user } = useUserStore();
+  const {
+    data: feeds,
+    isLoading,
+    isError,
+    error,
+  } = useChallengeFeeds(challengeId ?? "");
+
+  const { user } = useUserStore();
+  const myFeed = useMemo(
+    () => feeds?.find((feed) => feed.userId === user?.id) ?? null,
+    [feeds, user?.id],
+  );
+
+  if (!challengeId) return <p>잘못된 경로입니다.</p>;
+  // 로딩 또는 에러시
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center text-white">
+        로딩 중
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="flex h-screen items-center justify-center text-red-400">
+        에러: {(error as Error).message}
+      </div>
+    );
+  }
 
   const openCreate = () => setModalState({ kind: "create" });
-  const openEdit = (log: CheckInLog) => setModalState({ kind: "edit", log });
-  const openDetail = (log: CheckInLog) =>
-    setModalState({ kind: "detail", log });
+  const openEdit = (feed: Feed) => setModalState({ kind: "edit", feed });
+  const openDetail = (feed: Feed) => setModalState({ kind: "detail", feed });
   const closeAll = () => setModalState(null);
 
   return (
@@ -96,7 +66,7 @@ function ChallengeFeed() {
       <div className="flex gap-6">
         <div className="flex-1">
           <MyFeedCard
-            log={myCheckInLog}
+            feed={myFeed}
             onCreate={openCreate}
             onEdit={openEdit}
             onDetail={openDetail}
@@ -107,7 +77,11 @@ function ChallengeFeed() {
           <h2 className="mb-3 text-base font-semibold text-gray-300">
             챌린지 메이트 인증 현황
           </h2>
-          <MateFeedList logs={checkInLogs} onItemClick={openDetail} />
+          {feeds ? (
+            <MateFeedList feeds={feeds} onItemClick={openDetail} />
+          ) : (
+            <p>피드 데이터를 불러오는데 실패했습니다.</p>
+          )}
         </div>
       </div>
 
@@ -116,12 +90,12 @@ function ChallengeFeed() {
         <FeedCreateModal isOpen onClose={closeAll} />
       )}
 
-      {modalState?.kind === "edit" && (
-        <FeedUpdateModal isOpen onClose={closeAll} initialData={myCheckInLog} />
+      {modalState?.kind === "edit" && myFeed && (
+        <FeedUpdateModal isOpen onClose={closeAll} initialData={myFeed} />
       )}
 
       {modalState?.kind === "detail" && (
-        <FeedDetailModal isOpen onClose={closeAll} feed={modalState.log} />
+        <FeedDetailModal isOpen onClose={closeAll} feed={modalState.feed} />
       )}
     </section>
   );
