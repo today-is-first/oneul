@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { useUserStore } from "@stores/userStore";
 import { useState, useRef, useEffect } from "react";
+import { FaUserCircle } from "react-icons/fa";
 
-function LoginBtn() {
+function LoginButton() {
   const { user } = useUserStore();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -22,56 +23,68 @@ function LoginBtn() {
     };
   }, []);
 
+  const buttonBaseClass =
+    "flex w-17 h-17 flex-col items-center justify-center rounded-2xl transition hover:bg-[#2d2d35] px-2 py-2";
+
   if (user) {
     return (
-      <div className="relative min-w-[120px]" ref={dropdownRef}>
+      <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setOpen((prev) => !prev)}
-          className="flex w-full items-center gap-2 rounded-full bg-transparent px-3 py-2 transition hover:bg-gray-100 dark:hover:bg-gray-700"
+          className={buttonBaseClass}
         >
           <img
-            src={user.profile || "/default-profile.png"}
+            src={user.profile || "/svgs/default-profile.svg"}
             alt="프로필"
             className="h-8 w-8 rounded-full object-cover"
           />
-          <div className="min-w-[100px] flex-shrink-0">
-            <span className="text-sm font-medium text-black dark:text-white">
-              {user.nickname || user.name || "사용자"}
-            </span>
-          </div>
+          <span className="mt-1 max-w-[64px] truncate text-center text-xs text-gray-300">
+            {user.nickname || user.name || "사용자"}
+          </span>
         </button>
 
-        {open && (
-          <div className="absolute right-0 z-50 mt-2 min-w-[160px] rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-600 dark:bg-gray-800">
-            <Link
-              to="/mypage"
-              className="block rounded-t-lg px-4 py-2 text-sm text-black hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-              onClick={() => setOpen(false)}
-            >
-              마이페이지
-            </Link>
-            <button
-              onClick={() => {
-                useUserStore.getState().logout();
-                setOpen(false);
-              }}
-              className="w-full rounded-b-lg px-4 py-2 text-left text-sm text-black hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-            >
-              로그아웃
-            </button>
-          </div>
-        )}
+        {/* 드롭다운 */}
+        <div
+          id="user-dropdown"
+          className={`fixed right-16 top-14 z-[9999] w-[120px] transform overflow-hidden rounded-lg border border-[#3a3a3a] bg-[#1f1f25] shadow-lg transition-all duration-200 ease-in-out ${
+            open
+              ? "translate-y-0 scale-100 opacity-100"
+              : "pointer-events-none -translate-y-2 scale-95 opacity-0"
+          }`}
+        >
+          <Link
+            to="/mypage"
+            className="block w-full px-4 py-3 text-center text-sm text-gray-200 hover:bg-[#2d2d35]"
+            onClick={() => setOpen(false)}
+          >
+            마이페이지
+          </Link>
+          <button
+            onClick={() => {
+              useUserStore.getState().logout();
+              setOpen(false);
+            }}
+            className="w-full px-4 py-3 text-center text-sm text-gray-200 hover:bg-[#2d2d35]"
+          >
+            로그아웃
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <Link to="/login">
-      <button className="min-w-[100px] rounded-full bg-[#3384fa] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
-        로그인
+    <Link to="/login" className="w-full">
+      <button className={buttonBaseClass}>
+        <img
+          src="/svgs/default-profile.svg"
+          alt="디폴트 프로필"
+          className="h-8 w-8 rounded-full object-cover"
+        />
+        <span className="mt-1 text-xs text-gray-300">로그인</span>
       </button>
     </Link>
   );
 }
 
-export default LoginBtn;
+export default LoginButton;

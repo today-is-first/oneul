@@ -1,13 +1,14 @@
 import MyFeedCard from "@/components/feed/MyFeedCard";
+import BannerSlider from "@/components/home/BannerSlider";
 import CommunityFeed from "@/components/home/CommunityFeed";
 import { feedData } from "@/constants/homeConstants";
+import { Feed } from "@/types/Feed";
 import { eachDayOfInterval, endOfYear, startOfYear } from "date-fns";
 import { useState } from "react";
 import MonthlyStats from "./MonthlyStats";
 import StreakCalendar from "./StreakCalendar";
 import WorkoutModal from "./WorkoutModal";
-import { Feed } from "@/types/Feed";
-import BannerSlider from "@/components/home/BannerSlider";
+import FeedCreateModal from "../feed/FeedCreateModal";
 
 export const getContributionColor = (count: number) => {
   if (count >= 4) return "bg-[#8B5CF6]"; // 진한 보라색
@@ -30,6 +31,7 @@ const MyWorkoutDashboard = () => {
     new Date().getFullYear(),
   );
   const [todayFeed, setTodayFeed] = useState<Feed | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const feedCountByMonth = Array(12).fill(0);
   Object.keys(feedData).forEach((date) => {
@@ -51,7 +53,7 @@ const MyWorkoutDashboard = () => {
 
   const handleCreateFeed = () => {
     // TODO: 인증 생성 로직 구현
-    window.location.href = "/challenge/create";
+    setIsModalOpen(true);
   };
 
   const handleEditFeed = (feed: Feed) => {
@@ -66,6 +68,10 @@ const MyWorkoutDashboard = () => {
 
   return (
     <div className="flex flex-col gap-8 p-6">
+      <FeedCreateModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
       <BannerSlider />
       <CommunityFeed />
       <div className="flex justify-between gap-8">
