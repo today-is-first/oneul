@@ -46,7 +46,7 @@ function LoginButton() {
         {/* 드롭다운 */}
         <div
           id="user-dropdown"
-          className={`fixed right-12 top-12 z-[9999] w-[120px] transform overflow-hidden rounded-lg border border-[#3a3a3a] bg-[#1f1f25] shadow-lg transition-all duration-200 ease-in-out ${
+          className={`fixed right-16 top-14 z-[9999] w-[120px] transform overflow-hidden rounded-lg border border-[#3a3a3a] bg-[#1f1f25] shadow-lg transition-all duration-200 ease-in-out ${
             open
               ? "translate-y-0 scale-100 opacity-100"
               : "pointer-events-none -translate-y-2 scale-95 opacity-0"
