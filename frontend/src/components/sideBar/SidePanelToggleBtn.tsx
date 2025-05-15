@@ -13,10 +13,12 @@ const SidePanelToggleButton = ({ icon, label, onClick }: Props) => {
         e.stopPropagation();
         onClick?.();
       }}
-      className="flex w-full flex-col items-center justify-center py-2 transition hover:bg-[#1f1f25]"
+      className="h-17 w-17 flex flex-col items-center justify-center rounded-2xl px-2 py-2 transition hover:bg-[#1f1f25]"
     >
-      {icon}
-      <span className="mt-1 text-xs text-gray-300">{label}</span>
+      <div className="flex items-center justify-center">{icon}</div>
+      <span className="mt-1 max-w-[64px] truncate text-center text-xs text-gray-300">
+        {label}
+      </span>
     </button>
   );
 };
