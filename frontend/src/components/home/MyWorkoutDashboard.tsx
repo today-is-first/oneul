@@ -7,6 +7,7 @@ import MonthlyStats from "./MonthlyStats";
 import StreakCalendar from "./StreakCalendar";
 import WorkoutModal from "./WorkoutModal";
 import { Feed } from "@/types/Feed";
+import BannerSlider from "@/components/home/BannerSlider";
 
 export const getContributionColor = (count: number) => {
   if (count >= 4) return "bg-[#8B5CF6]"; // 진한 보라색
@@ -65,6 +66,7 @@ const MyWorkoutDashboard = () => {
 
   return (
     <div className="flex flex-col gap-8 p-6">
+      <BannerSlider />
       <CommunityFeed />
       <div className="flex justify-between gap-8">
         {/* 오늘의 인증 섹션 */}
