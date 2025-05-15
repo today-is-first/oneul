@@ -1,4 +1,3 @@
-import { CheckInLog } from "@/components/challengeDetail/ChallengeFeed";
 import MyFeedCard from "@/components/feed/MyFeedCard";
 import CommunityFeed from "@/components/home/CommunityFeed";
 import { feedData } from "@/constants/homeConstants";
@@ -7,6 +6,7 @@ import { useState } from "react";
 import MonthlyStats from "./MonthlyStats";
 import StreakCalendar from "./StreakCalendar";
 import WorkoutModal from "./WorkoutModal";
+import { Feed } from "@/types/Feed";
 
 export const getContributionColor = (count: number) => {
   if (count >= 4) return "bg-[#8B5CF6]"; // 진한 보라색
@@ -28,7 +28,7 @@ const MyWorkoutDashboard = () => {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear(),
   );
-  const [todayLog, setTodayLog] = useState<CheckInLog | null>(null);
+  const [todayFeed, setTodayFeed] = useState<Feed | null>(null);
 
   const feedCountByMonth = Array(12).fill(0);
   Object.keys(feedData).forEach((date) => {
@@ -48,19 +48,19 @@ const MyWorkoutDashboard = () => {
     contributionsByDate[date] = feeds.length;
   });
 
-  const handleCreateLog = () => {
+  const handleCreateFeed = () => {
     // TODO: 인증 생성 로직 구현
     window.location.href = "/challenge/create";
   };
 
-  const handleEditLog = (log: CheckInLog) => {
+  const handleEditFeed = (feed: Feed) => {
     // TODO: 인증 수정 로직 구현
-    console.log("Edit log:", log);
+    console.log("Edit feed:", feed);
   };
 
-  const handleDetailLog = (log: CheckInLog) => {
+  const handleDetailFeed = (feed: Feed) => {
     // TODO: 인증 상세 보기 로직 구현
-    console.log("View log details:", log);
+    console.log("View feed details:", feed);
   };
 
   return (
@@ -71,10 +71,10 @@ const MyWorkoutDashboard = () => {
         <div className="w-1/3 rounded-lg bg-[#1A1A1E] p-6">
           <h2 className="mb-6 text-xl font-semibold text-white">오늘의 인증</h2>
           <MyFeedCard
-            log={todayLog}
-            onCreate={handleCreateLog}
-            onEdit={handleEditLog}
-            onDetail={handleDetailLog}
+            feed={todayFeed}
+            onCreate={handleCreateFeed}
+            onEdit={handleEditFeed}
+            onDetail={handleDetailFeed}
           />
         </div>
         <div className="w-2/3 rounded-lg bg-[#1A1A1E] p-6">

@@ -1,16 +1,16 @@
 import { formatTimeAgo } from "@/utils/date";
-import { CheckInLog } from "../challengeDetail/ChallengeFeed";
 import CheckStatus from "../common/CheckStatus";
+import { Feed } from "@/types/Feed";
 
 interface MyFeedCardProps {
-  log: CheckInLog | null;
+  feed: Feed | null;
   onCreate?: () => void;
-  onEdit?: (log: CheckInLog) => void;
-  onDetail?: (log: CheckInLog) => void;
+  onEdit?: (feed: Feed) => void;
+  onDetail?: (feed: Feed) => void;
 }
 
-function MyFeedCard({ log, onCreate, onEdit, onDetail }: MyFeedCardProps) {
-  if (!log) {
+function MyFeedCard({ feed, onCreate, onEdit, onDetail }: MyFeedCardProps) {
+  if (!feed) {
     return (
       <>
         <p className="mb-4 text-gray-400">
@@ -29,14 +29,14 @@ function MyFeedCard({ log, onCreate, onEdit, onDetail }: MyFeedCardProps) {
   return (
     <div
       className="flex max-w-md cursor-pointer flex-col"
-      onClick={() => onDetail?.(log)}
+      onClick={() => onDetail?.(feed)}
     >
       <div className="mb-3 flex items-start justify-between">
         <p className="font-medium text-gray-400">오늘의 인증 완료 💪🔥</p>
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onEdit?.(log);
+            onEdit?.(feed);
           }}
           className="cursor-pointer p-1 text-gray-500 hover:text-gray-200"
           aria-label="인증 수정"
@@ -60,19 +60,19 @@ function MyFeedCard({ log, onCreate, onEdit, onDetail }: MyFeedCardProps) {
 
       <div className="relative mb-3 aspect-square w-full overflow-hidden rounded-lg bg-[#24242c]">
         <img
-          src={log.image_url}
+          src={feed.imageUrl}
           alt="내 오늘 인증 사진"
           className="h-full w-full object-cover"
         />
         {/* 상태 뱃지 추가 */}
         <div className="absolute right-2 top-2">
-          <CheckStatus type={log.check_status} />
+          <CheckStatus type={feed.checkStatus} />
         </div>
       </div>
 
-      <p className="line-clamp-2 text-gray-500">{log.content}</p>
+      <p className="line-clamp-2 text-gray-500">{feed.content}</p>
       <span className="text-right text-sm text-gray-600">
-        {formatTimeAgo(log.created_at)}
+        {formatTimeAgo(feed.createdAt)}
       </span>
     </div>
   );

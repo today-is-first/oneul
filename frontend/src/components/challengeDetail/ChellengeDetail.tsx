@@ -27,7 +27,7 @@ function ChallengeDetail({ data }: ChallengeDetailProps) {
     name,
   } = data;
   return (
-    <section className="flex flex-col gap-8 rounded-2xl border border-[#2d2d2d] bg-[#1A1A1F] px-8 py-9">
+    <section className="flex flex-col gap-8 rounded-2xl bg-[#1A1A1F] px-8 py-9">
       {/* 상단 뱃지 + 제목 */}
       <div className="flex items-center gap-2">
         <Badge type={isChallenge ? "challenge" : "normal"}>

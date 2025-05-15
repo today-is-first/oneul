@@ -17,6 +17,7 @@ import store.oneul.mvc.feed.enums.CheckStatus;
 public class FeedDTO {
     private Long id;
     private Long userId;
+    private String nickname;
     private Long challengeId;
     private String imageUrl;
     private String content;

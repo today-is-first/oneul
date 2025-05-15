@@ -7,15 +7,22 @@
 
     <!-- SELECT ONE -->
     <select id="getFeed" parameterType="map" resultType="FeedDTO">
-        SELECT * FROM feed
-        WHERE challenge_id = #{challengeId} AND id = #{id}
+        SELECT f.*, u.nickname 
+        FROM feed f
+        LEFT JOIN user u
+          ON f.user_id = u.user.id
+        WHERE f.challenge_id = #{challengeId} 
+          AND f.id = #{id}
     </select>
 
     <!-- SELECT ALL -->
     <select id="getFeeds" parameterType="map" resultType="FeedDTO">
-        SELECT * FROM feed
-        WHERE challenge_id = #{challengeId}
-        ORDER BY created_at DESC
+        SELECT f.*, u.nickname 
+        FROM feed f
+        LEFT JOIN user u
+          ON f.user_id = u.user_id
+        WHERE f.challenge_id = #{challengeId}
+        ORDER BY f.created_at DESC
     </select>
 
     <!-- INSERT -->

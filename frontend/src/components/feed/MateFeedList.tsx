@@ -1,19 +1,19 @@
-import { CheckInLog } from "../challengeDetail/ChallengeFeed";
+import { Feed } from "@/types/Feed";
 import MateFeedItem from "./MateFeedItem";
 
 interface MateFeedListProps {
-  logs: CheckInLog[];
-  onItemClick?: (log: CheckInLog) => void;
+  feeds: Feed[];
+  onItemClick?: (feed: Feed) => void;
 }
 
-function MateFeedList({ logs, onItemClick }: MateFeedListProps) {
+function MateFeedList({ feeds, onItemClick }: MateFeedListProps) {
   return (
     <ul className="h-full space-y-4 overflow-y-auto pr-5">
-      {logs.map((log) => (
+      {feeds.map((feed) => (
         <MateFeedItem
-          key={log.id}
-          log={log}
-          onClick={() => onItemClick?.(log)}
+          key={feed.id}
+          feed={feed}
+          onClick={() => onItemClick?.(feed)}
         />
       ))}
     </ul>

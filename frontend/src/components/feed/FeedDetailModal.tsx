@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { CheckInLog } from "../challengeDetail/ChallengeFeed";
 import { formatTimeAgo } from "@/utils/date";
+import { Feed } from "@/types/Feed";
 
 function FeedDetailModal({
   isOpen,
@@ -9,10 +9,10 @@ function FeedDetailModal({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  feed: CheckInLog;
+  feed: Feed;
 }) {
   const [showAnimation, setShowAnimation] = useState(false);
-  const [likeCount, setLikeCount] = useState(feed.like_count);
+  const [likeCount, setLikeCount] = useState(feed.likeCount);
   const [liked, setLiked] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -59,7 +59,7 @@ function FeedDetailModal({
         }}
       >
         <div className="flex items-center justify-between">
-          <span className="font-bold">{feed.user_id}</span>
+          <span className="font-bold">{feed.userId}</span>
           <button
             onClick={onClose}
             className="cursor-pointer text-gray-400 hover:text-gray-200"
@@ -68,9 +68,9 @@ function FeedDetailModal({
           </button>
         </div>
         <div className="max-h-[400px] overflow-y-auto">
-          {feed.image_url && (
+          {feed.imageUrl && (
             <img
-              src={feed.image_url}
+              src={feed.imageUrl}
               alt="Feed"
               className="mb-4 h-64 w-full rounded-lg object-cover"
             />
@@ -85,7 +85,7 @@ function FeedDetailModal({
 
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-400">
-            {formatTimeAgo(feed.created_at)}
+            {formatTimeAgo(feed.createdAt)}
           </span>
           <button
             onClick={handleLike}
