@@ -1,34 +1,10 @@
 // components/CommunityFeed.tsx
 import { FaHeart } from "react-icons/fa";
-
-const dummyFeeds = [
-  {
-    id: 1,
-    username: "헬창용팔이",
-    profileImg: "https://i.pravatar.cc/50?img=10",
-    image: "https://picsum.photos/id/1011/300/200",
-    content: "오늘도 하체 불살랐다🔥",
-    likeCount: 15,
-  },
-  {
-    id: 2,
-    username: "스쿼트요정",
-    profileImg: "https://i.pravatar.cc/50?img=11",
-    image: "https://picsum.photos/id/1012/300/200",
-    content: "스쿼트 100개 성공!",
-    likeCount: 23,
-  },
-  {
-    id: 3,
-    username: "피티쌤짱",
-    profileImg: "https://i.pravatar.cc/50?img=12",
-    image: "https://picsum.photos/id/1013/300/200",
-    content: "어깨 불태웠어요 🔥",
-    likeCount: 9,
-  },
-];
+import { useFeedStore } from "@/stores/feedStore";
 
 const CommunityFeed = () => {
+  const feeds = useFeedStore((state) => state.communityFeeds);
+
   return (
     <div className="rounded-lg bg-[#1A1A1E] p-6">
       <h2 className="mb-6 text-xl font-semibold text-white">
@@ -36,25 +12,25 @@ const CommunityFeed = () => {
       </h2>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {dummyFeeds.map((feed) => (
+        {feeds.map((feed) => (
           <div
             key={feed.id}
             className="overflow-hidden rounded-lg bg-[#222227] shadow-sm transition hover:shadow-md"
           >
             <img
-              src={feed.image}
+              src={feed.imageUrl}
               alt="피드 이미지"
               className="h-40 w-full object-cover"
             />
             <div className="p-4">
               <div className="mb-2 flex items-center gap-2">
                 <img
-                  src={feed.profileImg}
+                  src={feed.profileImageUrl || "/svgs/default-profile.svg"}
                   alt="프로필"
                   className="h-8 w-8 rounded-full object-cover"
                 />
                 <span className="text-sm font-medium text-white">
-                  {feed.username}
+                  {feed.nickname}
                 </span>
               </div>
               <p className="line-clamp-2 text-sm text-gray-300">

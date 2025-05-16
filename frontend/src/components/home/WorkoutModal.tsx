@@ -1,8 +1,9 @@
 import { Dialog } from "@components/common/Dialog";
 import { WorkoutModalProps } from "@/types/home";
-import { feedData } from "@/constants/homeConstants";
+import { useFeedStore } from "@/stores/feedStore";
 
 const WorkoutModal = ({ selectedDate, setSelectedDate }: WorkoutModalProps) => {
+  const feeds = useFeedStore((state) => state.myFeeds);
   return (
     <Dialog open={!!selectedDate} onOpenChange={() => setSelectedDate(null)}>
       <div className="flex items-center justify-center bg-opacity-60">
@@ -10,9 +11,9 @@ const WorkoutModal = ({ selectedDate, setSelectedDate }: WorkoutModalProps) => {
           <h3 className="mb-2 text-lg font-semibold">{selectedDate} 피드</h3>
           <ul className="list-inside list-disc space-y-1">
             {selectedDate &&
-              feedData[selectedDate as keyof typeof feedData]?.map(
-                (item, idx) => <li key={idx}>{item}</li>,
-              )}
+              feeds
+                .filter((feed) => feed.createdAt === selectedDate)
+                .map((item, idx) => <li key={idx}>{item.content}</li>)}
           </ul>
           <button
             className="mt-4 rounded bg-neutral-800 px-4 py-2 text-white hover:bg-neutral-700"

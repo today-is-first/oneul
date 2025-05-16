@@ -1,28 +1,20 @@
 import MyFeedCard from "@/components/feed/MyFeedCard";
 import BannerSlider from "@/components/home/BannerSlider";
 import CommunityFeed from "@/components/home/CommunityFeed";
-import { feedData } from "@/constants/homeConstants";
 import { Feed } from "@/types/Feed";
-import { eachDayOfInterval, endOfYear, startOfYear } from "date-fns";
 import { useState } from "react";
 import MonthlyStats from "./MonthlyStats";
 import StreakCalendar from "./StreakCalendar";
 import WorkoutModal from "./WorkoutModal";
 import FeedCreateModal from "../feed/FeedCreateModal";
+import { useFeedStore } from "@/stores/feedStore";
 
 export const getContributionColor = (count: number) => {
-  if (count >= 4) return "bg-[#8B5CF6]"; // 진한 보라색
-  if (count >= 3) return "bg-[#A78BFA]"; // 중간 보라색
-  if (count >= 2) return "bg-[#C4B5FD]"; // 밝은 보라색
-  if (count >= 1) return "bg-[#DDD6FE]"; // 가장 밝은 보라색
+  if (count >= 4) return "bg-primary-500"; // 진한 보라색
+  if (count >= 3) return "bg-primary-400"; // 중간 보라색
+  if (count >= 2) return "bg-primary-300"; // 밝은 보라색
+  if (count >= 1) return "bg-primary-200"; // 가장 밝은 보라색
   return "bg-neutral-700";
-};
-
-const getYearDays = (year: number) => {
-  return eachDayOfInterval({
-    start: startOfYear(new Date(year, 0, 1)),
-    end: endOfYear(new Date(year, 0, 1)),
-  });
 };
 
 const MyWorkoutDashboard = () => {
@@ -32,12 +24,14 @@ const MyWorkoutDashboard = () => {
   );
   const [todayFeed, setTodayFeed] = useState<Feed | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const streak = useFeedStore((state) => state.streak);
 
   const feedCountByMonth = Array(12).fill(0);
-  Object.keys(feedData).forEach((date) => {
-    const d = new Date(date);
+
+  streak.forEach((item) => {
+    const d = new Date(item.date);
     if (d.getFullYear() === currentYear) {
-      feedCountByMonth[d.getMonth()]++;
+      feedCountByMonth[d.getMonth()] += item.count;
     }
   });
 
@@ -47,8 +41,8 @@ const MyWorkoutDashboard = () => {
   });
 
   const contributionsByDate: Record<string, number> = {};
-  Object.entries(feedData).forEach(([date, feeds]) => {
-    contributionsByDate[date] = feeds.length;
+  streak.forEach((item) => {
+    contributionsByDate[item.date] = item.count;
   });
 
   const handleCreateFeed = () => {
