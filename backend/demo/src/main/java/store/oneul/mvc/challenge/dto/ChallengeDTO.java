@@ -31,5 +31,5 @@ public class ChallengeDTO {
     private String ownerNickname;
     private Integer successDay;
     private Integer participantCount;
-
+    private Integer memberCount;
 }

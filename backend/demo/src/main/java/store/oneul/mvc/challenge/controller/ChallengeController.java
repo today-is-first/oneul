@@ -67,4 +67,10 @@ public class ChallengeController {
         return ResponseEntity.ok(challengeDTOs);
     }
 
+    @GetMapping("/community")
+    public ResponseEntity<List<ChallengeDTO>> getCommunityChallenges() {
+        List<ChallengeDTO> challengeDTOs = challengeService.getCommunityChallenges();
+        return ResponseEntity.ok(challengeDTOs);
+    }
+
 }

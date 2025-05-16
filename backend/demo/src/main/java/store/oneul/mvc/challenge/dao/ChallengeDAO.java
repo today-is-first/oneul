@@ -21,4 +21,6 @@ public interface ChallengeDAO {
     void deleteChallenge(Long challengeId);
 
     List<ChallengeDTO> getSubscribedChallenges(Long userId);
+
+    List<ChallengeDTO> getCommunityChallenges();
 }

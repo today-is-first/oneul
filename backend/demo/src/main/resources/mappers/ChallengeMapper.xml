@@ -87,5 +87,11 @@
         JOIN challenge_user cu ON c.challenge_id = cu.challenge_id
         WHERE cu.user_id = #{userId}
     </select>
+    
+    <select id="getCommunityChallenges" resultType="store.oneul.mvc.challenge.dto.ChallengeDTO">
+        SELECT * FROM challenge
+        WHERE is_public = 1
+        ORDER BY created_at DESC
+    </select>
 
 </mapper>
