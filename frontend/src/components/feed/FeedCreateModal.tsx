@@ -51,7 +51,7 @@ function FeedCreateModal({
     // API 요청 보내는 부분 (여기 추가)
     axios
       .post(
-        `${import.meta.env.VITE_API_URL}/upload/presigned-url`,
+        `${import.meta.env.VITE_API_URL}/presigned/upload`,
         {
           filename: image.name,
           contentType: image.type,
@@ -75,7 +75,7 @@ function FeedCreateModal({
           .then(() => {
             //TODO : 챌린지 아이디 변경하기
             axios.post(
-              `${import.meta.env.VITE_API_URL}/challenges/${challengeId}/feeds`,
+              `${import.meta.env.VITE_API_URL}/challenges/${1}/feeds`,
               {
                 content: content,
                 imageUrl: objectKey,
