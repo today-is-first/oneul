@@ -16,6 +16,8 @@ public interface FeedService {
 
     public FeedDTO getFeed(Long challengeId, Long id);
 
+    public List<FeedDTO> getFeeds(Long challengeId);
+
     public List<FeedDTO> getMyFeeds(Long userId);
 
     public List<CommunityFeedDTO> getCommunityFeeds();

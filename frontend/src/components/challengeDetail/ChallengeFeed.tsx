@@ -9,6 +9,7 @@ import FeedCreateBtn from "@/components/feed/FeedCreateBtn";
 import { useParams } from "react-router";
 import { useChallengeFeeds } from "@/hooks/useFeed";
 import { Feed } from "@/types/Feed";
+import { useQueryClient } from "@tanstack/react-query";
 
 type ModalState =
   | { kind: "create" }
@@ -20,6 +21,7 @@ function ChallengeFeed() {
   const { challengeId } = useParams<{ challengeId: string }>();
   const [modalState, setModalState] = useState<ModalState>(null);
 
+  const queryClient = useQueryClient();
   const {
     data: feeds,
     isLoading,
@@ -32,6 +34,12 @@ function ChallengeFeed() {
     () => feeds?.find((feed) => feed.userId === user?.id) ?? null,
     [feeds, user?.id],
   );
+
+  const invalidateFeeds = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["feeds", challengeId],
+    });
+  };
 
   if (!challengeId) return <p>잘못된 경로입니다.</p>;
   // 로딩 또는 에러시
@@ -91,7 +99,12 @@ function ChallengeFeed() {
       )}
 
       {modalState?.kind === "edit" && myFeed && (
-        <FeedUpdateModal isOpen onClose={closeAll} initialData={myFeed} />
+        <FeedUpdateModal
+          isOpen
+          onClose={closeAll}
+          initialData={myFeed}
+          onUpdate={invalidateFeeds}
+        />
       )}
 
       {modalState?.kind === "detail" && (

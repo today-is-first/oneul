@@ -1,22 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import { Feed } from "@/types/Feed";
+import { useUserStore } from "@/stores/userStore";
+import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface FeedUpdateModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialData: Feed;
+  onUpdate: () => void;
 }
 
 function FeedUpdateModal({
   isOpen,
   onClose,
   initialData,
+  onUpdate,
 }: FeedUpdateModalProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [content, setContent] = useState("");
   const [showAnimation, setShowAnimation] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (isOpen) {
@@ -42,15 +49,53 @@ function FeedUpdateModal({
   };
 
   const handleUpdate = async () => {
-    if (!previewUrl || !content.trim()) {
+    if (!previewUrl || !content.trim() || !imageFile) {
       alert("이미지와 내용을 모두 입력해주세요.");
       return;
     }
 
+    const accessToken = useUserStore.getState().accessToken;
+    const userId = useUserStore.getState().user?.id;
+    const challengeId = initialData.challengeId;
+
     try {
-      console.log(imageFile);
-      console.log(content);
-      // 초기화
+      const presignRes = await axios.post(
+        `${import.meta.env.VITE_API_URL}/presigned/upload`,
+        {
+          filename: imageFile.name,
+          contentType: imageFile.type,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      const { presignedUrl, objectKey } = presignRes.data;
+
+      await axios.put(presignedUrl, imageFile, {
+        headers: {
+          "Content-Type": imageFile.type,
+        },
+      });
+
+      await axios.patch(
+        `${import.meta.env.VITE_API_URL}/challenges/${challengeId}/feeds/${initialData.id}`,
+        {
+          content,
+          imageUrl: objectKey,
+          userId,
+        },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        },
+      );
+
+      onUpdate();
+
+      // 5. 상태 초기화 및 모달 닫기
       setImageFile(null);
       setPreviewUrl(null);
       setContent("");
@@ -70,7 +115,9 @@ function FeedUpdateModal({
     >
       <div
         ref={modalRef}
-        className={`w-[400px] transform rounded-2xl bg-[#1B1B1E] p-8 text-white transition-all duration-300 ${showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"} `}
+        className={`w-[400px] transform rounded-2xl bg-[#1B1B1E] p-8 text-white transition-all duration-300 ${
+          showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
+        }`}
         style={{
           boxShadow:
             "0 0 20px rgba(255, 255, 255, 0.1), 0 0 10px rgba(255, 255, 255, 0.2)",
@@ -78,6 +125,7 @@ function FeedUpdateModal({
       >
         <h2 className="mb-6 text-xl font-bold">피드 수정</h2>
 
+        {/* 이미지 미리보기 */}
         <div className="mb-4">
           {previewUrl ? (
             <img

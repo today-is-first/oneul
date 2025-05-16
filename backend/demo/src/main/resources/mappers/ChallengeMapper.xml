@@ -7,7 +7,7 @@
 
     <!-- SELECT ONE -->
     <!-- 챌린지 상세 조회 + 방장 nickname + 로그인 유저의 success_day -->
-    <select id="getChallenge" parameterType="map" resultType="store.oneul.mvc.challenge.dto.ChallengeDTO">
+    <select id="getChallenge" parameterType="map" resultType="ChallengeDTO">
 		SELECT 
 		    c.challenge_id,
 		    c.name,
@@ -40,13 +40,13 @@
     </select>
 
     <!-- SELECT ALL -->
-    <select id="getChallenges" resultType="store.oneul.mvc.challenge.dto.ChallengeDTO">
+    <select id="getChallenges" resultType="ChallengeDTO">
         SELECT * FROM challenge
         ORDER BY created_at DESC
     </select>
 
     <!-- INSERT -->
-    <insert id="insertChallenge" parameterType="store.oneul.mvc.challenge.dto.ChallengeDTO">
+    <insert id="insertChallenge" parameterType="ChallengeDTO">
         INSERT INTO challenge (
             name, owner_id, category_id, description,
             total_day, goal_day, is_challenge, is_public,
@@ -59,7 +59,7 @@
     </insert>
 
     <!-- UPDATE -->
-    <update id="updateChallenge" parameterType="store.oneul.mvc.challenge.dto.ChallengeDTO">
+    <update id="updateChallenge" parameterType="ChallengeDTO">
         UPDATE challenge
         SET name = #{name},
             category_id = #{categoryId},
@@ -89,7 +89,7 @@
         AND c.challenge_status = 'IN_PROGRESS'
     </select>
     
-    <select id="getCommunityChallenges" resultType="store.oneul.mvc.challenge.dto.ChallengeDTO">
+    <select id="getCommunityChallenges" resultType="ChallengeDTO">
         SELECT * FROM challenge
         WHERE is_public = 1
         ORDER BY created_at DESC

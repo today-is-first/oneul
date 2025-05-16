@@ -25,7 +25,7 @@ const CommunityFeed = () => {
             <div className="p-4">
               <div className="mb-2 flex items-center gap-2">
                 <img
-                  src={feed.profileImageUrl || "/svgs/default-profile.svg"}
+                  src={feed.profileImg || "/svgs/default-profile.svg"}
                   alt="프로필"
                   className="h-8 w-8 rounded-full object-cover"
                 />

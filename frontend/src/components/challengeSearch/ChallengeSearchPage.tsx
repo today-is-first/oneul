@@ -13,11 +13,11 @@ const ChallengeSearchPage = () => {
 
   const challengeList = useChallengeStore.getState().communityChallengeList;
 
-  const filteredList = challengeList.filter((c: Challenge) => {
+  const filteredList = challengeList.filter((c) => {
     const matchTab =
       activeTab === "전체" ||
-      (activeTab === "챌린지" && c.isChallenge) ||
-      (activeTab === "일반" && !c.isChallenge);
+      (activeTab === "챌린지" && c.challenge) ||
+      (activeTab === "일반" && !c.challenge);
 
     const category = categories[c.categoryId];
     const matchCategory = !activeCategory || category === activeCategory;
@@ -96,8 +96,8 @@ const ChallengeSearchPage = () => {
                   <h3 className="line-clamp-1 text-base font-semibold text-white">
                     {room.name}
                   </h3>
-                  <Badge type={room.isChallenge ? "challenge" : "normal"}>
-                    {room.isChallenge ? "챌린지" : "일반"}
+                  <Badge type={room.challenge ? "challenge" : "normal"}>
+                    {room.challenge ? "챌린지" : "일반"}
                   </Badge>
                 </div>
                 <p className="mb-2 line-clamp-2 text-sm text-gray-400">

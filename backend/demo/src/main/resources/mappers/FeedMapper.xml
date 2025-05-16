@@ -81,8 +81,8 @@
     <!-- UPDATE -->
     <update id="updateFeed" parameterType="map">
         UPDATE feed
-        SET user_id = #{userId}, challenge_id = #{challengeId}, image_url = #{imageUrl}, content = #{content}, like_count = #{likeCount}, created_at = #{createdAt}, check_status = #{checkStatus}, checked_at = #{checkedAt}
-        WHERE challenge_id = #{challengeId} AND id = #{id}
+        SET image_url = #{feedDTO.imageUrl}, content = #{feedDTO.content}, check_status = 'PENDING', checked_at = null
+        WHERE challenge_id = #{challengeId} AND id = #{feedDTO.id}
     </update>
     
     <!-- UPDATE CHECK STATUS -->

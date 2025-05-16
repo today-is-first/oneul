@@ -26,5 +26,5 @@ public class CommunityFeedDTO {
     private CheckStatus checkStatus;
     private LocalDateTime checkedAt;
     private LocalDateTime updatedAt;
-    private String profileImageUrl;
+    private String profileImg;
 }

@@ -35,9 +35,6 @@ function ChallengeDetailPage() {
     <div className="relative flex min-h-screen select-none flex-col overflow-hidden bg-[#0E0E11]">
       {/* 챌린지 상세 정보 영역 */}
       <section className="flex flex-col items-center justify-center px-6 py-12">
-        <h1 className="mb-6 text-2xl font-bold text-white">
-          챌린지 상세 페이지 - {challengeId}
-        </h1>
         <div className="w-7xl mx-auto flex gap-6 text-white">
           <div className="min-w-sm flex flex-col gap-8">
             {challenge ? (

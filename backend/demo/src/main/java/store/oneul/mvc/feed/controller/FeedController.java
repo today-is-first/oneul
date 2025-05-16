@@ -27,6 +27,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 public class FeedController {
     private final FeedService feedService;
 
+    @GetMapping
+    public ResponseEntity<List<FeedDTO>> getFeeds(@PathVariable Long challengeId) {
+        return ResponseEntity.ok(feedService.getFeeds(challengeId));
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<FeedDTO> getFeed(@PathVariable Long challengeId, @PathVariable Long id) {
@@ -45,8 +49,10 @@ public class FeedController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping
-    public ResponseEntity<FeedDTO> updateFeed(@PathVariable Long challengeId, @RequestBody FeedDTO feedDTO) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<FeedDTO> updateFeed(@PathVariable Long challengeId, @PathVariable Long id, @RequestBody FeedDTO feedDTO) {
+        System.out.println("feedDTO : " + feedDTO);
+        feedDTO.setId(id);
         feedService.updateFeed(challengeId, feedDTO);
         return ResponseEntity.ok(feedDTO);
     }

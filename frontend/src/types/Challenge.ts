@@ -10,8 +10,8 @@ export interface Challenge {
   totalDay: number;
   goalDay: number;
   entryFee: number;
-  isChallenge: boolean;
-  isPublic: boolean;
+  challenge: boolean;
+  public: boolean;
   createdAt: string;
   successDay: number; // 삭제 예정
   roomPassword: string; // 삭제 예정

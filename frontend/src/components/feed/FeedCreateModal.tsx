@@ -48,7 +48,7 @@ function FeedCreateModal({
 
     const accessToken = useUserStore.getState().accessToken;
     const userId = useUserStore.getState().user?.id;
-    // API 요청 보내는 부분 (여기 추가)
+
     axios
       .post(
         `${import.meta.env.VITE_API_URL}/presigned/upload`,
@@ -75,7 +75,7 @@ function FeedCreateModal({
           .then(() => {
             //TODO : 챌린지 아이디 변경하기
             axios.post(
-              `${import.meta.env.VITE_API_URL}/challenges/${1}/feeds`,
+              `${import.meta.env.VITE_API_URL}/challenges/${challengeId}/feeds`,
               {
                 content: content,
                 imageUrl: objectKey,

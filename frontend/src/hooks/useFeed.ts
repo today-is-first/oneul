@@ -1,5 +1,6 @@
 import { Feed } from "@/types/Feed";
-import { useGet } from "./useApiHooks";
+import { useGet, usePatch } from "./useApiHooks";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function useChallengeFeeds(challengeId: string) {
   return useGet<Feed[]>(
@@ -9,6 +10,45 @@ export function useChallengeFeeds(challengeId: string) {
       staleTime: 1000 * 60 * 1,
       gcTime: 1000 * 60 * 5,
       enabled: Boolean(challengeId),
+    },
+  );
+}
+
+interface UpdateFeedVariables {
+  challengeId: number;
+  feedId: number;
+  content: string;
+  imageUrl: string;
+  userId: number;
+}
+
+export function useUpdateFeed() {
+  const queryClient = useQueryClient();
+
+  return usePatch<Feed, UpdateFeedVariables>(
+    "", // URL은 mutationFn에서 조립
+    {
+      mutationFn: async ({ challengeId, feedId, ...body }) => {
+        return await fetch(`/challenges/${challengeId}/feeds/${feedId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }).then((res) => res.json());
+      },
+      onSuccess: (updatedFeed, variables) => {
+        const { challengeId } = variables;
+
+        // 캐시 수정 방식 1: 직접 setQueryData로 갱신
+        queryClient.setQueryData<Feed[]>(["feeds", challengeId], (oldFeeds) =>
+          oldFeeds
+            ? oldFeeds.map((feed) =>
+                feed.id === updatedFeed.id ? { ...feed, ...updatedFeed } : feed,
+              )
+            : [],
+        );
+      },
     },
   );
 }

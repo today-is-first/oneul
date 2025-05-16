@@ -43,9 +43,11 @@ public class SecurityConfig {
             .and()
             .csrf().disable()
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/feeds/community").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
             )
+            
             .oauth2Login(oauth -> oauth
                 .userInfoEndpoint().userService(customOAuth2UserService)
                 .and()

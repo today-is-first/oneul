@@ -48,6 +48,19 @@ public class FeedServiceImpl implements FeedService {
         return feed;
     }
 
+    @Override   
+    public List<FeedDTO> getFeeds(Long challengeId) {
+        List<FeedDTO> feeds = feedDAO.getFeeds(challengeId);
+        for (FeedDTO feed : feeds) {
+            if (!feed.getImageUrl().startsWith("uploads")) {
+                continue;
+            }
+            String presignedUrl = s3PresignedUrlGenerator.getPresignedUrlToDownload(feed.getImageUrl());
+            feed.setImageUrl(presignedUrl);
+        }
+        return feeds;
+    }
+
     @Override
     public List<FeedDTO> getMyFeeds(Long userId) {
         List<FeedDTO> myFeeds = feedDAO.getMyFeeds(userId);

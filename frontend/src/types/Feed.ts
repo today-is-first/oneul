@@ -12,5 +12,5 @@ export interface Feed {
   updatedAt: string;
   checkStatus: CheckStatus;
   checkedAt: string | null;
-  profileImageUrl: string;
+  profileImg: string;
 }
