@@ -32,4 +32,6 @@ public class ChallengeDTO {
     private Integer successDay;
     private Integer participantCount;
     private Integer memberCount;
+    private String challengeStatus;
+
 }

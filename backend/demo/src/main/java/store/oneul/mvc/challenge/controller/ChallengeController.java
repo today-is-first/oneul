@@ -73,4 +73,12 @@ public class ChallengeController {
         return ResponseEntity.ok(challengeDTOs);
     }
 
+    @GetMapping("/subscribed")
+    public ResponseEntity<List<ChallengeDTO>> getSubscribedChallenges(
+            @AuthenticationPrincipal UserDTO loginUser) {
+        Long loginUserId = loginUser.getUserId();
+        List<ChallengeDTO> challengeDTOs = challengeService.getSubscribedChallenges(loginUserId);
+        return ResponseEntity.ok(challengeDTOs);
+    }   
+
 }

@@ -86,6 +86,7 @@
         FROM challenge c
         JOIN challenge_user cu ON c.challenge_id = cu.challenge_id
         WHERE cu.user_id = #{userId}
+        AND c.challenge_status = 'IN_PROGRESS'
     </select>
     
     <select id="getCommunityChallenges" resultType="store.oneul.mvc.challenge.dto.ChallengeDTO">

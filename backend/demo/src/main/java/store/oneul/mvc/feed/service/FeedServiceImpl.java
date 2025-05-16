@@ -40,6 +40,9 @@ public class FeedServiceImpl implements FeedService {
     @Override
     public FeedDTO getFeed(Long challengeId, Long id) {
         FeedDTO feed = feedDAO.getFeed(challengeId, id);
+        if (!feed.getImageUrl().startsWith("uploads")) {
+            return feed;
+        }
         String presignedUrl = s3PresignedUrlGenerator.getPresignedUrlToDownload(feed.getImageUrl());
         feed.setImageUrl(presignedUrl);
         return feed;
@@ -49,6 +52,9 @@ public class FeedServiceImpl implements FeedService {
     public List<FeedDTO> getMyFeeds(Long userId) {
         List<FeedDTO> myFeeds = feedDAO.getMyFeeds(userId);
         for (FeedDTO feed : myFeeds) {
+            if (!feed.getImageUrl().startsWith("uploads")) {
+                continue;
+            }
             String presignedUrl = s3PresignedUrlGenerator.getPresignedUrlToDownload(feed.getImageUrl());
             feed.setImageUrl(presignedUrl);
         }
@@ -59,6 +65,9 @@ public class FeedServiceImpl implements FeedService {
     public List<CommunityFeedDTO> getCommunityFeeds() {
         List<CommunityFeedDTO> communityFeeds = feedDAO.getCommunityFeeds();
         for (CommunityFeedDTO communityFeed : communityFeeds) {
+            if (!communityFeed.getImageUrl().startsWith("uploads")) {
+                continue;
+            }
             String presignedUrl = s3PresignedUrlGenerator.getPresignedUrlToDownload(communityFeed.getImageUrl());
             communityFeed.setImageUrl(presignedUrl);
         }

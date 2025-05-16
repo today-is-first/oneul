@@ -23,4 +23,5 @@ public interface ChallengeDAO {
     List<ChallengeDTO> getSubscribedChallenges(Long userId);
 
     List<ChallengeDTO> getCommunityChallenges();
+
 }
