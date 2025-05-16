@@ -16,4 +16,5 @@ export interface Challenge {
   successDay: number; // 삭제 예정
   roomPassword: string; // 삭제 예정
   memberCount: number;
+  challengeStatus: string;
 }

@@ -52,6 +52,12 @@ function App() {
     staleTime: 1000 * 60 * 5,
   });
 
+  const { data: subscribedChallengeList } = useQuery<Challenge[]>({
+    queryKey: ["subscribedChallengeList"],
+    queryFn: () => get("/challenges/subscribed"),
+    staleTime: 1000 * 60 * 5,
+  });
+
   useEffect(() => {
     useUserStore.getState().initializeFromToken();
   }, []);
@@ -94,6 +100,14 @@ function App() {
         .setCommunityChallengeList(communityChallengeList);
     }
   }, [communityChallengeList]);
+
+  useEffect(() => {
+    if (subscribedChallengeList) {
+      useChallengeStore
+        .getState()
+        .setSubscribedChallengeList(subscribedChallengeList);
+    }
+  }, [subscribedChallengeList]);
 
   return (
     <div className="bg-background h-full w-full">

@@ -18,17 +18,11 @@ function SideBar() {
   };
 
   const messages = useSocketStore((state) => state.messages);
-  const { getChallenge } = useChallengeStore();
+  const subscribedChallengeList = useChallengeStore(
+    (state) => state.subscribedChallengeList,
+  );
 
-  // 메뉴 구성: 동적 챌린지 + 고정 탭
-  const menuItems = [
-    ...Object.entries(messages).map(([challengeId, messageList]) => ({
-      icon: <FaHeart size={18} />,
-      label: getChallenge(Number(challengeId))?.name ?? "",
-      challengeId: challengeId,
-      messageList: messageList,
-    })),
-  ];
+  console.log("🔄 subscribedChallengeList", subscribedChallengeList);
 
   return (
     <>
@@ -38,11 +32,11 @@ function SideBar() {
           <div className="flex flex-col items-center space-y-4 overflow-y-auto">
             <LoginBtn />
             <div className="h-px w-12 rounded-full bg-[#23232a]" />
-            {menuItems.map((item) => (
+            {subscribedChallengeList.map((item) => (
               <SidePanelToggleButton
                 key={item.challengeId}
-                icon={item.icon}
-                label={item.label}
+                icon={<FaHeart size={18} />}
+                label={item.name}
                 onClick={() => togglePanel(item.challengeId.toString())}
               />
             ))}
@@ -51,9 +45,8 @@ function SideBar() {
       </div>
 
       {/* 동적 챌린지 패널들 */}
-      {menuItems.map((item) => {
+      {subscribedChallengeList.map((item) => {
         const messageList = messages[Number(item.challengeId)] ?? [];
-        console.log("🔄 messageList", messageList);
         return (
           <SidePanel
             key={item.challengeId}
@@ -62,7 +55,7 @@ function SideBar() {
           >
             <ChatRoom
               challengeId={Number(item.challengeId)}
-              challengeName={item.label}
+              challengeName={item.name}
               messages={messageList}
             />
           </SidePanel>
