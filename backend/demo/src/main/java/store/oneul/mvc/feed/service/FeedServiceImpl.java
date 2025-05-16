@@ -1,7 +1,6 @@
 package store.oneul.mvc.feed.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -10,16 +9,18 @@ import store.oneul.mvc.feed.dao.FeedDAO;
 import store.oneul.mvc.feed.dto.CommunityFeedDTO;
 import store.oneul.mvc.feed.dto.FeedDTO;
 import store.oneul.mvc.feed.dto.FeedEvaluationRequest;
+import store.oneul.mvc.feed.dto.StreakDTO;
 import store.oneul.mvc.feed.enums.CheckStatus;
+import store.oneul.mvc.upload.util.S3PresignedUrlGenerator;
 import store.oneul.mvc.workoutLog.dao.WorkoutLogDAO;
 import store.oneul.mvc.workoutLog.dto.WorkoutLogInsertRequestDTO;
-import store.oneul.mvc.feed.dto.StreakDTO;
 
 @Service
 @RequiredArgsConstructor
 public class FeedServiceImpl implements FeedService {
     private final FeedDAO feedDAO;
     private final WorkoutLogDAO workoutLogDAO;
+    private final S3PresignedUrlGenerator s3PresignedUrlGenerator;
 
     @Override
     public void createFeed(Long challengeId, FeedDTO feedDTO) {
@@ -38,28 +39,36 @@ public class FeedServiceImpl implements FeedService {
 
     @Override
     public FeedDTO getFeed(Long challengeId, Long id) {
-        return feedDAO.getFeed(challengeId, id);
+        FeedDTO feed = feedDAO.getFeed(challengeId, id);
+        String presignedUrl = s3PresignedUrlGenerator.getPresignedUrlToDownload(feed.getImageUrl());
+        feed.setImageUrl(presignedUrl);
+        return feed;
     }
 
     @Override
     public List<FeedDTO> getMyFeeds(Long userId) {
-        return feedDAO.getMyFeeds(userId);
+        List<FeedDTO> myFeeds = feedDAO.getMyFeeds(userId);
+        for (FeedDTO feed : myFeeds) {
+            String presignedUrl = s3PresignedUrlGenerator.getPresignedUrlToDownload(feed.getImageUrl());
+            feed.setImageUrl(presignedUrl);
+        }
+        return myFeeds;
     }
 
     @Override
     public List<CommunityFeedDTO> getCommunityFeeds() {
-        return feedDAO.getCommunityFeeds();
+        List<CommunityFeedDTO> communityFeeds = feedDAO.getCommunityFeeds();
+        for (CommunityFeedDTO communityFeed : communityFeeds) {
+            String presignedUrl = s3PresignedUrlGenerator.getPresignedUrlToDownload(communityFeed.getImageUrl());
+            communityFeed.setImageUrl(presignedUrl);
+        }
+        return communityFeeds;
         
     }
 
     @Override
     public List<StreakDTO> getStreak(Long userId) {
         return feedDAO.getStreak(userId);
-    }
-
-    @Override
-    public List<FeedDTO> getFeeds(Long challengeId) {
-        return feedDAO.getFeeds(challengeId);
     }
 
     @Override

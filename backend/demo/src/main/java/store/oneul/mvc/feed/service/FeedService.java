@@ -1,7 +1,6 @@
 package store.oneul.mvc.feed.service;
 
 import java.util.List;
-import java.util.Map;
 
 import store.oneul.mvc.feed.dto.CommunityFeedDTO;
 import store.oneul.mvc.feed.dto.FeedDTO;
@@ -23,7 +22,5 @@ public interface FeedService {
 
     public List<StreakDTO> getStreak(Long userId);
 
-    public List<FeedDTO> getFeeds(Long challengeId);
-    
     public void evaluateFeed(FeedEvaluationRequest feedEvaluationRequest, Long userId);
 }
