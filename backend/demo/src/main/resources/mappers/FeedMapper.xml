@@ -15,6 +15,43 @@
           AND f.id = #{id}
     </select>
 
+    <!-- SELECT MY FEEDS -->
+    <select id="getMyFeeds" resultType="FeedDTO">
+        SELECT f.*, u.nickname 
+        FROM feed f
+        LEFT JOIN user u
+          ON f.user_id = u.user_id
+        WHERE f.user_id = #{userId}
+        ORDER BY f.created_at DESC
+    </select>
+
+    <!-- SELECT COMMUNITY FEEDS -->
+    <select id="getCommunityFeeds" resultType="CommunityFeedDTO">
+        SELECT 
+            f.*, 
+            u.nickname, 
+            u.profile_img
+        FROM feed f
+        LEFT JOIN user u
+        ON f.user_id = u.user_id
+        WHERE f.check_status = 'APPROVED'
+        ORDER BY f.like_count DESC, f.created_at DESC
+        LIMIT 12;
+    </select>
+
+    <!-- SELECT STREAK -->
+    <select id="getStreak" resultType="StreakDTO">
+        SELECT 
+            DATE_FORMAT(created_at, '%Y-%m-%d') AS date,
+            COUNT(*) AS count
+        FROM feed   
+        WHERE user_id = #{userId}
+        AND check_status = 'APPROVED'
+        GROUP BY DATE_FORMAT(created_at, '%Y-%m-%d')
+        ORDER BY date DESC; 
+    </select>
+    
+
     <!-- SELECT ALL -->
     <select id="getFeeds" parameterType="map" resultType="FeedDTO">
         SELECT f.*, u.nickname 

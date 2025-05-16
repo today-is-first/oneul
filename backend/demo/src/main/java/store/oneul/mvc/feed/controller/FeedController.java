@@ -27,10 +27,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 public class FeedController {
     private final FeedService feedService;
 
-    @GetMapping
-    public ResponseEntity<List<FeedDTO>> getFeeds(@PathVariable Long challengeId) {
-        return ResponseEntity.ok(feedService.getFeeds(challengeId));
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<FeedDTO> getFeed(@PathVariable Long challengeId, @PathVariable Long id) {
