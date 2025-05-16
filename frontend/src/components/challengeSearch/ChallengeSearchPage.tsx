@@ -2,41 +2,25 @@
 import { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import Badge from "../common/Badge";
-
-const tabs = ["전체", "챌린지", "일반"];
-const categories = [
-  "다이어트",
-  "운동 루틴",
-  "식단",
-  "근력 운동",
-  "유산소",
-  "스트레칭",
-  "홈트레이닝",
-  "요가",
-];
-
-const challengeList = Array.from({ length: 30 }, (_, i) => ({
-  id: i + 1,
-  name: `${i + 1}번 챌린지 방`,
-  description: `${i + 1}번 방 설명입니다. 운동 목표를 공유하고 함께 달성해요!`,
-  category: categories[i % categories.length],
-  isChallenge: i % 2 === 0,
-  totalDay: 30 + (i % 10),
-  goalDay: 20 + (i % 10),
-  memberCount: 5 + (i % 20),
-}));
+import { categories, tabs } from "@/constants/challengeSearchContants";
+import { useChallengeStore } from "@/stores/challengeStore";
+import { Challenge } from "@/types/Challenge";
 
 const ChallengeSearchPage = () => {
   const [activeTab, setActiveTab] = useState("전체");
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<String | null>(null);
   const [keyword, setKeyword] = useState("");
 
-  const filteredList = challengeList.filter((c) => {
+  const challengeList = useChallengeStore.getState().communityChallengeList;
+
+  const filteredList = challengeList.filter((c: Challenge) => {
     const matchTab =
       activeTab === "전체" ||
       (activeTab === "챌린지" && c.isChallenge) ||
       (activeTab === "일반" && !c.isChallenge);
-    const matchCategory = !activeCategory || c.category === activeCategory;
+
+    const category = categories[c.categoryId];
+    const matchCategory = !activeCategory || category === activeCategory;
     const matchKeyword =
       keyword === "" || c.name.toLowerCase().includes(keyword.toLowerCase());
     return matchTab && matchCategory && matchKeyword;
@@ -105,7 +89,7 @@ const ChallengeSearchPage = () => {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {filteredList.map((room) => (
               <div
-                key={room.id}
+                key={room.challengeId}
                 className="rounded-lg border border-[#2F2F33] bg-[#222227] p-5 shadow-sm transition hover:shadow-md"
               >
                 <div className="mb-2 flex items-center justify-between">
@@ -121,7 +105,7 @@ const ChallengeSearchPage = () => {
                 </p>
                 <div className="text-xs text-gray-500">
                   {room.totalDay}일 중 {room.goalDay}일 목표 ・ 참여자{" "}
-                  {room.memberCount}명
+                  {room.memberCount || 0}명
                 </div>
               </div>
             ))}
