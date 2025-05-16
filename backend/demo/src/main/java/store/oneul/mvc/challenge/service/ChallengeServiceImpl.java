@@ -44,4 +44,9 @@ public class ChallengeServiceImpl implements ChallengeService {
         return challengeDAO.getSubscribedChallenges(userId);
     }
 
+    @Override
+    public List<ChallengeDTO> getCommunityChallenges() {
+        return challengeDAO.getCommunityChallenges();
+    }
+
 }
