@@ -13,8 +13,9 @@ export interface Challenge {
   challenge: boolean;
   public: boolean;
   createdAt: string;
-  successDay: number; // 삭제 예정
+  successDay?: number; // 삭제 예정
   roomPassword: string; // 삭제 예정
   memberCount: number;
   challengeStatus: string;
+  participantCount?: number;
 }
