@@ -1,15 +1,15 @@
 // pages/ChallengeSearchPage.tsx
 import { useState } from "react";
 import { FiSearch } from "react-icons/fi";
-import Badge from "../common/Badge";
+import Badge from "@components/common/Badge";
 import { categories, tabs } from "@/constants/challengeSearchContants";
 import { useChallengeStore } from "@/stores/challengeStore";
 import { Challenge } from "@/types/Challenge";
-import ChallengeDetailModal from "../challengeRegist/ChallengeDetailModal";
+import ChallengeDetailModal from "@components/challengeRegist/ChallengeDetailModal";
 
 const ChallengeSearchPage = () => {
   const [activeTab, setActiveTab] = useState("전체");
-  const [activeCategory, setActiveCategory] = useState<String | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [keyword, setKeyword] = useState("");
   const [selected, setSelected] = useState<Challenge | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
