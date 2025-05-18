@@ -5,13 +5,18 @@ import Badge from "../common/Badge";
 import { categories, tabs } from "@/constants/challengeSearchContants";
 import { useChallengeStore } from "@/stores/challengeStore";
 import { Challenge } from "@/types/Challenge";
+import ChallengeDetailModal from "../challengeRegist/ChallengeDetailModal";
 
 const ChallengeSearchPage = () => {
   const [activeTab, setActiveTab] = useState("전체");
   const [activeCategory, setActiveCategory] = useState<String | null>(null);
   const [keyword, setKeyword] = useState("");
+  const [selected, setSelected] = useState<Challenge | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const challengeList = useChallengeStore.getState().communityChallengeList;
+  const challengeList = useChallengeStore(
+    (state) => state.communityChallengeList,
+  );
 
   const filteredList = challengeList.filter((c) => {
     const matchTab =
@@ -90,7 +95,11 @@ const ChallengeSearchPage = () => {
             {filteredList.map((room) => (
               <div
                 key={room.challengeId}
-                className="rounded-lg border border-[#2F2F33] bg-[#222227] p-5 shadow-sm transition hover:shadow-md"
+                className="cursor-pointer rounded-lg border border-[#2F2F33] bg-[#222227] p-5 shadow-sm transition hover:shadow-md"
+                onClick={() => {
+                  setSelected(room);
+                  setIsModalOpen(true);
+                }}
               >
                 <div className="mb-2 flex items-center justify-between">
                   <h3 className="line-clamp-1 text-base font-semibold text-white">
@@ -116,6 +125,14 @@ const ChallengeSearchPage = () => {
             )}
           </div>
         </div>
+        {/* 모달 삽입 */}
+        {selected && (
+          <ChallengeDetailModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            challenge={selected}
+          />
+        )}
       </div>
     </div>
   );
