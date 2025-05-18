@@ -62,7 +62,7 @@ export default function ChallengeDetailModal({
     >
       <div
         ref={modalRef}
-        className={`flex w-[400px] transform flex-col gap-4 rounded-2xl bg-[#1B1B1E] p-8 text-white transition-all duration-300 ${
+        className={`flex w-[400px] transform flex-col gap-8 rounded-2xl bg-[#1B1B1E] p-8 text-white transition-all duration-300 ${
           showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
         }`}
         style={{
@@ -107,23 +107,18 @@ export default function ChallengeDetailModal({
             목표: {challenge.successDay ?? 0}일 달성 / 총 {challenge.totalDay}일
           </div>
           <div className="text-sm text-gray-400">
-            설명: {challenge.description}
-          </div>
-
-          <div className="text-sm text-gray-400">
             참가비:{" "}
             {challenge.entryFee > 0
               ? `${challenge.entryFee.toLocaleString()}원`
               : "무료"}
           </div>
-
-          <p className="mt-4 whitespace-pre-wrap text-gray-100">
+          <p className="mt-6 whitespace-pre-wrap text-sm text-gray-300">
             {challenge.description}
           </p>
         </div>
 
         {/* 푸터 */}
-        <div className="mt-4 flex justify-end">
+        <div className="flex justify-end">
           <button
             onClick={handleJoin}
             disabled={challenge.challengeStatus !== "RECRUITING"}
