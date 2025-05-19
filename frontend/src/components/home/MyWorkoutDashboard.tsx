@@ -3,11 +3,13 @@ import BannerSlider from "@/components/home/BannerSlider";
 import CommunityFeed from "@/components/home/CommunityFeed";
 import { Feed } from "@/types/Feed";
 import { useState } from "react";
-import MonthlyStats from "./MonthlyStats";
-import StreakCalendar from "./StreakCalendar";
-import WorkoutModal from "./WorkoutModal";
-import FeedCreateModal from "../feed/FeedCreateModal";
+import MonthlyStats from "@/components/home/MonthlyStats";
+import StreakCalendar from "@/components/home/StreakCalendar";
+import WorkoutModal from "@/components/home/WorkoutModal";
+import FeedCreateModal from "@/components/feed/FeedCreateModal";
 import { useFeedStore } from "@/stores/feedStore";
+import { useQueryClient } from "@tanstack/react-query";
+import FeedUpdateModal from "@/components/feed/FeedUpdateModal";
 
 export const getContributionColor = (count: number) => {
   if (count >= 4) return "bg-primary-500"; // 진한 보라색
@@ -22,8 +24,9 @@ const MyWorkoutDashboard = () => {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear(),
   );
-  const [todayFeed, setTodayFeed] = useState<Feed | null>(null);
+  const myFeeds = useFeedStore((state) => state.myFeeds);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const streak = useFeedStore((state) => state.streak);
 
   const feedCountByMonth = Array(12).fill(0);
@@ -60,11 +63,26 @@ const MyWorkoutDashboard = () => {
     console.log("View feed details:", feed);
   };
 
+  const queryClient = useQueryClient();
+
+  const invalidateFeeds = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["myFeeds"],
+    });
+  };
+
   return (
     <div className="flex flex-col gap-8 p-6">
       <FeedCreateModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onCreate={invalidateFeeds}
+      />
+      <FeedUpdateModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        initialData={myFeeds[0]}
+        onUpdate={invalidateFeeds}
       />
       <BannerSlider />
       <CommunityFeed />
@@ -73,9 +91,9 @@ const MyWorkoutDashboard = () => {
         <div className="w-1/3 rounded-lg bg-[#1A1A1E] p-6">
           <h2 className="mb-6 text-xl font-semibold text-white">오늘의 인증</h2>
           <MyFeedCard
-            feed={todayFeed}
+            feed={myFeeds[0]}
             onCreate={handleCreateFeed}
-            onEdit={handleEditFeed}
+            onEdit={() => setIsEditModalOpen(true)}
             onDetail={handleDetailFeed}
           />
         </div>

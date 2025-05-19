@@ -1,14 +1,15 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/stores/userStore";
-import { useParams } from "react-router-dom";
 import { useChallengeStore } from "@/stores/challengeStore";
 function FeedCreateModal({
   isOpen,
   onClose,
+  onCreate,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  onCreate: () => void;
 }) {
   const [image, setImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -18,7 +19,6 @@ function FeedCreateModal({
   );
   const modalRef = useRef<HTMLDivElement>(null);
   const [showAnimation, setShowAnimation] = useState(false);
-  const { challengeId } = useParams<{ challengeId: string }>();
   const { subscribedChallengeList } = useChallengeStore();
 
   useEffect(() => {
@@ -44,53 +44,50 @@ function FeedCreateModal({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!image || !content || !selectedChallengeId) {
-      alert("이미지와 내용을 모두 입력해주세요.");
+      alert("이미지와 내용 및 챌린지를 모두 입력해주세요.");
       return;
     }
 
     const accessToken = useUserStore.getState().accessToken;
     const userId = useUserStore.getState().user?.id;
 
-    axios
-      .post(
-        `${import.meta.env.VITE_API_URL}/presigned/upload`,
-        {
-          filename: image.name,
-          contentType: image.type,
+    const presignRes = await axios.post(
+      `${import.meta.env.VITE_API_URL}/presigned/upload`,
+      {
+        filename: image.name,
+        contentType: image.type,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        },
-      )
-      .then((res) => {
-        const { presignedUrl, objectKey } = res.data;
+      },
+    );
 
-        axios
-          .put(presignedUrl, image, {
-            headers: {
-              "Content-Type": image.type,
-            },
-          })
-          .then(() => {
-            //TODO : 챌린지 아이디 변경하기
-            axios.post(
-              `${import.meta.env.VITE_API_URL}/challenges/${selectedChallengeId}/feeds`,
-              {
-                content: content,
-                imageUrl: objectKey,
-                userId: userId,
-              },
-              {
-                headers: { Authorization: `Bearer ${accessToken}` },
-              },
-            );
-          });
-      });
+    const { presignedUrl, objectKey } = presignRes.data;
+
+    await axios.put(presignedUrl, image, {
+      headers: {
+        "Content-Type": image.type,
+      },
+    });
+
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/challenges/${selectedChallengeId}/feeds`,
+      {
+        content: content,
+        imageUrl: objectKey,
+        userId: userId,
+      },
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      },
+    );
+
+    onCreate();
 
     // 등록 완료 후 초기화 + 모달 닫기
     setImage(null);
