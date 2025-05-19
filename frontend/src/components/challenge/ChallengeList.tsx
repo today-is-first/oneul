@@ -1,7 +1,7 @@
-import { Challenge } from "@/api/challenge";
 import { get } from "@/api/api";
 import { useQuery } from "@tanstack/react-query";
 import { useChallengeStore } from "@/stores/challengeStore";
+import { Challenge } from "@/types/Challenge";
 
 function ChallengeList() {
   const { data, isLoading, error } = useQuery<Challenge[]>({

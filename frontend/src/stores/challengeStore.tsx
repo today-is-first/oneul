@@ -1,4 +1,4 @@
-import { Challenge } from "@/api/challenge";
+import { Challenge } from "@/types/Challenge";
 import { create } from "zustand";
 
 interface ChallengeStore {

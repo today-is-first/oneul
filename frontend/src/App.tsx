@@ -12,13 +12,14 @@ import { useEffect } from "react";
 import { data, Route, Routes } from "react-router";
 import "./App.css";
 import "./chart";
-import { Challenge } from "./api/challenge";
+
 import { get } from "./api/api";
 import { useQuery } from "@tanstack/react-query";
 import { useChallengeStore } from "@/stores/challengeStore";
 import { useFeedStore } from "@/stores/feedStore";
 import { Feed } from "@/types/Feed";
 import { Streak } from "@/types/Streak";
+import { Challenge } from "./types/Challenge";
 
 function App() {
   const { connect, disconnect } = useSocketStore();

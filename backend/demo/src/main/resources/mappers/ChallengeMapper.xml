@@ -41,7 +41,11 @@
 
     <!-- SELECT ALL -->
     <select id="getChallenges" resultType="ChallengeDTO">
-        SELECT * FROM challenge
+        SELECT 
+        	c.*, 
+        	u.nickname AS owner_nickname
+         FROM challenge c
+         JOIN user u ON c.owner_id = u.user_id
         ORDER BY created_at DESC
     </select>
 
@@ -90,7 +94,11 @@
     </select>
     
     <select id="getCommunityChallenges" resultType="ChallengeDTO">
-        SELECT * FROM challenge
+        SELECT 
+        	c.*, 
+        	u.nickname AS owner_nickname
+         FROM challenge c
+         JOIN user u ON c.owner_id = u.user_id
         WHERE is_public = 1
         ORDER BY created_at DESC
     </select>
