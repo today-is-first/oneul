@@ -6,10 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import store.oneul.mvc.user.exception.UserNotFoundException;
-import store.oneul.mvc.upload.exception.ImageUploadException;   
-import store.oneul.mvc.common.exception.InvalidParameterException;
+import store.oneul.mvc.payment.dto.TossErrorInfo;
+import store.oneul.mvc.payment.exception.PaymentConfirmException;
+import store.oneul.mvc.upload.exception.ImageUploadException;
 import store.oneul.mvc.user.exception.DuplicateEmailException;
+import store.oneul.mvc.user.exception.UserNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -41,5 +42,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleImageUploadException(ImageUploadException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ApiResponse.error("이미지 업로드 실패: " + ex.getMessage(), ErrorCode.IMAGE_UPLOAD_FAIL.name()));
+    }
+    
+    @ExceptionHandler(PaymentConfirmException.class)
+    public ResponseEntity<ApiResponse<String>> handlePaymentConfirmException(PaymentConfirmException ex) {
+        TossErrorInfo error = ex.getTossError();
+
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)  // 외부 API 실패니까 502
+                .body(ApiResponse.error(error.getMessage(), error.getCode()));
     }
 }
