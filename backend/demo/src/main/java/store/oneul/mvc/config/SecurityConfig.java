@@ -43,6 +43,7 @@ public class SecurityConfig {
             .and()
             .csrf().disable()
             .authorizeHttpRequests(auth -> auth
+            	.requestMatchers("/api/users/guest-login/**").permitAll()
                 .requestMatchers("/api/feeds/community").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
