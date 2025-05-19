@@ -22,7 +22,7 @@
         LEFT JOIN user u
           ON f.user_id = u.user_id
         WHERE f.user_id = #{userId}
-        ORDER BY f.created_at DESC
+        ORDER BY f.updated_at DESC
     </select>
 
     <!-- SELECT COMMUNITY FEEDS -->
@@ -83,6 +83,13 @@
         UPDATE feed
         SET image_url = #{feedDTO.imageUrl}, content = #{feedDTO.content}, check_status = 'PENDING', checked_at = null
         WHERE challenge_id = #{challengeId} AND id = #{feedDTO.id}
+    </update>
+
+    <!-- UPDATE CONTENT -->
+    <update id="updateFeedContent" parameterType="map">
+        UPDATE feed
+        SET content = #{content}
+        WHERE challenge_id = #{challengeId} AND id = #{id}
     </update>
     
     <!-- UPDATE CHECK STATUS -->
