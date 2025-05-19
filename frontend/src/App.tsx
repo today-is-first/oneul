@@ -20,6 +20,7 @@ import { useFeedStore } from "@/stores/feedStore";
 import { Feed } from "@/types/Feed";
 import { Streak } from "@/types/Streak";
 import { Challenge } from "./types/Challenge";
+import ChallengePaymentPage from "./components/payment/ChallengePaymentPage";
 
 function App() {
   const { connect, disconnect } = useSocketStore();
@@ -129,6 +130,10 @@ function App() {
         <Route path="/signup" element={<RegistPage />} />
         <Route path="/challenge/create" element={<ChallengeCreatePage />} />
         <Route path="/oauth/redirect" element={<OAuthRedirectPage />} />
+        <Route
+          path="challenge/:challengeId/order"
+          element={<ChallengePaymentPage />}
+        />
       </Routes>
     </div>
   );
