@@ -102,5 +102,10 @@
         WHERE is_public = 1
         ORDER BY created_at DESC
     </select>
+    
+	<select id="getChallengeById" resultType="ChallengeDTO">
+	  SELECT * FROM challenge WHERE challenge_id = #{challengeId}
+	</select>
+	    
 
 </mapper>
