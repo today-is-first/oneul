@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Feed } from "@/types/Feed";
 import { useUserStore } from "@/stores/userStore";
 import axios from "axios";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface FeedUpdateModalProps {
   isOpen: boolean;
@@ -22,8 +21,6 @@ function FeedUpdateModal({
   const [content, setContent] = useState("");
   const [showAnimation, setShowAnimation] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (isOpen) {
@@ -49,8 +46,8 @@ function FeedUpdateModal({
   };
 
   const handleUpdate = async () => {
-    if (!previewUrl || !content.trim() || !imageFile) {
-      alert("이미지와 내용을 모두 입력해주세요.");
+    if (!previewUrl || !content.trim()) {
+      alert("내용을 입력해주세요.");
       return;
     }
 
@@ -59,43 +56,59 @@ function FeedUpdateModal({
     const challengeId = initialData.challengeId;
 
     try {
-      const presignRes = await axios.post(
-        `${import.meta.env.VITE_API_URL}/presigned/upload`,
-        {
-          filename: imageFile.name,
-          contentType: imageFile.type,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
+      let finalImageUrl = initialData.imageUrl;
+
+      if (imageFile) {
+        // 이미지가 바뀐 경우에만 presigned URL 업로드
+        const presignRes = await axios.post(
+          `${import.meta.env.VITE_API_URL}/presigned/upload`,
+          {
+            filename: imageFile.name,
+            contentType: imageFile.type,
           },
-        },
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          },
+        );
 
-      const { presignedUrl, objectKey } = presignRes.data;
+        const { presignedUrl, objectKey } = presignRes.data;
 
-      await axios.put(presignedUrl, imageFile, {
-        headers: {
-          "Content-Type": imageFile.type,
-        },
-      });
+        await axios.put(presignedUrl, imageFile, {
+          headers: {
+            "Content-Type": imageFile.type,
+          },
+        });
 
-      await axios.patch(
-        `${import.meta.env.VITE_API_URL}/challenges/${challengeId}/feeds/${initialData.id}`,
-        {
-          content,
-          imageUrl: objectKey,
-          userId,
-        },
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        },
-      );
+        finalImageUrl = objectKey;
+
+        // 서버에 최종 데이터 패치
+        await axios.patch(
+          `${import.meta.env.VITE_API_URL}/challenges/${challengeId}/feeds/${initialData.id}`,
+          {
+            content,
+            imageUrl: finalImageUrl,
+            userId,
+          },
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          },
+        );
+      } else {
+        await axios.patch(
+          `${import.meta.env.VITE_API_URL}/challenges/${challengeId}/feeds/${initialData.id}/content`,
+          {
+            content,
+          },
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          },
+        );
+      }
 
       onUpdate();
-
-      // 5. 상태 초기화 및 모달 닫기
       setImageFile(null);
       setPreviewUrl(null);
       setContent("");

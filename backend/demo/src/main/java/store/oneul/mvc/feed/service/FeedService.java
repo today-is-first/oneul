@@ -12,6 +12,8 @@ public interface FeedService {
 
     public void updateFeed(Long challengeId, FeedDTO feedDTO);
 
+    public void updateFeedContent(Long challengeId, Long id, String content);
+
     public void deleteFeed(Long challengeId, Long id);
 
     public FeedDTO getFeed(Long challengeId, Long id);

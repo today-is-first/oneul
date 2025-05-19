@@ -9,8 +9,19 @@ interface MyFeedCardProps {
   onDetail?: (feed: Feed) => void;
 }
 
+function isFeedToday(feed: Feed | null): boolean {
+  if (!feed) return false;
+  const feedDate = new Date(feed.updatedAt);
+  const today = new Date();
+  return (
+    feedDate.getFullYear() === today.getFullYear() &&
+    feedDate.getMonth() === today.getMonth() &&
+    feedDate.getDate() === today.getDate()
+  );
+}
+
 function MyFeedCard({ feed, onCreate, onEdit, onDetail }: MyFeedCardProps) {
-  if (!feed) {
+  if (!feed || !isFeedToday(feed)) {
     return (
       <>
         <p className="mb-4 text-gray-400">

@@ -1,21 +1,25 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/stores/userStore";
-import { useParams } from "react-router-dom";
+import { useChallengeStore } from "@/stores/challengeStore";
 function FeedCreateModal({
   isOpen,
   onClose,
+  onCreate,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  onCreate: () => void;
 }) {
   const [image, setImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [content, setContent] = useState("");
-
+  const [selectedChallengeId, setSelectedChallengeId] = useState<number | null>(
+    null,
+  );
   const modalRef = useRef<HTMLDivElement>(null);
   const [showAnimation, setShowAnimation] = useState(false);
-  const { challengeId } = useParams<{ challengeId: string }>();
+  const { subscribedChallengeList } = useChallengeStore();
 
   useEffect(() => {
     if (isOpen) {
@@ -40,53 +44,50 @@ function FeedCreateModal({
     }
   };
 
-  const handleSubmit = () => {
-    if (!image || !content) {
-      alert("이미지와 내용을 모두 입력해주세요.");
+  const handleSubmit = async () => {
+    if (!image || !content || !selectedChallengeId) {
+      alert("이미지와 내용 및 챌린지를 모두 입력해주세요.");
       return;
     }
 
     const accessToken = useUserStore.getState().accessToken;
     const userId = useUserStore.getState().user?.id;
 
-    axios
-      .post(
-        `${import.meta.env.VITE_API_URL}/presigned/upload`,
-        {
-          filename: image.name,
-          contentType: image.type,
+    const presignRes = await axios.post(
+      `${import.meta.env.VITE_API_URL}/presigned/upload`,
+      {
+        filename: image.name,
+        contentType: image.type,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        },
-      )
-      .then((res) => {
-        const { presignedUrl, objectKey } = res.data;
+      },
+    );
 
-        axios
-          .put(presignedUrl, image, {
-            headers: {
-              "Content-Type": image.type,
-            },
-          })
-          .then(() => {
-            //TODO : 챌린지 아이디 변경하기
-            axios.post(
-              `${import.meta.env.VITE_API_URL}/challenges/${challengeId}/feeds`,
-              {
-                content: content,
-                imageUrl: objectKey,
-                userId: userId,
-              },
-              {
-                headers: { Authorization: `Bearer ${accessToken}` },
-              },
-            );
-          });
-      });
+    const { presignedUrl, objectKey } = presignRes.data;
+
+    await axios.put(presignedUrl, image, {
+      headers: {
+        "Content-Type": image.type,
+      },
+    });
+
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/challenges/${selectedChallengeId}/feeds`,
+      {
+        content: content,
+        imageUrl: objectKey,
+        userId: userId,
+      },
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      },
+    );
+
+    onCreate();
 
     // 등록 완료 후 초기화 + 모달 닫기
     setImage(null);
@@ -112,7 +113,23 @@ function FeedCreateModal({
             "0 0 4px rgba(255, 255, 255, 0.1), 0 0 2px rgba(255, 255, 255, 0.2)",
         }}
       >
-        <h2 className="mb-6 text-xl font-bold">피드 작성</h2>
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-xl font-bold">피드 작성</h2>
+          <select
+            className="rounded border border-[#444] bg-[#2A2A2D] p-1 text-sm text-white"
+            value={selectedChallengeId ?? ""}
+            onChange={(e) => setSelectedChallengeId(Number(e.target.value))}
+          >
+            <option value="" disabled>
+              챌린지 선택
+            </option>
+            {subscribedChallengeList.map((c) => (
+              <option key={c.challengeId} value={c.challengeId}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* 이미지 업로드 */}
         <div className="mb-4">

@@ -17,6 +17,8 @@ public interface FeedDAO {
 
     public void updateFeed(@Param("challengeId") Long challengeId, @Param("feedDTO") FeedDTO feedDTO);
 
+    public void updateFeedContent(@Param("challengeId") Long challengeId, @Param("id") Long id, @Param("content") String content);
+
     public void deleteFeed(@Param("challengeId") Long challengeId, @Param("id") Long id);
 
     public FeedDTO getFeed(@Param("challengeId") Long challengeId, @Param("id") Long id);

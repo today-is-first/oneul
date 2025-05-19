@@ -33,6 +33,11 @@ public class FeedServiceImpl implements FeedService {
     }
 
     @Override
+    public void updateFeedContent(Long challengeId, Long id, String content) {
+        feedDAO.updateFeedContent(challengeId, id, content);
+    }
+
+    @Override
     public void deleteFeed(Long challengeId, Long id) {
         feedDAO.deleteFeed(challengeId, id);
     }
