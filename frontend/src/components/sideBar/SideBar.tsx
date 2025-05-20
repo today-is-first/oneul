@@ -22,8 +22,6 @@ function SideBar() {
     (state) => state.subscribedChallengeList,
   );
 
-  console.log("🔄 subscribedChallengeList", subscribedChallengeList);
-
   return (
     <>
       {/* 사이드바 */}
@@ -57,6 +55,7 @@ function SideBar() {
               challengeId={Number(item.challengeId)}
               challengeName={item.name}
               messages={messageList}
+              isChatOpen={openPanel === item.challengeId.toString()}
             />
           </SidePanel>
         );
