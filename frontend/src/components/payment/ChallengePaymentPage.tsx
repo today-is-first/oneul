@@ -1,4 +1,3 @@
-// ChallengePaymentPage.tsx
 import { useEffect, useState } from "react";
 import {
   loadTossPayments,
@@ -53,29 +52,38 @@ const ChallengePaymentPage: React.FC = () => {
 
   // 3) widgets & amount 준비되면 결제 UI 렌더링
   useEffect(() => {
-    if (!widgets) return;
+    // widgets가 준비되고, challenge(entryFee)가 로드된 다음에만 실행
+    if (!widgets || isLoading || !challenge) return;
+
     (async () => {
-      // 1) 금액 설정
-      await widgets.setAmount(amount);
+      try {
+        // 1) 금액 설정
+        await widgets.setAmount({ currency: "KRW", value: challenge.entryFee });
 
-      // 2) 결제 수단 렌더링
-      await widgets.renderPaymentMethods({
-        selector: "#payment-method",
-        variantKey: "DEFAULT",
-      });
+        // 2) 결제 수단 렌더링
+        await widgets.renderPaymentMethods({
+          selector: "#payment-method",
+          variantKey: "DEFAULT",
+        });
 
-      // 3) 약관 UI 렌더링 후, 이벤트 리스너 등록
-      const agreementWidget = await widgets.renderAgreement({
-        selector: "#agreement",
-        variantKey: "AGREEMENT",
-      });
-      agreementWidget.on("agreementStatusChange", ({ agreedRequiredTerms }) => {
-        // 꼭 필수 약관에 동의해야만 결제 버튼 활성화
-        setIsReady(agreedRequiredTerms);
-      });
-      setIsReady(true);
+        // 3) 약관 렌더링 & 이벤트 등록
+        const agreementWidget = await widgets.renderAgreement({
+          selector: "#agreement",
+          variantKey: "AGREEMENT",
+        });
+        agreementWidget.on(
+          "agreementStatusChange",
+          ({ agreedRequiredTerms }) => {
+            setIsReady(agreedRequiredTerms);
+          },
+        );
+
+        setIsReady(true);
+      } catch (e) {
+        console.error(e);
+      }
     })();
-  }, [widgets, amount]);
+  }, [widgets, isLoading, challenge]);
 
   // ─── 화면 상태 처리 ─────────────────────────────────────────────
   if (!challengeId) {
@@ -103,6 +111,7 @@ const ChallengePaymentPage: React.FC = () => {
       // 서버에 orderId 요청
       setIsOrdering(true);
       const { orderId } = await getOrderId(challengeId);
+      console.log(orderId);
 
       const {
         paymentKey,
