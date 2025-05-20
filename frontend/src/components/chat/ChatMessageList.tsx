@@ -3,31 +3,73 @@ import ChatMessageItem from "./ChatMessageItem";
 import ChatMessage from "@/types/ChatMessage";
 import { FaArrowDown } from "react-icons/fa";
 
+import { useSocketStore } from "@/stores/socketStore";
 interface ChatMessageListProps {
   messages: ChatMessage[];
   isChatOpen: boolean;
+  challengeId: number;
 }
 
-function ChatMessageList({ messages, isChatOpen }: ChatMessageListProps) {
+function ChatMessageList({
+  messages,
+  isChatOpen,
+  challengeId,
+}: ChatMessageListProps) {
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
+  const [isScrolledToTop, setIsScrolledToTop] = useState(false);
   const [shouldShowScrollButton, setShouldShowScrollButton] = useState(false);
+  const { onFetchPreviousMessages } = useSocketStore();
+  const scrollTopRef = useRef(0);
+  const scrollHeightRef = useRef(0);
 
   useEffect(() => {
     const container = chatContainerRef.current;
     if (!container) return;
 
+    let scrollHoldTimer: NodeJS.Timeout | null = null;
+
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
       const atBottom = scrollHeight - scrollTop - clientHeight < 150;
+      const atTop = scrollTop === 0;
+
       setIsScrolledToBottom(atBottom);
       setShouldShowScrollButton(!atBottom);
+      setIsScrolledToTop(atTop);
+
+      if (atTop && !scrollHoldTimer) {
+        scrollHoldTimer = setTimeout(() => {
+          handlePreviousMessagesRequest();
+        }, 1000);
+      } else if (!atTop && scrollHoldTimer) {
+        clearTimeout(scrollHoldTimer);
+        scrollHoldTimer = null;
+      }
     };
 
     container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      if (scrollHoldTimer) clearTimeout(scrollHoldTimer);
+    };
+  }, [messages]);
+
+  const handlePreviousMessagesRequest = () => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+
+    scrollTopRef.current = container.scrollTop;
+    scrollHeightRef.current = container.scrollHeight;
+
+    if (messages.length > 0) {
+      const firstMessageId = messages[0].id;
+      if (firstMessageId) {
+        onFetchPreviousMessages(challengeId, firstMessageId);
+      }
+    }
+  };
 
   const scrollToBottom = () => {
     chatContainerRef.current?.scrollTo({
@@ -42,6 +84,16 @@ function ChatMessageList({ messages, isChatOpen }: ChatMessageListProps) {
       setShouldShowScrollButton(false);
     } else if (isChatOpen && !isScrolledToBottom) {
       setShouldShowScrollButton(true);
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+
+    const heightDiff = container.scrollHeight - scrollHeightRef.current;
+    if (heightDiff > 0) {
+      container.scrollTop = scrollTopRef.current + heightDiff;
     }
   }, [messages]);
 

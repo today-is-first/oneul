@@ -6,6 +6,7 @@ interface FeedStore {
   myFeeds: Feed[];
   communityFeeds: Feed[];
   streak: Streak[];
+
   setMyFeeds: (feeds: Feed[]) => void;
   setCommunityFeeds: (feeds: Feed[]) => void;
   setStreak: (streak: Streak[]) => void;

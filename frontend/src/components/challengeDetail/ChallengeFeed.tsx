@@ -35,8 +35,6 @@ function ChallengeFeed() {
     [feeds, user?.id],
   );
 
-  console.log(feeds);
-
   const invalidateFeeds = () => {
     queryClient.invalidateQueries({
       queryKey: ["feeds", challengeId],

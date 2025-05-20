@@ -16,4 +16,6 @@ public interface ChatDAO {
     public ChatMessage getChat(@Param("challengeId") Long challengeId, @Param("id") Long id);
 
     public List<ChatMessage> getChats(@Param("userId") Long userId);
+
+    public List<ChatMessage> getPreviousChats(@Param("challengeId") Long challengeId, @Param("beforeId") Long beforeId);
 }

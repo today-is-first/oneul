@@ -18,7 +18,11 @@ function ChatRoom({
   return (
     <div className="bg-black-chat flex h-screen select-none flex-col border-r border-gray-700">
       <ChatHeader challengeId={challengeId} challengeName={challengeName} />
-      <ChatMessageList messages={messages} isChatOpen={isChatOpen} />
+      <ChatMessageList
+        messages={messages}
+        isChatOpen={isChatOpen}
+        challengeId={challengeId}
+      />
       <ChatInput challengeId={challengeId} />
     </div>
   );
