@@ -7,6 +7,7 @@ import {
 import { useUserStore } from "@/stores/userStore";
 import { useParams } from "react-router";
 import { useChallenge } from "@/hooks/useChallenge";
+import { getOrderId } from "@/api/payment";
 
 interface Amount {
   currency: "KRW";
@@ -96,9 +97,11 @@ const ChallengePaymentPage: React.FC = () => {
   const onPayClick = async () => {
     if (!widgets || !challenge) return;
     try {
-      // TODO: 서버에 orderId/amount 저장
+      // 서버에 orderId 요청
+      const { orderId } = await getOrderId(challengeId);
+
       await widgets.requestPayment({
-        orderId: "rIc1Ge6eo-bWcEidwcINX",
+        orderId: orderId,
         orderName: challenge.name,
         customerEmail: user?.email,
         customerName: user?.name,
