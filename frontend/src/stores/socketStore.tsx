@@ -8,15 +8,27 @@ type SocketState = {
   socket: Socket;
   isConnected: boolean;
   messages: Record<number, ChatMessage[]>;
+  unreadCount: Record<number, number>;
   connect: () => void;
   disconnect: () => void;
   sendMessage: (content: string, challengeId: number) => void;
+  setUnreadCount: (challengeId: number, count: number) => void;
+  onFetchPreviousMessages: (challengeId: number, beforeId: number) => void;
 };
 
 export const useSocketStore = create<SocketState>((set, get) => ({
   socket,
   isConnected: false,
   messages: {},
+  unreadCount: {},
+  setUnreadCount: (challengeId: number, count: number) => {
+    set((state) => ({
+      unreadCount: {
+        ...state.unreadCount,
+        [challengeId]: count,
+      },
+    }));
+  },
 
   connect: () => {
     const { isConnected } = get();
@@ -48,7 +60,6 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on("chat", (data: ChatMessage) => {
       set((state) => {
         const challengeMessages = state.messages[data.challengeId] || [];
-        console.log("🔄 challengeMessages", challengeMessages);
         return {
           messages: {
             ...state.messages,
@@ -59,12 +70,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on("messages", (history: ChatMessage[]) => {
-      console.log("🔄 messages", history);
       const grouped: Record<number, ChatMessage[]> = {};
       for (const msg of history) {
         if (!grouped[msg.challengeId]) grouped[msg.challengeId] = [];
         grouped[msg.challengeId].push(msg);
       }
+
       set((state) => ({
         messages: {
           ...state.messages,
@@ -72,6 +83,22 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         },
       }));
     });
+
+    socket.on(
+      "previousMessages",
+      (data: { challengeId: number; messages: ChatMessage[] }) => {
+        console.log("🔄 previousMessages", data);
+        set((state) => {
+          const existing = state.messages[data.challengeId] || [];
+          return {
+            messages: {
+              ...state.messages,
+              [data.challengeId]: [...data.messages.reverse(), ...existing],
+            },
+          };
+        });
+      },
+    );
   },
 
   disconnect: () => {
@@ -101,5 +128,14 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
       console.log("📤 Sent:", content);
     }
+  },
+
+  onFetchPreviousMessages: (challengeId: number, beforeId: number) => {
+    const { socket } = get();
+    console.log("🔄 onFetchPreviousMessages", challengeId, beforeId);
+    socket.emit("fetchPreviousMessages", {
+      challengeId,
+      beforeId,
+    });
   },
 }));
