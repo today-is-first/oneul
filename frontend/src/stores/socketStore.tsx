@@ -14,6 +14,7 @@ type SocketState = {
   sendMessage: (content: string, challengeId: number) => void;
   setUnreadCount: (challengeId: number, count: number) => void;
   onFetchPreviousMessages: (challengeId: number, beforeId: number) => void;
+  setInitSocketStore: () => void;
 };
 
 export const useSocketStore = create<SocketState>((set, get) => ({
@@ -21,6 +22,13 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   isConnected: false,
   messages: {},
   unreadCount: {},
+  setInitSocketStore: () => {
+    set({
+      messages: {},
+      unreadCount: {},
+      isConnected: false,
+    });
+  },
   setUnreadCount: (challengeId: number, count: number) => {
     set((state) => ({
       unreadCount: {

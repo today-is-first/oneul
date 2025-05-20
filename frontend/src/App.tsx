@@ -9,7 +9,7 @@ import RegistPage from "@components/regist/RegistPage";
 import { useSocketStore } from "@stores/socketStore";
 import { useUserStore } from "@stores/userStore";
 import { useEffect } from "react";
-import { data, Route, Routes } from "react-router";
+import { Route, Routes } from "react-router";
 import "./App.css";
 import "./chart";
 
@@ -20,7 +20,8 @@ import { useFeedStore } from "@/stores/feedStore";
 import { Feed } from "@/types/Feed";
 import { Streak } from "@/types/Streak";
 import { Challenge } from "./types/Challenge";
-import ChallengePaymentPage from "./components/payment/ChallengePaymentPage";
+import ChallengePaymentPage from "@components/payment/ChallengePaymentPage";
+import { useTokenValidator } from "@/utils/userUtils";
 
 function App() {
   const { connect, disconnect } = useSocketStore();
@@ -110,6 +111,10 @@ function App() {
         .setSubscribedChallengeList(subscribedChallengeList);
     }
   }, [subscribedChallengeList]);
+
+  useEffect(() => {
+    useTokenValidator();
+  }, []);
 
   return (
     <div className="bg-background h-full w-full">

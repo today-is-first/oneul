@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useUserStore } from "@stores/userStore";
 import { useState, useRef, useEffect } from "react";
-import { FaUserCircle } from "react-icons/fa";
+import { useChallengeStore } from "@/stores/challengeStore";
+import { useSocketStore } from "@/stores/socketStore";
 
 function LoginButton() {
   const { user } = useUserStore();
@@ -62,6 +63,8 @@ function LoginButton() {
           <button
             onClick={() => {
               useUserStore.getState().logout();
+              useChallengeStore.getState().setInitChallengeStore();
+              useSocketStore.getState().setInitSocketStore();
               setOpen(false);
             }}
             className="w-full px-4 py-3 text-center text-sm text-gray-200 hover:bg-[#2d2d35]"

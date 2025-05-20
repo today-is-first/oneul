@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { parseJwt, getCookie } from "@/utils/userUtils";
 
 interface User {
   id: number;
@@ -16,22 +17,6 @@ interface UserStore {
   initializeFromToken: () => void;
 }
 
-function parseJwt(token: string): any {
-  try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(""),
-    );
-    return JSON.parse(jsonPayload);
-  } catch (e) {
-    return null;
-  }
-}
-
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
   accessToken: null,
@@ -42,12 +27,6 @@ export const useUserStore = create<UserStore>((set) => ({
     set({ user: null, accessToken: null });
   },
   initializeFromToken: () => {
-    function getCookie(name: string): string | null {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop()!.split(";").shift() || null;
-      return null;
-    }
     const token = getCookie("accessToken");
     if (token) {
       const payload = parseJwt(token);
@@ -59,7 +38,6 @@ export const useUserStore = create<UserStore>((set) => ({
           email: payload.userEmail,
           profile: payload.userProfile,
         };
-        console.log(`user: ${JSON.stringify(user, null, 2)}`);
         set({ user, accessToken: token });
       } else {
         set({ user: null, accessToken: null });
