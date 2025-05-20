@@ -45,7 +45,7 @@ const BannerSlider = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.8 }}
-      className={`relative w-full overflow-hidden rounded-xl bg-gradient-to-r ${currentSlide.bg} animate-gradient-flow h-[96px] bg-[length:300%_300%] px-8 py-6 shadow-md transition-colors`}
+      className={`relative w-full overflow-hidden rounded-xl bg-gradient-to-r ${currentSlide.bg} animate-gradient-flow h-[96px] max-w-[1200px] bg-[length:300%_300%] px-8 py-6 shadow-md transition-colors`}
     >
       <AnimatePresence mode="wait">
         <motion.div
