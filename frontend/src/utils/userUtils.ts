@@ -1,3 +1,6 @@
+import { useFeedStore } from "@/stores/feedStore";
+import { useChallengeStore } from "@/stores/challengeStore";
+import { useSocketStore } from "@/stores/socketStore";
 import { useUserStore } from "@/stores/userStore";
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +29,7 @@ export function getCookie(name: string): string | null {
 }
 
 export function useTokenValidator() {
-  const userStore = useUserStore();
+  const logout = useUserStore.getState().logout;
   const navigate = useNavigate();
 
   const validateToken = () => {
@@ -36,12 +39,16 @@ export function useTokenValidator() {
     const payload = parseJwt(token);
     if (!payload || !payload.exp) return;
 
-    const now = Math.floor(Date.now() / 1000); // 현재 시각(초)
+    const now = Math.floor(Date.now() / 1000);
+
     if (payload.exp < now) {
       console.log("🔐 Token expired, logging out");
-      document.cookie = "accessToken=; Max-Age=0"; // 쿠키 제거
-      userStore.logout(); // 전역 상태 초기화
-      navigate("/login"); // 로그인 페이지로 이동
+      document.cookie = "accessToken=; Max-Age=0";
+      logout();
+      useFeedStore.getState().setInitFeedStore();
+      useChallengeStore.getState().setInitChallengeStore();
+      useSocketStore.getState().setInitSocketStore();
+      navigate("/login");
     }
   };
 
