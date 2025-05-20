@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +22,10 @@ import store.oneul.mvc.challenge.service.ChallengeService;
 import store.oneul.mvc.common.exception.InvalidParameterException;
 import store.oneul.mvc.common.exception.NotFoundException;
 import store.oneul.mvc.payment.dto.OrderIdResponse;
+import store.oneul.mvc.payment.dto.PaymentConfirmRequest;
 import store.oneul.mvc.payment.dto.PaymentSessionDto;
+import store.oneul.mvc.payment.dto.TossConfirmResponse;
+import store.oneul.mvc.payment.usecase.PaymentUsecase;
 import store.oneul.mvc.user.dto.UserDTO;
 
 @RestController
@@ -31,7 +36,8 @@ public class PaymentController {
     private static final int PAYMENT_SESSION_TTL_MINUTES = 15; // Redis TTL
 
     private final ChallengeService challengeService;
-
+    private final PaymentUsecase paymentUsecase;
+    
     @Qualifier("jsonRedisTemplate")
     private final RedisTemplate<String, Object> jsonRedisTemplate;
 
@@ -73,5 +79,16 @@ public class PaymentController {
         // 5. 응답 반환
         return ResponseEntity.ok(new OrderIdResponse(orderId, challenge.getEntryFee()));
     }
+    
+    @PostMapping("/confirm")
+    public ResponseEntity<TossConfirmResponse> confirmPayment(
+            @RequestBody PaymentConfirmRequest request,
+            @AuthenticationPrincipal UserDTO loginUser
+    ) {
+        TossConfirmResponse response = paymentUsecase.confirmPayment(loginUser.getUserId(), request);
+        return ResponseEntity.ok(response);
+    }
+
+
 }
 
