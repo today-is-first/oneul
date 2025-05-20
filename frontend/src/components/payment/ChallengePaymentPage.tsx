@@ -5,20 +5,19 @@ import {
   TossPaymentsWidgets,
 } from "@tosspayments/tosspayments-sdk";
 import { useUserStore } from "@/stores/userStore";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useChallenge } from "@/hooks/useChallenge";
 import { getOrderId } from "@/api/payment";
 import { FiArrowLeft } from "react-icons/fi";
-
-interface Amount {
-  currency: "KRW";
-  value: number;
-}
+import { Amount, ConfirmPaymentRequest } from "@/types/Payment";
+import { useConfirmPayment } from "@/hooks/usePayment";
+import { AxiosError } from "axios";
 
 const ChallengePaymentPage: React.FC = () => {
   const { challengeId } = useParams<{ challengeId: string }>();
   const user = useUserStore.getState().user;
   const customerKey = user ? "user_" + user.id : null; // 고객 식별키
+  const navigate = useNavigate();
 
   // 챌린지 정보 호출
   const {
@@ -28,9 +27,12 @@ const ChallengePaymentPage: React.FC = () => {
     error,
   } = useChallenge(challengeId ?? "");
 
+  const { mutateAsync: confirmPayment } = useConfirmPayment();
+
   const [widgets, setWidgets] = useState<TossPaymentsWidgets | null>(null);
   const [amount, setAmount] = useState<Amount>({ currency: "KRW", value: 0 });
   const [isReady, setIsReady] = useState(false);
+  const [isOrdering, setIsOrdering] = useState(false);
 
   const clientKey = import.meta.env.VITE_TOSS_CLIENT_KEY!;
 
@@ -99,16 +101,57 @@ const ChallengePaymentPage: React.FC = () => {
     if (!widgets || !challenge) return;
     try {
       // 서버에 orderId 요청
+      setIsOrdering(true);
       const { orderId } = await getOrderId(challengeId);
 
-      await widgets.requestPayment({
+      const {
+        paymentKey,
+        orderId: paidOrderId,
+        amount: paidAmount,
+      } = await widgets.requestPayment({
         orderId: orderId,
         orderName: challenge.name,
         customerEmail: user?.email,
         customerName: user?.name,
       });
+
+      sessionStorage.setItem(
+        "toss:paymentPending",
+        JSON.stringify({ orderId: paidOrderId, paymentKey }),
+      ); // 페이먼트 키+오더아이디 저장
+
+      const payload: ConfirmPaymentRequest = {
+        challengeId: +challengeId,
+        orderId: paidOrderId,
+        paymentKey,
+        amount: paidAmount.value,
+      };
+
+      // 서버에 결제 검증 요청
+      await confirmPayment(payload);
+
+      // 성공 페이지로 이동, 뒤로가기 X
+      navigate(`/payment/success/${challengeId}`, {
+        replace: true,
+      });
     } catch (err) {
-      console.error(err);
+      console.error("결제 오류:", err);
+      const axiosErr = err as AxiosError<{
+        errorCode: number;
+        errorMessage: string;
+      }>;
+      const httpStatus = axiosErr.response?.status;
+      const body = axiosErr.response?.data;
+      const errorCode = body?.errorCode;
+      const errorMessage = body?.errorMessage;
+
+      // 실패 페이지로 이동, 뒤로가기 X
+      navigate(`/payment/fail/${challengeId}`, {
+        replace: true,
+        state: { httpStatus, errorCode, errorMessage },
+      });
+    } finally {
+      setIsOrdering(false);
     }
   };
 
@@ -145,10 +188,10 @@ const ChallengePaymentPage: React.FC = () => {
           <div className="w-full px-[30px]">
             <button
               onClick={onPayClick}
-              disabled={!isReady}
+              disabled={!isReady || isOrdering}
               className="bg-primary-purple-400 disabled:bg-primary-purple-100 w-full rounded-lg px-6 py-5 text-lg font-semibold text-white disabled:cursor-default disabled:opacity-50"
             >
-              결제하기
+              {isOrdering ? "결제 진행중" : "결제하기"}
             </button>
           </div>
         </section>
