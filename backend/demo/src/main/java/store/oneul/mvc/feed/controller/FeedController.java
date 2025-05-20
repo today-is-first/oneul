@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.feed.dto.ContentDTO;
 import store.oneul.mvc.feed.dto.FeedDTO;
 import store.oneul.mvc.feed.dto.FeedEvaluationRequest;
+import store.oneul.mvc.feed.dto.ChallengeFeedDTO;
 import store.oneul.mvc.feed.service.FeedService;
 import store.oneul.mvc.user.dto.UserDTO;
 
@@ -34,6 +35,11 @@ public class FeedController {
     @GetMapping("/{id}")
     public ResponseEntity<FeedDTO> getFeed(@PathVariable Long challengeId, @PathVariable Long id) {
         return ResponseEntity.ok(feedService.getFeed(challengeId, id));
+    }
+
+    @GetMapping("/challenge")
+    public ResponseEntity<List<ChallengeFeedDTO>> getChallengeFeeds(@PathVariable Long challengeId) {
+        return ResponseEntity.ok(feedService.getChallengeFeeds(challengeId));
     }
 
     @PostMapping

@@ -1,11 +1,11 @@
 package store.oneul.mvc.feed.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import store.oneul.mvc.feed.dto.ChallengeFeedDTO;
 import store.oneul.mvc.feed.dto.CommunityFeedDTO;
 import store.oneul.mvc.feed.dto.FeedDTO;
 import store.oneul.mvc.feed.dto.FeedEvaluationRequest;
@@ -26,6 +26,8 @@ public interface FeedDAO {
     public List<FeedDTO> getMyFeeds(@Param("userId") Long userId);
 
     public List<CommunityFeedDTO> getCommunityFeeds();
+
+    public List<ChallengeFeedDTO> getChallengeFeeds(@Param("challengeId") Long challengeId);
 
     public List<StreakDTO> getStreak(@Param("userId") Long userId);
 

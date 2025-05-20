@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 export function useChallengeFeeds(challengeId: string) {
   return useGet<Feed[]>(
     ["feeds", challengeId],
-    `/challenges/${challengeId}/feeds`,
+    `/challenges/${challengeId}/feeds/challenge`,
     {
       staleTime: 1000 * 60 * 1,
       gcTime: 1000 * 60 * 5,

@@ -41,9 +41,9 @@ function ChallengeDetailPage() {
               <>
                 <ChallengeDetail data={challenge} />
                 <ChallengeStatus
-                  success={challenge.successDay}
-                  goal={challenge.goalDay}
-                  endDate={challenge.endDate}
+                  success={challenge.successDay ?? 0}
+                  goal={challenge.goalDay ?? 0}
+                  endDate={challenge.endDate ?? ""}
                 />
               </>
             ) : (

@@ -6,6 +6,7 @@ import store.oneul.mvc.feed.dto.CommunityFeedDTO;
 import store.oneul.mvc.feed.dto.FeedDTO;
 import store.oneul.mvc.feed.dto.FeedEvaluationRequest;
 import store.oneul.mvc.feed.dto.StreakDTO;
+import store.oneul.mvc.feed.dto.ChallengeFeedDTO;
 
 public interface FeedService {
     public void createFeed(Long challengeId, FeedDTO feedDTO);
@@ -23,6 +24,8 @@ public interface FeedService {
     public List<FeedDTO> getMyFeeds(Long userId);
 
     public List<CommunityFeedDTO> getCommunityFeeds();
+
+    public List<ChallengeFeedDTO> getChallengeFeeds(Long challengeId);
 
     public List<StreakDTO> getStreak(Long userId);
 
