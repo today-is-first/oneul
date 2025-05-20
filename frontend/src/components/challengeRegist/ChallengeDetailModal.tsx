@@ -37,7 +37,7 @@ export default function ChallengeDetailModal({
   const handleJoin = async () => {
     if (challenge.entryFee > 0) {
       // 유료 챌린지 → 결제 페이지로 이동
-      navigate(`/challenges/${challenge.challengeId}/order`);
+      navigate(`/challenge/${challenge.challengeId}/order`);
     } else {
       // 무료 챌린지 → 즉시 신청 API 호출
       try {
