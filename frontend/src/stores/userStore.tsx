@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { parseJwt, getCookie } from "@/utils/userUtils";
+import { get } from "@/api/api";
 
 interface User {
   id: number;
@@ -17,13 +18,11 @@ interface UserStore {
   initializeFromToken: () => void;
 }
 
-export const useUserStore = create<UserStore>((set) => ({
+export const useUserStore = create<UserStore>((set, get) => ({
   user: null,
   accessToken: null,
   setUser: (user, accessToken) => set({ user, accessToken }),
   logout: () => {
-    document.cookie =
-      "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     set({ user: null, accessToken: null });
   },
   initializeFromToken: () => {

@@ -3,11 +3,14 @@ import { useUserStore } from "@stores/userStore";
 import { useState, useRef, useEffect } from "react";
 import { useChallengeStore } from "@/stores/challengeStore";
 import { useSocketStore } from "@/stores/socketStore";
+import { useFeedStore } from "@/stores/feedStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 function LoginButton() {
   const { user } = useUserStore();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -62,9 +65,13 @@ function LoginButton() {
           </Link>
           <button
             onClick={() => {
+              document.cookie =
+                "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+              queryClient.clear();
               useUserStore.getState().logout();
               useChallengeStore.getState().setInitChallengeStore();
               useSocketStore.getState().setInitSocketStore();
+              useFeedStore.getState().setInitFeedStore();
               setOpen(false);
             }}
             className="w-full px-4 py-3 text-center text-sm text-gray-200 hover:bg-[#2d2d35]"

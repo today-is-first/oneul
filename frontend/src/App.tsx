@@ -21,20 +21,22 @@ import { Feed } from "@/types/Feed";
 import { Streak } from "@/types/Streak";
 import { Challenge } from "./types/Challenge";
 import ChallengePaymentPage from "@components/payment/ChallengePaymentPage";
-import { useTokenValidator } from "@/utils/userUtils";
 
 function App() {
+  const { user } = useUserStore();
   const { connect, disconnect } = useSocketStore();
   const { data: challengeList } = useQuery<Challenge[]>({
     queryKey: ["challengeList"],
     queryFn: () => get("/challenges"),
     staleTime: 1000 * 60 * 5,
+    enabled: !!user,
   });
 
   const { data: myFeeds } = useQuery<Feed[]>({
     queryKey: ["myFeeds"],
     queryFn: () => get("/feeds/my"),
     staleTime: 1000 * 60 * 5,
+    enabled: !!user,
   });
 
   const { data: communityFeeds } = useQuery<Feed[]>({
@@ -47,18 +49,21 @@ function App() {
     queryKey: ["streak"],
     queryFn: () => get("/feeds/streak"),
     staleTime: 1000 * 60 * 5,
+    enabled: !!user,
   });
 
   const { data: communityChallengeList } = useQuery<Challenge[]>({
     queryKey: ["communityChallengeList"],
     queryFn: () => get("/challenges/community"),
     staleTime: 1000 * 60 * 5,
+    enabled: !!user,
   });
 
   const { data: subscribedChallengeList } = useQuery<Challenge[]>({
     queryKey: ["subscribedChallengeList"],
     queryFn: () => get("/challenges/subscribed"),
     staleTime: 1000 * 60 * 5,
+    enabled: !!user,
   });
 
   useEffect(() => {
@@ -111,10 +116,6 @@ function App() {
         .setSubscribedChallengeList(subscribedChallengeList);
     }
   }, [subscribedChallengeList]);
-
-  useEffect(() => {
-    useTokenValidator();
-  }, []);
 
   return (
     <div className="bg-background h-full w-full">
