@@ -1,8 +1,11 @@
 import { create } from "zustand";
 import { Socket } from "socket.io-client";
-import { socket } from "../utils/socket";
-import { useUserStore } from "./userStore";
+import { socket } from "@/utils/socket";
+import { useUserStore } from "@/stores/userStore";
 import ChatMessage from "@/types/ChatMessage";
+import { useFeedStore } from "@/stores/feedStore";
+import { useChallengeStore } from "@/stores/challengeStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 type SocketState = {
   socket: Socket;
@@ -14,6 +17,7 @@ type SocketState = {
   sendMessage: (content: string, challengeId: number) => void;
   setUnreadCount: (challengeId: number, count: number) => void;
   onFetchPreviousMessages: (challengeId: number, beforeId: number) => void;
+  setInitSocketStore: () => void;
 };
 
 export const useSocketStore = create<SocketState>((set, get) => ({
@@ -21,6 +25,13 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   isConnected: false,
   messages: {},
   unreadCount: {},
+  setInitSocketStore: () => {
+    set({
+      messages: {},
+      unreadCount: {},
+      isConnected: false,
+    });
+  },
   setUnreadCount: (challengeId: number, count: number) => {
     set((state) => ({
       unreadCount: {
@@ -35,8 +46,13 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     if (isConnected) return;
 
     const accessToken = useUserStore.getState().accessToken;
+
     if (!accessToken) {
-      console.error("Access token is not available");
+      useUserStore.getState().logout();
+      useFeedStore.getState().setInitFeedStore();
+      useChallengeStore.getState().setInitChallengeStore();
+      useSocketStore.getState().setInitSocketStore();
+      console.log("Access token is not available");
       return;
     }
 

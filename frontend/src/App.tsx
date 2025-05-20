@@ -9,7 +9,7 @@ import RegistPage from "@components/regist/RegistPage";
 import { useSocketStore } from "@stores/socketStore";
 import { useUserStore } from "@stores/userStore";
 import { useEffect } from "react";
-import { data, Route, Routes } from "react-router";
+import { Route, Routes } from "react-router";
 import "./App.css";
 import "./chart";
 
@@ -20,20 +20,23 @@ import { useFeedStore } from "@/stores/feedStore";
 import { Feed } from "@/types/Feed";
 import { Streak } from "@/types/Streak";
 import { Challenge } from "./types/Challenge";
-import ChallengePaymentPage from "./components/payment/ChallengePaymentPage";
+import ChallengePaymentPage from "@components/payment/ChallengePaymentPage";
 
 function App() {
+  const { user } = useUserStore();
   const { connect, disconnect } = useSocketStore();
   const { data: challengeList } = useQuery<Challenge[]>({
     queryKey: ["challengeList"],
     queryFn: () => get("/challenges"),
     staleTime: 1000 * 60 * 5,
+    enabled: !!user,
   });
 
   const { data: myFeeds } = useQuery<Feed[]>({
     queryKey: ["myFeeds"],
     queryFn: () => get("/feeds/my"),
     staleTime: 1000 * 60 * 5,
+    enabled: !!user,
   });
 
   const { data: communityFeeds } = useQuery<Feed[]>({
@@ -46,18 +49,21 @@ function App() {
     queryKey: ["streak"],
     queryFn: () => get("/feeds/streak"),
     staleTime: 1000 * 60 * 5,
+    enabled: !!user,
   });
 
   const { data: communityChallengeList } = useQuery<Challenge[]>({
     queryKey: ["communityChallengeList"],
     queryFn: () => get("/challenges/community"),
     staleTime: 1000 * 60 * 5,
+    enabled: !!user,
   });
 
   const { data: subscribedChallengeList } = useQuery<Challenge[]>({
     queryKey: ["subscribedChallengeList"],
     queryFn: () => get("/challenges/subscribed"),
     staleTime: 1000 * 60 * 5,
+    enabled: !!user,
   });
 
   useEffect(() => {

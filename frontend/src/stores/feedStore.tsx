@@ -10,6 +10,7 @@ interface FeedStore {
   setMyFeeds: (feeds: Feed[]) => void;
   setCommunityFeeds: (feeds: Feed[]) => void;
   setStreak: (streak: Streak[]) => void;
+  setInitFeedStore: () => void;
 }
 
 export const useFeedStore = create<FeedStore>((set) => ({
@@ -19,4 +20,5 @@ export const useFeedStore = create<FeedStore>((set) => ({
   setMyFeeds: (feeds) => set({ myFeeds: feeds }),
   setCommunityFeeds: (feeds) => set({ communityFeeds: feeds }),
   setStreak: (streak) => set({ streak }),
+  setInitFeedStore: () => set({ myFeeds: [], streak: [] }),
 }));
