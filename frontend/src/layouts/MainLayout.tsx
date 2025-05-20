@@ -10,7 +10,7 @@ function MainLayout() {
       <Header left={<Logo />} center={<NavBar />} right={<></>} />
       <div className="flex flex-1 overflow-hidden">
         <SideBar />
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto pr-20">
           <Outlet />
         </main>
       </div>

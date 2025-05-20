@@ -62,6 +62,15 @@
         ORDER BY f.created_at DESC
     </select>
 
+    <select id="getChallengeFeeds" parameterType="map" resultType="ChallengeFeedDTO">
+        SELECT f.*, u.nickname, u.profile_img
+        FROM feed f
+        LEFT JOIN user u
+          ON f.user_id = u.user_id
+        WHERE f.challenge_id = #{challengeId}
+        ORDER BY f.created_at DESC
+    </select>
+
     <!-- INSERT -->
     <insert id="createFeed" parameterType="map">
         INSERT INTO feed (

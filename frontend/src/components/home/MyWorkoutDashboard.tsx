@@ -1,6 +1,6 @@
 import MyFeedCard from "@/components/feed/MyFeedCard";
 import BannerSlider from "@/components/home/BannerSlider";
-import CommunityFeed from "@/components/home/CommunityFeed";
+import CommunityFeed from "@/components/home/CommunityFeedList";
 import { Feed } from "@/types/Feed";
 import { useState } from "react";
 import MonthlyStats from "@/components/home/MonthlyStats";
@@ -10,6 +10,7 @@ import FeedCreateModal from "@/components/feed/FeedCreateModal";
 import { useFeedStore } from "@/stores/feedStore";
 import { useQueryClient } from "@tanstack/react-query";
 import FeedUpdateModal from "@/components/feed/FeedUpdateModal";
+import FeedDetailModal from "@/components/feed/FeedDetailModal";
 
 export const getContributionColor = (count: number) => {
   if (count >= 4) return "bg-primary-500"; // 진한 보라색
@@ -27,6 +28,8 @@ const MyWorkoutDashboard = () => {
   const myFeeds = useFeedStore((state) => state.myFeeds);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedFeed, setSelectedFeed] = useState<Feed | null>(null);
   const streak = useFeedStore((state) => state.streak);
 
   const feedCountByMonth = Array(12).fill(0);
@@ -59,8 +62,8 @@ const MyWorkoutDashboard = () => {
   };
 
   const handleDetailFeed = (feed: Feed) => {
-    // TODO: 인증 상세 보기 로직 구현
-    console.log("View feed details:", feed);
+    setSelectedFeed(feed);
+    setIsDetailModalOpen(true);
   };
 
   const queryClient = useQueryClient();
@@ -85,7 +88,12 @@ const MyWorkoutDashboard = () => {
         onUpdate={invalidateFeeds}
       />
       <BannerSlider />
-      <CommunityFeed />
+      <FeedDetailModal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        feed={selectedFeed}
+      />
+      <CommunityFeed onFeedClick={handleDetailFeed} />
       <div className="flex justify-between gap-8">
         {/* 오늘의 인증 섹션 */}
         <div className="w-1/3 rounded-lg bg-[#1A1A1E] p-6">
@@ -97,8 +105,13 @@ const MyWorkoutDashboard = () => {
             onDetail={handleDetailFeed}
           />
         </div>
-        <div className="w-2/3 rounded-lg bg-[#1A1A1E] p-6">
-          <h2 className="mb-6 text-xl font-semibold text-white">월간 통계</h2>
+        <div className="flex w-2/3 flex-col rounded-lg bg-[#1A1A1E] p-6">
+          <div>
+            <h2 className="mb-6 text-xl font-semibold text-white">월간 통계</h2>
+            <p className="mb-4 text-gray-400">
+              한 해 동안 오늘의 인증 달성률을 확인해보세요!
+            </p>
+          </div>
           <MonthlyStats monthAchievementRate={monthAchievementRate} />
         </div>
       </div>

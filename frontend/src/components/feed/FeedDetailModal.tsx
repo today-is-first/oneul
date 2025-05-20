@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { formatTimeAgo } from "@/utils/date";
 import { Feed } from "@/types/Feed";
+import { FaHeart } from "react-icons/fa";
 
 function FeedDetailModal({
   isOpen,
@@ -9,10 +10,10 @@ function FeedDetailModal({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  feed: Feed;
+  feed: Feed | null;
 }) {
   const [showAnimation, setShowAnimation] = useState(false);
-  const [likeCount, setLikeCount] = useState(feed.likeCount);
+  const [likeCount, setLikeCount] = useState(feed?.likeCount || 0);
   const [liked, setLiked] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -30,74 +31,73 @@ function FeedDetailModal({
     }
   };
 
-  const handleLike = async () => {
-    try {
-      // TODO: 실제 API 호출로 변경
-      // await axios.post(`/api/feeds/${feed.id}/like`);
-      setLiked((prev) => !prev);
-      setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
-    } catch (err) {
-      console.error(err);
-    }
+  const handleLike = () => {
+    setLiked((prev) => !prev);
+    setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !feed) return null;
 
   return (
     <div
       onClick={handleBackgroundClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md"
     >
       <div
         ref={modalRef}
-        className={`flex w-[400px] transform flex-col gap-4 rounded-2xl bg-[#1B1B1E] p-6 text-white transition-all duration-300 ${
-          showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
+        className={`min-h-[550px] w-[450px] transform overflow-hidden rounded-2xl border border-white/10 text-white shadow-[0_4px_40px_rgba(0,0,0,0.6)] transition-all duration-300 ${
+          showAnimation ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
-        style={{
-          boxShadow:
-            "0 0 20px rgba(255, 255, 255, 0.1), 0 0 10px rgba(255, 255, 255, 0.2)",
-        }}
       >
-        <div className="flex items-center justify-between">
-          <span className="font-bold">{feed.userId}</span>
+        {/* 상단: 닉네임 + 닫기 버튼 */}
+        <div className="flex items-center justify-between px-5 py-4">
+          <div className="flex items-center gap-2">
+            <img
+              src={feed.profileImg || "/svgs/default-profile.svg"}
+              alt="프로필"
+              className="h-8 w-8 rounded-full object-cover"
+            />
+            <span className="text-sm font-semibold">{feed.nickname}</span>
+          </div>
           <button
             onClick={onClose}
-            className="cursor-pointer text-gray-400 hover:text-gray-200"
+            className="text-lg text-gray-400 hover:text-white"
           >
             ✕
           </button>
         </div>
-        <div className="max-h-[400px] overflow-y-auto">
-          {feed.imageUrl && (
-            <img
-              src={feed.imageUrl}
-              alt="Feed"
-              className="mb-4 h-64 w-full rounded-lg object-cover"
-            />
-          )}
 
-          <div className="max-h-[100px]">
-            <p className="mb-4 w-[100%] whitespace-normal break-words">
-              {feed.content}
-            </p>
-          </div>
-        </div>
+        {/* 이미지 */}
+        {feed.imageUrl && (
+          <img
+            src={feed.imageUrl}
+            alt="Feed"
+            className="h-[400px] w-full object-cover"
+          />
+        )}
 
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-400">
-            {formatTimeAgo(feed.createdAt)}
-          </span>
-          <button
-            onClick={handleLike}
-            className="flex items-center space-x-1 text-sm font-semibold hover:opacity-80"
-          >
-            <span
-              className={`inline-block ${liked ? "text-red-400" : "text-gray-400"}`}
+        {/* 본문 */}
+        <div className="space-y-4 border border-white/10 px-5 py-4 shadow backdrop-blur-md">
+          <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-white">
+            {feed.content}
+          </p>
+
+          {/* 시간 + 좋아요 */}
+          <div className="flex items-center justify-between text-sm text-gray-400">
+            <span>{formatTimeAgo(feed.createdAt)}</span>
+            <button
+              onClick={handleLike}
+              className="flex items-center gap-1 font-semibold hover:opacity-80"
             >
-              ♥
-            </span>
-            <span>{likeCount}</span>
-          </button>
+              <FaHeart
+                size={14}
+                className={liked ? "text-purple-400" : "text-gray-400"}
+              />
+              <span className={liked ? "text-purple-400" : "text-gray-400"}>
+                {likeCount}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
