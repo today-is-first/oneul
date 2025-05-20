@@ -1,9 +1,14 @@
-import { FaHeart } from "react-icons/fa";
 import { useFeedStore } from "@/stores/feedStore";
 import { useRef } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import CommunityFeedItem from "./CommunityFeedItem";
+import { Feed } from "@/types/Feed";
 
-const CommunityFeed = () => {
+const CommunityFeed = ({
+  onFeedClick,
+}: {
+  onFeedClick: (feed: Feed) => void;
+}) => {
   const feeds = useFeedStore((state) => state.communityFeeds);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -41,35 +46,11 @@ const CommunityFeed = () => {
           style={{ scrollBehavior: "smooth" }}
         >
           {feeds.map((feed) => (
-            <div
+            <CommunityFeedItem
               key={feed.id}
-              className="min-w-[280px] max-w-[280px] flex-shrink-0 overflow-hidden rounded-lg bg-[#222227] shadow-sm"
-            >
-              <img
-                src={feed.imageUrl}
-                alt="피드 이미지"
-                className="h-40 w-full object-cover"
-              />
-              <div className="p-4">
-                <div className="mb-2 flex items-center gap-2">
-                  <img
-                    src={feed.profileImg || "/svgs/default-profile.svg"}
-                    alt="프로필"
-                    className="h-8 w-8 rounded-full object-cover"
-                  />
-                  <span className="text-sm font-medium text-white">
-                    {feed.nickname}
-                  </span>
-                </div>
-                <p className="line-clamp-2 text-sm text-gray-300">
-                  {feed.content}
-                </p>
-                <div className="mt-3 flex items-center gap-1 text-sm text-purple-400">
-                  <FaHeart size={14} />
-                  <span>{feed.likeCount}</span>
-                </div>
-              </div>
-            </div>
+              feed={feed}
+              onClick={() => onFeedClick(feed)}
+            />
           ))}
         </div>
       </div>

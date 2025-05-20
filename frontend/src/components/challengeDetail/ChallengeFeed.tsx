@@ -35,6 +35,8 @@ function ChallengeFeed() {
     [feeds, user?.id],
   );
 
+  console.log(feeds);
+
   const invalidateFeeds = () => {
     queryClient.invalidateQueries({
       queryKey: ["feeds", challengeId],
@@ -95,7 +97,7 @@ function ChallengeFeed() {
 
       {/* --- 모달 분기 --- */}
       {modalState?.kind === "create" && (
-        <FeedCreateModal isOpen onClose={closeAll} />
+        <FeedCreateModal isOpen onClose={closeAll} onCreate={invalidateFeeds} />
       )}
 
       {modalState?.kind === "edit" && myFeed && (
