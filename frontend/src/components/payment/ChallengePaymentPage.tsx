@@ -12,7 +12,7 @@ import { Amount, ConfirmPaymentRequest } from "@/types/Payment";
 import { useConfirmPayment } from "@/hooks/usePayment";
 import { AxiosError } from "axios";
 
-const ChallengePaymentPage: React.FC = () => {
+function ChallengePaymentPage() {
   const { challengeId } = useParams<{ challengeId: string }>();
   const user = useUserStore.getState().user;
   const customerKey = user ? "user_" + user.id : null; // 고객 식별키
@@ -140,8 +140,9 @@ const ChallengePaymentPage: React.FC = () => {
       await confirmPayment(payload);
 
       // 성공 페이지로 이동, 뒤로가기 X
-      navigate(`/payment/success/${challengeId}`, {
+      navigate(`/payment/success`, {
         replace: true,
+        state: { challengeId },
       });
     } catch (err) {
       console.error("결제 오류:", err);
@@ -155,9 +156,9 @@ const ChallengePaymentPage: React.FC = () => {
       const errorMessage = body?.errorMessage;
 
       // 실패 페이지로 이동, 뒤로가기 X
-      navigate(`/payment/fail/${challengeId}`, {
+      navigate(`/payment/fail`, {
         replace: true,
-        state: { httpStatus, errorCode, errorMessage },
+        state: { httpStatus, errorCode, errorMessage, challengeId },
       });
     } finally {
       setIsOrdering(false);
@@ -207,6 +208,6 @@ const ChallengePaymentPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ChallengePaymentPage;
