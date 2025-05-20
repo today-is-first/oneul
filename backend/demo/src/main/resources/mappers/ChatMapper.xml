@@ -37,15 +37,32 @@
     </select>
 
     <select id="getChats" resultMap="ChatMessageResultMap">
-        SELECT cc.id, cc.challenge_id, cc.content, cc.created_at, u.nickname
-        FROM challenge_chat cc
-        JOIN user u ON cc.user_id = u.user_id
-        WHERE cc.challenge_id IN (
-            SELECT challenge_id
-            FROM challenge_user
-            WHERE user_id = #{userId}
-        )
-        ORDER BY cc.created_at ASC;
+          <![CDATA[
+                SELECT *
+                FROM (
+                SELECT cc.id, cc.challenge_id, cc.content, cc.created_at, u.nickname,
+                        ROW_NUMBER() OVER (PARTITION BY cc.challenge_id ORDER BY cc.created_at DESC) AS rn
+                FROM challenge_chat cc
+                JOIN user u ON cc.user_id = u.user_id
+                WHERE cc.challenge_id IN (
+                    SELECT challenge_id FROM challenge_user WHERE user_id = #{userId}
+                )
+                ) sub
+                WHERE sub.rn <= 30
+                ORDER BY sub.challenge_id, sub.created_at ASC   
+        ]]>
+    
+    </select>
+
+    <select id="getPreviousChats" resultMap="ChatMessageResultMap">
+        <![CDATA[
+            SELECT *
+            FROM challenge_chat
+            WHERE challenge_id = #{challengeId}
+            AND id < #{beforeId}
+            ORDER BY created_at DESC
+            LIMIT 30
+        ]]>
     </select>
 
 </mapper>

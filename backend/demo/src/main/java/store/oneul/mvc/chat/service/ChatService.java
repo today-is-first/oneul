@@ -1,6 +1,7 @@
 package store.oneul.mvc.chat.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import store.oneul.mvc.chat.dao.ChatDAO;
 import store.oneul.mvc.chat.dto.ChatMessage;
+import store.oneul.mvc.chat.dto.FetchPreviousMessagesRequest;
 
 @Component
 @RequiredArgsConstructor
@@ -34,5 +36,15 @@ public class ChatService {
         log.info("[messages] {}", userId);
         List<ChatMessage> chatMessages = chatDAO.getChats(userId);
         client.sendEvent("messages", chatMessages);
+    }
+
+    @OnEvent("fetchPreviousMessages")
+    public void onFetchPreviousMessages(SocketIOClient client, FetchPreviousMessagesRequest request) {
+        log.info("[fetchPreviousMessages] challengeId: {}, beforeId: {}", request.getChallengeId(), request.getBeforeId());
+        List<ChatMessage> chatMessages = chatDAO.getPreviousChats(request.getChallengeId(), request.getBeforeId());
+        client.sendEvent("previousMessages", Map.of(
+            "challengeId", request.getChallengeId(),
+            "messages", chatMessages
+        ));
     }
 }
