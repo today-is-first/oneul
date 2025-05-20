@@ -24,6 +24,7 @@ public class ChatService {
     @OnEvent("chat")
     public void onChat(SocketIOClient client, ChatMessage message) {
         log.info("[chat] {}: {} - {}", client.getSessionId(), message.getUserId(), message.getContent());
+        chatDAO.createChat(message.getChallengeId(), message);
         server.getRoomOperations(String.valueOf(message.getChallengeId())).sendEvent("chat", message);
     }
 
