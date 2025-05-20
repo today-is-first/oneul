@@ -21,6 +21,8 @@ function ChatMessageList({
   const [isScrolledToTop, setIsScrolledToTop] = useState(false);
   const [shouldShowScrollButton, setShouldShowScrollButton] = useState(false);
   const { onFetchPreviousMessages } = useSocketStore();
+  const scrollTopRef = useRef(0);
+  const scrollHeightRef = useRef(0);
 
   useEffect(() => {
     const container = chatContainerRef.current;
@@ -55,10 +57,14 @@ function ChatMessageList({
   }, [messages]);
 
   const handlePreviousMessagesRequest = () => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+
+    scrollTopRef.current = container.scrollTop;
+    scrollHeightRef.current = container.scrollHeight;
+
     if (messages.length > 0) {
       const firstMessageId = messages[0].id;
-      console.log("firstMessageId", firstMessageId);
-      console.log("challengeId", challengeId);
       if (firstMessageId) {
         onFetchPreviousMessages(challengeId, firstMessageId);
       }
@@ -78,6 +84,16 @@ function ChatMessageList({
       setShouldShowScrollButton(false);
     } else if (isChatOpen && !isScrolledToBottom) {
       setShouldShowScrollButton(true);
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+
+    const heightDiff = container.scrollHeight - scrollHeightRef.current;
+    if (heightDiff > 0) {
+      container.scrollTop = scrollTopRef.current + heightDiff;
     }
   }, [messages]);
 
