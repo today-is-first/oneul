@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.feed.dao.FeedDAO;
+import store.oneul.mvc.feed.dto.ChallengeFeedDTO;
 import store.oneul.mvc.feed.dto.CommunityFeedDTO;
 import store.oneul.mvc.feed.dto.FeedDTO;
 import store.oneul.mvc.feed.dto.FeedEvaluationRequest;
@@ -91,6 +92,19 @@ public class FeedServiceImpl implements FeedService {
         }
         return communityFeeds;
         
+    }
+
+    @Override
+    public List<ChallengeFeedDTO> getChallengeFeeds(Long challengeId) {
+        List<ChallengeFeedDTO> challengeFeeds = feedDAO.getChallengeFeeds(challengeId);
+        for (ChallengeFeedDTO challengeFeed : challengeFeeds) {
+            if (!challengeFeed.getImageUrl().startsWith("uploads")) {
+                continue;
+            }
+            String presignedUrl = s3PresignedUrlGenerator.getPresignedUrlToDownload(challengeFeed.getImageUrl());
+            challengeFeed.setImageUrl(presignedUrl);
+        }
+        return challengeFeeds;
     }
 
     @Override
