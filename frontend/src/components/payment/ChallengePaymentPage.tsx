@@ -8,6 +8,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useParams } from "react-router";
 import { useChallenge } from "@/hooks/useChallenge";
 import { getOrderId } from "@/api/payment";
+import { FiArrowLeft } from "react-icons/fi";
 
 interface Amount {
   currency: "KRW";
@@ -118,7 +119,15 @@ const ChallengePaymentPage: React.FC = () => {
     <div className="flex min-h-screen w-full items-center justify-center bg-[#0E0E11]">
       <div className="flex min-h-screen flex-col gap-4 bg-white pt-4">
         <section className="flex w-[600px] flex-col items-center p-8">
-          <h1 className="mb-8 text-2xl font-bold">챌린지 결제</h1>
+          <div className="relative mb-8 flex w-full items-center justify-center">
+            <button
+              onClick={() => window.history.back()}
+              className="absolute left-[30px] flex cursor-pointer items-center text-2xl text-gray-400"
+            >
+              <FiArrowLeft />
+            </button>
+            <h1 className="text-2xl font-bold">챌린지 결제</h1>
+          </div>
           <div className="w-full px-[24px]">
             <div className="border-primary-purple-100 flex flex-col gap-2 rounded-md border p-8">
               <div className="flex justify-between gap-4">
@@ -133,14 +142,15 @@ const ChallengePaymentPage: React.FC = () => {
           </div>
           <div id="payment-method" className="w-full" />
           <div id="agreement" className="mb-6 w-full text-center" />
-
-          <button
-            onClick={onPayClick}
-            disabled={!isReady}
-            className="bg-primary-purple-400 disabled:bg-primary-purple-100 w-full cursor-pointer rounded-lg px-6 py-5 font-medium text-white disabled:cursor-default disabled:opacity-50"
-          >
-            결제하기
-          </button>
+          <div className="w-full px-[30px]">
+            <button
+              onClick={onPayClick}
+              disabled={!isReady}
+              className="bg-primary-purple-400 disabled:bg-primary-purple-100 w-full rounded-lg px-6 py-5 text-lg font-semibold text-white disabled:cursor-default disabled:opacity-50"
+            >
+              결제하기
+            </button>
+          </div>
         </section>
       </div>
     </div>
