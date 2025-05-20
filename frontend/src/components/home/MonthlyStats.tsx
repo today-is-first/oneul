@@ -10,6 +10,8 @@ const MonthlyStats = ({ monthAchievementRate }: MonthlyStatsProps) => {
       <CardContent>
         <div className="h-56">
           <Line
+            width={600}
+            height={300}
             data={{
               labels: monthLabels,
               datasets: [
@@ -23,6 +25,7 @@ const MonthlyStats = ({ monthAchievementRate }: MonthlyStatsProps) => {
               ],
             }}
             options={{
+              maintainAspectRatio: false,
               responsive: true,
               plugins: { legend: { display: false } },
               scales: {

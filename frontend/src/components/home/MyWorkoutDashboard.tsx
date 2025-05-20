@@ -97,8 +97,13 @@ const MyWorkoutDashboard = () => {
             onDetail={handleDetailFeed}
           />
         </div>
-        <div className="w-2/3 rounded-lg bg-[#1A1A1E] p-6">
-          <h2 className="mb-6 text-xl font-semibold text-white">월간 통계</h2>
+        <div className="flex w-2/3 flex-col rounded-lg bg-[#1A1A1E] p-6">
+          <div>
+            <h2 className="mb-6 text-xl font-semibold text-white">월간 통계</h2>
+            <p className="mb-4 text-gray-400">
+              한 해 동안 오늘의 인증 달성률을 확인해보세요!
+            </p>
+          </div>
           <MonthlyStats monthAchievementRate={monthAchievementRate} />
         </div>
       </div>

@@ -73,7 +73,7 @@ const StreakCalendar = ({
             {weeks.map((_, weekIdx) => (
               <div
                 key={weekIdx}
-                className={`text-center ${monthPositions[weekIdx] ? "w-[24px]" : "w-[12px]"}`}
+                className={`text-center ${monthPositions[weekIdx] ? "w-[28px]" : "w-[16px]"}`}
               >
                 {monthPositions[weekIdx] || ""}
               </div>
@@ -84,7 +84,7 @@ const StreakCalendar = ({
             {/* 요일 라벨 */}
             <div className="mr-1 flex flex-col justify-between text-xs text-gray-400">
               {weekdayLabels.map((d, i) => (
-                <div key={i} className="h-[12px] text-center leading-[12px]">
+                <div key={i} className="h-[16px] text-center leading-[16px]">
                   {d}
                 </div>
               ))}
@@ -103,12 +103,12 @@ const StreakCalendar = ({
                         <div
                           key={key}
                           onClick={() => count > 0 && setSelectedDate(key)}
-                          className={`h-[12px] w-[12px] cursor-pointer rounded-sm ${getContributionColor(count)} hover:opacity-80`}
+                          className={`h-[16px] w-[16px] cursor-pointer rounded-sm ${getContributionColor(count)} hover:opacity-80`}
                           title={`${key} - ${count > 0 ? count + "개 피드 있음" : "피드 없음"}`}
                         />
                       );
                     } else {
-                      return <div key={dayIdx} className="h-[12px] w-[12px]" />;
+                      return <div key={dayIdx} className="h-[16px] w-[16px]" />;
                     }
                   })}
                 </div>
