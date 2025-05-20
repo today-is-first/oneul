@@ -16,7 +16,6 @@ function ChatMessageList({
   challengeId,
 }: ChatMessageListProps) {
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  console.log(messages);
 
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isScrolledToTop, setIsScrolledToTop] = useState(false);
