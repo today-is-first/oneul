@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import store.oneul.mvc.common.exception.InvalidParameterException;
+import store.oneul.mvc.common.exception.NotFoundException;
 import store.oneul.mvc.payment.dto.TossErrorInfo;
 import store.oneul.mvc.payment.exception.PaymentConfirmException;
 import store.oneul.mvc.upload.exception.ImageUploadException;
@@ -51,4 +53,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY)  // 외부 API 실패니까 502
                 .body(ApiResponse.error(error.getMessage(), error.getCode()));
     }
+    
+    @ExceptionHandler(InvalidParameterException.class)
+    public ResponseEntity<ApiResponse<String>> handleInvalidParameterException(InvalidParameterException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponse.error("잘못된 요청 파라미터: " + ex.getMessage(), ErrorCode.INVALID_PARAMETER.name()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiResponse<String>> handleNotFoundException(NotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ApiResponse.error("리소스를 찾을 수 없습니다: " + ex.getMessage(), ErrorCode.NOT_FOUND.name()));
+    }
+
 }

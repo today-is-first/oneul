@@ -1,4 +1,4 @@
-package store.oneul.mvc.payment.config;
+package store.oneul.mvc.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
