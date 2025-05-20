@@ -70,7 +70,7 @@ public class PaymentController {
 
         // 3. orderId 생성
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String orderId = "user" + userId + ":challenge" + challengeId + ":" + timestamp;
+        String orderId = "user" + userId + "_challenge" + challengeId + "_" + timestamp;
 
         // 4. Redis 저장
         PaymentSessionDto newSession = new PaymentSessionDto(orderId, challengeId, challenge.getEntryFee());
