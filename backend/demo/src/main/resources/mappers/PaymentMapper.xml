@@ -7,7 +7,7 @@
 
     <select id="existsByPaymentKey" parameterType="string" resultType="boolean">
         SELECT EXISTS (
-            SELECT 1 FROM payment
+            SELECT * FROM payment
             WHERE payment_key = #{paymentKey}
         )
     </select>
