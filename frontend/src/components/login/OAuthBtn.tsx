@@ -1,5 +1,6 @@
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import GuestLoginBtn from "@components/login/GuestLoginBtn";
 
 function OAuthBtn() {
   return (
@@ -14,11 +15,21 @@ function OAuthBtn() {
         Google 계정으로 로그인
       </button>
 
-      <div className="mt-4 text-sm text-gray-400">
-        아직 회원이 아니신가요?{" "}
-        <Link to="/signup" className="text-blue-400 underline">
-          가입하기
-        </Link>
+      <div className="mt-4 w-full text-center text-sm text-gray-400">
+        <div>
+          <p>구글 로그인이 번거로우신가요?</p>
+          <p>
+            저희는{" "}
+            <span className="text-primary-purple-200 font-bold">
+              게스트 로그인
+            </span>
+            을 제공합니다!
+          </p>
+        </div>
+        <div className="mt-4 flex w-full gap-2">
+          <GuestLoginBtn guestLoginNumber={1} />
+          <GuestLoginBtn guestLoginNumber={2} />
+        </div>
       </div>
     </div>
   );
