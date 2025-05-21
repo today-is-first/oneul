@@ -22,6 +22,7 @@ import { Streak } from "@/types/Streak";
 import { Challenge } from "./types/Challenge";
 import ChallengePaymentPage from "@components/payment/ChallengePaymentPage";
 import PaymentSuccessPage from "./components/payment/PaymentSuccessPage";
+import PaymentFailPage from "./components/payment/PaymentFailPage";
 
 function App() {
   const { user } = useUserStore();
@@ -142,6 +143,7 @@ function App() {
           element={<ChallengePaymentPage />}
         />
         <Route path="/payment/success" element={<PaymentSuccessPage />} />
+        <Route path="/payment/fail" element={<PaymentFailPage />} />
       </Routes>
     </div>
   );
