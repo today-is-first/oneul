@@ -1,22 +1,9 @@
-import { get } from "@/api/api";
+import { post } from "./api";
 
-export interface Challenge {
-  challengeId: number;
-  name: string;
-  ownerId: number;
-  ownerNickname: string;
-  categoryId: number;
-  description: string;
-  startDate: string;
-  endDate: string;
-  totalDay: number;
-  goalDay: number;
-  entryFee: number;
-  isChallenge: boolean;
-  isPublic: boolean;
-  createdAt: string;
-  successDay: number; // 삭제 예정
-  roomPassword: string; // 삭제 예정
-}
-
-export const fetchChallengeList = () => get<Challenge[]>("/challenges");
+export const joinChallenge = async (
+  challengeId: number,
+  roomPassword?: string,
+) => {
+  const body: { roomPassword?: string } = roomPassword ? { roomPassword } : {};
+  await post<void>(`/challenges/${challengeId}/user`, body);
+};
