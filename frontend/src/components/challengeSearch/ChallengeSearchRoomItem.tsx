@@ -1,5 +1,6 @@
 import { Challenge } from "@/types/Challenge";
 import Badge from "@components/common/Badge";
+import { IoMdLock } from "react-icons/io";
 
 interface ChallengeSearchRoomItemProps {
   challenge: Challenge;
@@ -22,9 +23,12 @@ function ChallengeSearchRoomItem({
       }}
     >
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="line-clamp-1 text-base font-semibold text-white">
-          {challenge.name}
-        </h3>
+        <div className="flex items-center gap-1">
+          {!challenge.public && <IoMdLock className="h-4 w-4 text-gray-400" />}
+          <h3 className="line-clamp-1 max-w-[230px] flex-1 text-base font-semibold text-white">
+            {challenge.name}
+          </h3>
+        </div>
         <Badge type={challenge.challenge ? "CHALLENGE" : "NORMAL"}>
           {challenge.challenge ? "챌린지" : "일반"}
         </Badge>
