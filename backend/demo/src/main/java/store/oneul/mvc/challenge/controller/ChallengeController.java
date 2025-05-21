@@ -105,4 +105,13 @@ public class ChallengeController {
                 .body(ApiResponse.success("null"));
     }
     
+    @PostMapping("/{challengeId}/validate-password")
+    public ResponseEntity<ApiResponse<Boolean>> validatePassword(
+            @PathVariable Long challengeId,
+            @RequestBody Map<String, String> body
+    ) {
+        String roomPassword = body.get("roomPassword");
+        boolean valid = challengeService.isRoomPasswordValid(challengeId, roomPassword);
+        return ResponseEntity.ok(ApiResponse.success(valid));
+    }
 }
