@@ -11,7 +11,7 @@ import store.oneul.mvc.challenge.dto.ChallengeUserDTO;
 @Mapper
 public interface ChallengeDAO {
 
-    ChallengeDTO getChallenge(Map<String, Object> paramMap);
+    ChallengeDTO getMyChallenge(Map<String, Object> paramMap);
 
     List<ChallengeDTO> getChallenges();
 

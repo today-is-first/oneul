@@ -3,6 +3,18 @@ import { Challenge } from "@/types/Challenge";
 import { useGet } from "./useApiHooks";
 
 // 챌린지 정보 호출
+export function useMyChallenge(challengeId: string) {
+  return useGet<Challenge>(
+    ["myChallenge", challengeId],
+    `/challenges/my/${challengeId}`,
+    {
+      staleTime: 1000 * 60 * 10,
+      gcTime: 1000 * 60 * 30,
+      enabled: Boolean(challengeId),
+    },
+  );
+}
+
 export function useChallenge(challengeId: string) {
   return useGet<Challenge>(
     ["challenge", challengeId],

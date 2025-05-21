@@ -45,18 +45,26 @@ public class ChallengeController {
         return ResponseEntity.ok().build();
     }
 
+    /** 일반 챌린지 조회용(챌린지 신청, 결제) */
     @GetMapping("/{challengeId}")
-    public ResponseEntity<ChallengeDTO> getChallenge(
+    public ResponseEntity<ChallengeDTO> getChallengeById(@PathVariable Long challengeId) {
+    	ChallengeDTO dto = challengeService.getChallenge(challengeId);
+    	return ResponseEntity.ok(dto);
+    }
+    
+    /** 나의 챌린지 조회용(챌린지 디테일) */
+    @GetMapping("/my/{challengeId}")
+    public ResponseEntity<ChallengeDTO> getMyChallenge(
             @PathVariable Long challengeId,
             @AuthenticationPrincipal UserDTO loginUser) {
         
         Long loginUserId = loginUser.getUserId();
-
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("challengeId", challengeId);
         paramMap.put("loginUserId", loginUserId);
 
-        ChallengeDTO dto = challengeService.getChallenge(paramMap);
+        ChallengeDTO dto = challengeService.getMyChallenge(paramMap);
+        System.out.println("dto: " + dto);
 
         return ResponseEntity.ok(dto);
     }

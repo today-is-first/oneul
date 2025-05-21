@@ -94,7 +94,7 @@ const MyWorkoutDashboard = () => {
         feed={selectedFeed}
       />
       <CommunityFeed onFeedClick={handleDetailFeed} />
-      <div className="flex max-w-[1200px] justify-between gap-8">
+      <div className="flex w-full max-w-[1200px] justify-between gap-8">
         {/* 오늘의 인증 섹션 */}
         <div className="w-1/3 rounded-lg bg-[#1A1A1E] p-6">
           <h2 className="mb-6 text-xl font-semibold text-white">오늘의 인증</h2>

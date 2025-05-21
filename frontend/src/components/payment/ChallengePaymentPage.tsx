@@ -1,23 +1,22 @@
-// ChallengePaymentPage.tsx
 import { useEffect, useState } from "react";
 import {
   loadTossPayments,
   TossPaymentsWidgets,
 } from "@tosspayments/tosspayments-sdk";
 import { useUserStore } from "@/stores/userStore";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useChallenge } from "@/hooks/useChallenge";
 import { getOrderId } from "@/api/payment";
+import { FiArrowLeft } from "react-icons/fi";
+import { Amount, ConfirmPaymentRequest } from "@/types/Payment";
+import { useConfirmPayment } from "@/hooks/usePayment";
+import { AxiosError } from "axios";
 
-interface Amount {
-  currency: "KRW";
-  value: number;
-}
-
-const ChallengePaymentPage: React.FC = () => {
+function ChallengePaymentPage() {
   const { challengeId } = useParams<{ challengeId: string }>();
   const user = useUserStore.getState().user;
   const customerKey = user ? "user_" + user.id : null; // 고객 식별키
+  const navigate = useNavigate();
 
   // 챌린지 정보 호출
   const {
@@ -27,9 +26,12 @@ const ChallengePaymentPage: React.FC = () => {
     error,
   } = useChallenge(challengeId ?? "");
 
+  const { mutateAsync: confirmPayment } = useConfirmPayment();
+
   const [widgets, setWidgets] = useState<TossPaymentsWidgets | null>(null);
   const [amount, setAmount] = useState<Amount>({ currency: "KRW", value: 0 });
   const [isReady, setIsReady] = useState(false);
+  const [isOrdering, setIsOrdering] = useState(false);
 
   const clientKey = import.meta.env.VITE_TOSS_CLIENT_KEY!;
 
@@ -50,29 +52,38 @@ const ChallengePaymentPage: React.FC = () => {
 
   // 3) widgets & amount 준비되면 결제 UI 렌더링
   useEffect(() => {
-    if (!widgets) return;
+    // widgets가 준비되고, challenge(entryFee)가 로드된 다음에만 실행
+    if (!widgets || isLoading || !challenge) return;
+
     (async () => {
-      // 1) 금액 설정
-      await widgets.setAmount(amount);
+      try {
+        // 1) 금액 설정
+        await widgets.setAmount({ currency: "KRW", value: challenge.entryFee });
 
-      // 2) 결제 수단 렌더링
-      await widgets.renderPaymentMethods({
-        selector: "#payment-method",
-        variantKey: "DEFAULT",
-      });
+        // 2) 결제 수단 렌더링
+        await widgets.renderPaymentMethods({
+          selector: "#payment-method",
+          variantKey: "DEFAULT",
+        });
 
-      // 3) 약관 UI 렌더링 후, 이벤트 리스너 등록
-      const agreementWidget = await widgets.renderAgreement({
-        selector: "#agreement",
-        variantKey: "AGREEMENT",
-      });
-      agreementWidget.on("agreementStatusChange", ({ agreedRequiredTerms }) => {
-        // 꼭 필수 약관에 동의해야만 결제 버튼 활성화
-        setIsReady(agreedRequiredTerms);
-      });
-      setIsReady(true);
+        // 3) 약관 렌더링 & 이벤트 등록
+        const agreementWidget = await widgets.renderAgreement({
+          selector: "#agreement",
+          variantKey: "AGREEMENT",
+        });
+        agreementWidget.on(
+          "agreementStatusChange",
+          ({ agreedRequiredTerms }) => {
+            setIsReady(agreedRequiredTerms);
+          },
+        );
+
+        setIsReady(true);
+      } catch (e) {
+        console.error(e);
+      }
     })();
-  }, [widgets, amount]);
+  }, [widgets, isLoading, challenge]);
 
   // ─── 화면 상태 처리 ─────────────────────────────────────────────
   if (!challengeId) {
@@ -98,16 +109,59 @@ const ChallengePaymentPage: React.FC = () => {
     if (!widgets || !challenge) return;
     try {
       // 서버에 orderId 요청
+      setIsOrdering(true);
       const { orderId } = await getOrderId(challengeId);
+      console.log(orderId);
 
-      await widgets.requestPayment({
+      const {
+        paymentKey,
+        orderId: paidOrderId,
+        amount: paidAmount,
+      } = await widgets.requestPayment({
         orderId: orderId,
         orderName: challenge.name,
         customerEmail: user?.email,
         customerName: user?.name,
       });
+
+      sessionStorage.setItem(
+        "toss:paymentPending",
+        JSON.stringify({ orderId: paidOrderId, paymentKey }),
+      ); // 페이먼트 키+오더아이디 저장
+
+      const payload: ConfirmPaymentRequest = {
+        challengeId: +challengeId,
+        orderId: paidOrderId,
+        paymentKey,
+        amount: paidAmount.value,
+      };
+
+      // 서버에 결제 검증 요청
+      await confirmPayment(payload);
+
+      // 성공 페이지로 이동, 뒤로가기 X
+      navigate(`/payment/success`, {
+        replace: true,
+        state: { challengeId },
+      });
     } catch (err) {
-      console.error(err);
+      console.error("결제 오류:", err);
+      const axiosErr = err as AxiosError<{
+        errorCode: number;
+        errorMessage: string;
+      }>;
+      const httpStatus = axiosErr.response?.status;
+      const body = axiosErr.response?.data;
+      const errorCode = body?.errorCode;
+      const errorMessage = body?.errorMessage;
+
+      // 실패 페이지로 이동, 뒤로가기 X
+      navigate(`/payment/fail`, {
+        replace: true,
+        state: { httpStatus, errorCode, errorMessage, challengeId },
+      });
+    } finally {
+      setIsOrdering(false);
     }
   };
 
@@ -118,7 +172,15 @@ const ChallengePaymentPage: React.FC = () => {
     <div className="flex min-h-screen w-full items-center justify-center bg-[#0E0E11]">
       <div className="flex min-h-screen flex-col gap-4 bg-white pt-4">
         <section className="flex w-[600px] flex-col items-center p-8">
-          <h1 className="mb-8 text-2xl font-bold">챌린지 결제</h1>
+          <div className="relative mb-8 flex w-full items-center justify-center">
+            <button
+              onClick={() => window.history.back()}
+              className="absolute left-[30px] flex cursor-pointer items-center text-2xl text-gray-400"
+            >
+              <FiArrowLeft />
+            </button>
+            <h1 className="text-2xl font-bold">챌린지 결제</h1>
+          </div>
           <div className="w-full px-[24px]">
             <div className="border-primary-purple-100 flex flex-col gap-2 rounded-md border p-8">
               <div className="flex justify-between gap-4">
@@ -133,18 +195,19 @@ const ChallengePaymentPage: React.FC = () => {
           </div>
           <div id="payment-method" className="w-full" />
           <div id="agreement" className="mb-6 w-full text-center" />
-
-          <button
-            onClick={onPayClick}
-            disabled={!isReady}
-            className="bg-primary-purple-400 disabled:bg-primary-purple-100 w-full cursor-pointer rounded-lg px-6 py-5 font-medium text-white disabled:cursor-default disabled:opacity-50"
-          >
-            결제하기
-          </button>
+          <div className="w-full px-[30px]">
+            <button
+              onClick={onPayClick}
+              disabled={!isReady || isOrdering}
+              className="bg-primary-purple-400 disabled:bg-primary-purple-100 w-full rounded-lg px-6 py-5 text-lg font-semibold text-white disabled:cursor-default disabled:opacity-50"
+            >
+              {isOrdering ? "결제 진행중" : "결제하기"}
+            </button>
+          </div>
         </section>
       </div>
     </div>
   );
-};
+}
 
 export default ChallengePaymentPage;

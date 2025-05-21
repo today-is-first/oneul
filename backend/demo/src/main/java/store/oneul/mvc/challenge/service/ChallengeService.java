@@ -12,7 +12,7 @@ public interface ChallengeService {
 
     public void deleteChallenge(Long challengeId);
 
-    public ChallengeDTO getChallenge(Map<String, Object> paramMap);
+    public ChallengeDTO getMyChallenge(Map<String, Object> paramMap);
 
     public List<ChallengeDTO> getChallenges();
 

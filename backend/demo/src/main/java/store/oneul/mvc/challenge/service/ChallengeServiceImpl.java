@@ -30,8 +30,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public ChallengeDTO getChallenge(Map<String, Object> paramMap) {
-        return challengeDAO.getChallenge(paramMap);
+    public ChallengeDTO getMyChallenge(Map<String, Object> paramMap) {
+        return challengeDAO.getMyChallenge(paramMap);
     }
 
     @Override
