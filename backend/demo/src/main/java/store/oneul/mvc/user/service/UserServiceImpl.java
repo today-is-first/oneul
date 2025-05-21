@@ -36,7 +36,6 @@ public class UserServiceImpl implements UserService{
     public UserDTO findById(Long userId) {
         return userDAO.findById(userId);
     }
-    
  
 
 }
