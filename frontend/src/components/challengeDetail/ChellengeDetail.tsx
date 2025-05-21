@@ -30,7 +30,7 @@ function ChallengeDetail({ data }: ChallengeDetailProps) {
     <section className="flex flex-col gap-8 rounded-2xl bg-[#1A1A1F] px-8 py-9">
       {/* 상단 뱃지 + 제목 */}
       <div className="flex items-center gap-2">
-        <Badge type={challenge ? "challenge" : "normal"}>
+        <Badge type={challenge ? "CHALLENGE" : "NORMAL"}>
           {challenge ? "챌린지" : "일반"}
         </Badge>
         <div className="mt-1 flex items-center gap-2">

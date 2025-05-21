@@ -25,7 +25,7 @@ function ChallengeSearchRoomItem({
         <h3 className="line-clamp-1 text-base font-semibold text-white">
           {challenge.name}
         </h3>
-        <Badge type={challenge.challenge ? "challenge" : "normal"}>
+        <Badge type={challenge.challenge ? "CHALLENGE" : "NORMAL"}>
           {challenge.challenge ? "챌린지" : "일반"}
         </Badge>
       </div>
