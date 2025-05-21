@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  FormEvent,
+  FormEventHandler,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { formatTimeHHMM } from "@/utils/date";
 import { Challenge } from "@/types/Challenge";
@@ -6,6 +13,7 @@ import Badge from "../common/Badge";
 import { FiX } from "react-icons/fi";
 import { IoMdLock } from "react-icons/io";
 import { useJoinChallenge } from "@/hooks/useChallenge";
+import { validatePassword } from "@/api/challenge";
 
 interface Props {
   isOpen: boolean;
@@ -46,18 +54,20 @@ export default function ChallengeDetailModal({
     }
   };
 
-  const handleJoin = async () => {
+  const handleJoin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (challenge.entryFee > 0) {
       // 유료 챌린지
       // 비밀번호 있으면 -> 비밀번호 검증 -> 결제페이지로 이동
       // 추후 -> (비밀번호 정보 함께 가지고 감-이중 검증)
       if (isPrivate) {
-        
+        const res = await validatePassword(challenge.challengeId, password);
+        if (res) navigate(`/challenge/${challenge.challengeId}/order`);
+        else alert("비밀번호가 틀렸습니다.");
       } else {
         // 비밀번호 없으면 -> 결제 페이지로 이동
         navigate(`/challenge/${challenge.challengeId}/order`);
       }
-
     } else {
       // 무료 챌린지 → 즉시 신청 API 호출
       try {
@@ -71,6 +81,7 @@ export default function ChallengeDetailModal({
         console.error(err);
       }
     }
+    setPassword("");
   };
 
   if (!isOpen) return null;
