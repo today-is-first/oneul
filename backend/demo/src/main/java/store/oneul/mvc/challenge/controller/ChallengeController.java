@@ -59,12 +59,12 @@ public class ChallengeController {
             @AuthenticationPrincipal UserDTO loginUser) {
         
         Long loginUserId = loginUser.getUserId();
-
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("challengeId", challengeId);
         paramMap.put("loginUserId", loginUserId);
 
-        ChallengeDTO dto = challengeService.getChallenge(paramMap);
+        ChallengeDTO dto = challengeService.getMyChallenge(paramMap);
+        System.out.println("dto: " + dto);
 
         return ResponseEntity.ok(dto);
     }
