@@ -2,7 +2,7 @@ import ChallengeFeed from "./ChallengeFeed";
 import ChallengeDetail from "./ChellengeDetail";
 import ChallengeStatus from "./ChallengeStatus";
 import { useParams } from "react-router";
-import { useChallenge } from "@/hooks/useChallenge";
+import { useMyChallenge } from "@/hooks/useChallenge";
 
 function ChallengeDetailPage() {
   const { challengeId } = useParams<{ challengeId: string }>();
@@ -11,7 +11,7 @@ function ChallengeDetailPage() {
     isLoading,
     isError,
     error,
-  } = useChallenge(challengeId ?? "");
+  } = useMyChallenge(challengeId ?? "");
 
   if (!challengeId) return <p>잘못된 경로입니다.</p>;
 

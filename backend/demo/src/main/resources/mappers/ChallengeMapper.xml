@@ -7,7 +7,7 @@
 
     <!-- SELECT ONE -->
     <!-- 챌린지 상세 조회 + 방장 nickname + 로그인 유저의 success_day -->
-    <select id="getChallenge" parameterType="map" resultType="ChallengeDTO">
+    <select id="getMyChallenge" parameterType="map" resultType="ChallengeDTO">
 		SELECT 
 		    c.challenge_id,
 		    c.name,
