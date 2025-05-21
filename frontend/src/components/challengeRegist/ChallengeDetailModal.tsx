@@ -5,6 +5,7 @@ import { Challenge } from "@/types/Challenge";
 import Badge from "../common/Badge";
 import { FiX } from "react-icons/fi";
 import { IoMdLock } from "react-icons/io";
+import { useJoinChallenge } from "@/hooks/useChallenge";
 
 interface Props {
   isOpen: boolean;
@@ -29,6 +30,7 @@ export default function ChallengeDetailModal({
     () => challenge.challengeStatus === "RECRUITING",
     [challenge.challengeStatus],
   );
+  const { mutate: join, status: joinStatus } = useJoinChallenge();
 
   useEffect(() => {
     if (isOpen) {
@@ -46,17 +48,25 @@ export default function ChallengeDetailModal({
 
   const handleJoin = async () => {
     if (challenge.entryFee > 0) {
-      // 유료 챌린지 → 결제 페이지로 이동
-      navigate(`/challenge/${challenge.challengeId}/order`);
+      // 유료 챌린지
+      // 비밀번호 있으면 -> 비밀번호 검증 -> 결제페이지로 이동
+      // 추후 -> (비밀번호 정보 함께 가지고 감-이중 검증)
+      if (isPrivate) {
+        
+      } else {
+        // 비밀번호 없으면 -> 결제 페이지로 이동
+        navigate(`/challenge/${challenge.challengeId}/order`);
+      }
+
     } else {
       // 무료 챌린지 → 즉시 신청 API 호출
       try {
-        await fetch(`/api/challenges/${challenge.challengeId}/join`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        join({
+          challengeId: challenge.challengeId,
+          roomPassword: isPrivate ? password : undefined,
         });
         onClose();
-        // TODO: 성공 토스트, 리스트 리패치 등 추가
+        // TODO: 성공 토스트
       } catch (err) {
         console.error(err);
       }
@@ -97,7 +107,7 @@ export default function ChallengeDetailModal({
               className="h-6 w-6 cursor-pointer text-gray-400 transition-colors hover:text-gray-200"
             />
           </div>
-          <h2 className="line-clamp-1 max-w-full text-xl font-semibold">
+          <h2 className="line-clamp-1 max-w-full text-lg font-semibold">
             {challenge.name}
           </h2>
         </div>
@@ -163,7 +173,7 @@ export default function ChallengeDetailModal({
           className="flex items-center justify-end gap-2"
         >
           {/* 비밀방이면 패스워드 입력 */}
-          {isPrivate && isPaid && (
+          {isPrivate && isRecruiting && (
             <input
               type="password"
               value={password}
@@ -174,7 +184,7 @@ export default function ChallengeDetailModal({
           )}
           <button
             type="submit"
-            disabled={!isRecruiting}
+            disabled={!isRecruiting && joinStatus !== "pending"}
             className={`h-10 rounded-md px-4 py-2 text-sm font-semibold transition ${
               isRecruiting
                 ? "bg-primary-purple-200 text-white hover:opacity-90"
