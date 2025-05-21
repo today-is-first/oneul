@@ -1,9 +1,10 @@
 // components/ChallengeDetailModal.tsx
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatTimeHHMM } from "@/utils/date";
 import { Challenge } from "@/types/Challenge";
 import Badge from "../common/Badge";
+import { FiX } from "react-icons/fi";
 
 interface Props {
   isOpen: boolean;
@@ -18,7 +19,16 @@ export default function ChallengeDetailModal({
 }: Props) {
   const navigate = useNavigate();
   const [showAnimation, setShowAnimation] = useState(false);
+  const [password, setPassword] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
+
+  // const isPrivate = useMemo(() => !challenge.public, [challenge.public]);
+  const isPrivate = true;
+  const isPaid = useMemo(() => challenge.entryFee > 0, [challenge.entryFee]);
+  const isRecruiting = useMemo(
+    () => challenge.challengeStatus === "RECRUITING",
+    [challenge.challengeStatus],
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -62,77 +72,117 @@ export default function ChallengeDetailModal({
     >
       <div
         ref={modalRef}
-        className={`flex w-[400px] transform flex-col gap-8 rounded-2xl bg-[#1B1B1E] p-8 text-white transition-all duration-300 ${
+        className={`flex w-[400px] transform flex-col gap-8 rounded-2xl border border-gray-700 bg-[#1B1B1E] p-8 text-white transition-all duration-300 ${
           showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
         }`}
         style={{
           boxShadow:
-            "0 0 20px rgba(255, 255, 255, 0.1), 0 0 10px rgba(255, 255, 255, 0.2)",
+            "0 0 20px rgba(255, 255, 255, 0.1), 0 0 10px rgba(255, 255, 255, 0.1)",
         }}
       >
         {/* 헤더 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Badge type={challenge.challenge ? "challenge" : "normal"}>
+            <Badge type={challenge.challenge ? "CHALLENGE" : "NORMAL"}>
               {challenge.challenge ? "챌린지" : "일반"}
             </Badge>
-            <h2 className="text-xl font-semibold">{challenge.name}</h2>
+            <Badge type={isRecruiting ? "RECRUITING" : "ENDED"}>
+              {challenge.challenge ? "모집중" : "모집종료"}
+            </Badge>
+            <h2 className="line-clamp-1 max-w-[200px] text-xl font-semibold">
+              {challenge.name}
+            </h2>
           </div>
-          <button
+          <FiX
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-200"
-          >
-            ✕
-          </button>
+            className="h-6 w-6 cursor-pointer text-gray-400 transition-colors hover:text-gray-200"
+          />
         </div>
 
-        {/* 본문 */}
-        <div className="max-h-[400px] space-y-2 overflow-y-auto">
-          <div className="text-sm text-gray-400">
-            챌린지 매니저: {challenge.ownerNickname}
+        {/* 챌린지 정보 */}
+        <div className="flex flex-col gap-y-4">
+          <div className="flex flex-col gap-1 text-base">
+            <span className="text-sm font-medium text-gray-300">
+              챌린지 매니저
+            </span>
+            <span className="text-sm leading-relaxed text-gray-400">
+              {challenge.ownerNickname}
+            </span>
           </div>
-
-          <div className="text-sm text-gray-400">
-            기간: {challenge.startDate.split("T")[0]}{" "}
-            {challenge.startDate.includes("T") && (
-              <span>{formatTimeHHMM(challenge.startDate)}</span>
-            )}{" "}
-            ~ {challenge.endDate.split("T")[0]}{" "}
-            {challenge.endDate.includes("T") && (
-              <span>{formatTimeHHMM(challenge.endDate)}</span>
-            )}
+          <div className="flex flex-col gap-1 text-base">
+            <span className="text-sm font-medium text-gray-300">
+              챌린지 기간
+            </span>
+            <span className="text-sm leading-relaxed text-gray-400">
+              {challenge.startDate.split("T")[0]}{" "}
+              {challenge.startDate.includes("T") && (
+                <span>{formatTimeHHMM(challenge.startDate)}</span>
+              )}{" "}
+              ~ {challenge.endDate.split("T")[0]}{" "}
+              {challenge.endDate.includes("T") && (
+                <span>{formatTimeHHMM(challenge.endDate)}</span>
+              )}
+            </span>
           </div>
-
-          <div className="text-sm text-gray-400">
-            목표: {challenge.successDay ?? 0}일 달성 / 총 {challenge.totalDay}일
+          <div className="flex flex-col gap-1 text-base">
+            <span className="text-sm font-medium text-gray-300">
+              챌린지 목표
+            </span>
+            <span className="text-sm leading-relaxed text-gray-400">
+              {challenge.totalDay}일 중{" "}
+              {challenge.goalDay ?? challenge.totalDay}일 달성 (
+              {Math.ceil((challenge.goalDay / challenge.totalDay) * 100)}%)
+            </span>
           </div>
-          <div className="text-sm text-gray-400">
-            참가비:{" "}
-            {challenge.entryFee > 0
-              ? `${challenge.entryFee.toLocaleString()}원`
-              : "무료"}
+          <div className="flex flex-col gap-1 text-base">
+            <span className="text-sm font-medium text-gray-300">참가비</span>
+            <span className="text-sm leading-relaxed text-gray-400">
+              {challenge.entryFee > 0
+                ? `${challenge.entryFee.toLocaleString()}원`
+                : "무료"}
+            </span>
           </div>
-          <p className="mt-6 whitespace-pre-wrap text-sm text-gray-300">
-            {challenge.description}
-          </p>
+          <div className="flex max-h-[100px] flex-col gap-1 text-base">
+            <span className="text-sm font-medium text-gray-300">
+              챌린지 안내
+            </span>
+            <span className="break-after-all overflow-y-auto break-all text-sm leading-relaxed text-gray-400">
+              {challenge.description
+                ? challenge.description
+                : "설명이 없습니다."}
+            </span>
+          </div>
         </div>
 
         {/* 푸터 */}
-        <div className="flex justify-end">
+        <form
+          onSubmit={handleJoin}
+          className="flex items-center justify-end gap-2"
+        >
+          {/* 비밀방이면 패스워드 입력 */}
+          {isPrivate && isPaid && (
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="비밀번호 입력"
+              className="focus:border-primary-purple-100 flex-1 rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white placeholder-gray-400 focus:outline-none"
+            />
+          )}
+
+          {/* 버튼 레이블은 유료/무료에 따라 하나만 */}
           <button
-            onClick={handleJoin}
-            disabled={challenge.challengeStatus !== "RECRUITING"}
+            type="submit"
+            disabled={!isRecruiting}
             className={`rounded-md px-4 py-2 text-sm font-semibold transition ${
-              challenge.challengeStatus === "RECRUITING"
+              isRecruiting
                 ? "bg-primary-purple-200 text-white hover:opacity-90"
                 : "cursor-not-allowed bg-gray-600 text-gray-300"
             }`}
           >
-            {challenge.challengeStatus === "RECRUITING"
-              ? "참여하기"
-              : "모집 종료"}
+            {!isRecruiting ? "모집 종료" : isPaid ? "결제하기" : "참여하기"}
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
