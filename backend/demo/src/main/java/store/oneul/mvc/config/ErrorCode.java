@@ -7,5 +7,6 @@ public enum ErrorCode {
     DUPLICATE_EMAIL,
     IMAGE_UPLOAD_FAIL,
     // 필요에 따라 추가
-    NOT_FOUND
+    NOT_FOUND,
+    CHALLENGE_ALREADY_JOINED,
 } 
