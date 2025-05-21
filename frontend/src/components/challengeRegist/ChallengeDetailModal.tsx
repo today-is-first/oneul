@@ -1,10 +1,10 @@
-// components/ChallengeDetailModal.tsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatTimeHHMM } from "@/utils/date";
 import { Challenge } from "@/types/Challenge";
 import Badge from "../common/Badge";
 import { FiX } from "react-icons/fi";
+import { IoMdLock } from "react-icons/io";
 
 interface Props {
   isOpen: boolean;
@@ -68,11 +68,11 @@ export default function ChallengeDetailModal({
   return (
     <div
       onClick={handleBackgroundClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md"
     >
       <div
         ref={modalRef}
-        className={`flex w-[400px] transform flex-col gap-8 rounded-2xl border border-gray-700 bg-[#1B1B1E] p-8 text-white transition-all duration-300 ${
+        className={`flex w-[400px] transform flex-col gap-6 rounded-2xl border border-gray-700 bg-[#1B1B1E] p-8 text-white transition-all duration-300 ${
           showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
         }`}
         style={{
@@ -81,26 +81,29 @@ export default function ChallengeDetailModal({
         }}
       >
         {/* 헤더 */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Badge type={challenge.challenge ? "CHALLENGE" : "NORMAL"}>
-              {challenge.challenge ? "챌린지" : "일반"}
-            </Badge>
-            <Badge type={isRecruiting ? "RECRUITING" : "ENDED"}>
-              {challenge.challenge ? "모집중" : "모집종료"}
-            </Badge>
-            <h2 className="line-clamp-1 max-w-[200px] text-xl font-semibold">
-              {challenge.name}
-            </h2>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {isPrivate && <IoMdLock className="h-5 w-5 text-gray-400" />}
+              <Badge type={challenge.challenge ? "CHALLENGE" : "NORMAL"}>
+                {challenge.challenge ? "챌린지" : "일반"}
+              </Badge>
+              <Badge type={isRecruiting ? "RECRUITING" : "ENDED"}>
+                {isRecruiting ? "모집중" : "모집종료"}
+              </Badge>
+            </div>
+            <FiX
+              onClick={onClose}
+              className="h-6 w-6 cursor-pointer text-gray-400 transition-colors hover:text-gray-200"
+            />
           </div>
-          <FiX
-            onClick={onClose}
-            className="h-6 w-6 cursor-pointer text-gray-400 transition-colors hover:text-gray-200"
-          />
+          <h2 className="line-clamp-1 max-w-full text-xl font-semibold">
+            {challenge.name}
+          </h2>
         </div>
 
         {/* 챌린지 정보 */}
-        <div className="flex flex-col gap-y-4">
+        <div className="mb-2 flex flex-col gap-y-4">
           <div className="flex flex-col gap-1 text-base">
             <span className="text-sm font-medium text-gray-300">
               챌린지 매니저
@@ -154,7 +157,7 @@ export default function ChallengeDetailModal({
           </div>
         </div>
 
-        {/* 푸터 */}
+        {/* 푸터 - 참가 신청 폼 */}
         <form
           onSubmit={handleJoin}
           className="flex items-center justify-end gap-2"
@@ -166,15 +169,13 @@ export default function ChallengeDetailModal({
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="비밀번호 입력"
-              className="focus:border-primary-purple-100 flex-1 rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white placeholder-gray-400 focus:outline-none"
+              className="focus:border-primary-purple-100 border-input-gray bg-input-gray h-10 flex-1 rounded-md border px-3 py-2 text-sm text-white placeholder-gray-400 focus:outline-none"
             />
           )}
-
-          {/* 버튼 레이블은 유료/무료에 따라 하나만 */}
           <button
             type="submit"
             disabled={!isRecruiting}
-            className={`rounded-md px-4 py-2 text-sm font-semibold transition ${
+            className={`h-10 rounded-md px-4 py-2 text-sm font-semibold transition ${
               isRecruiting
                 ? "bg-primary-purple-200 text-white hover:opacity-90"
                 : "cursor-not-allowed bg-gray-600 text-gray-300"
