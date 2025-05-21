@@ -30,7 +30,7 @@ function PaymentSuccessPage() {
 
         <button
           onClick={() =>
-            navigate(`/challenges/${challengeId}`, { replace: true })
+            navigate(`/challenge/${challengeId}`, { replace: true })
           }
           className="bg-primary-purple-300 hover:bg-primary-purple-400 w-full flex-1 transform cursor-pointer rounded-lg p-4 font-semibold text-white"
         >
