@@ -27,7 +27,8 @@ public class PaymentUsecase {
         TossConfirmResponse tossResponse = tossConfirmService.confirm(request);
 
         // 3. DB 저장 (@Transactional 내부)
-        // paymentSaveService.save(userId, session.getChallengeId(), tossResponse);
+        paymentSaveService.save(userId, session.getChallengeId(), tossResponse);
+
 
         // 4. 성공 응답 반환
         return tossResponse;
