@@ -11,4 +11,24 @@
             WHERE payment_key = #{paymentKey}
         )
     </select>
+    
+        <insert id="insert" parameterType="PaymentDTO">
+        INSERT INTO payment (
+            user_id,
+            challenge_id,
+            order_id,
+            payment_key,
+            amount,
+            status
+        ) VALUES (
+            #{userId},
+            #{challengeId},
+            #{orderId},
+            #{paymentKey},
+            #{amount},
+            #{status}
+        )
+    </insert>
+    
+    
 </mapper>
