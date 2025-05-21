@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import store.oneul.mvc.challenge.dto.ChallengeDTO;
+import store.oneul.mvc.challenge.dto.ChallengeUserDTO;
 
 @Mapper
 public interface ChallengeDAO {
@@ -25,5 +26,7 @@ public interface ChallengeDAO {
     List<ChallengeDTO> getCommunityChallenges();
 
 	ChallengeDTO getChallengeById(Long challengeId);
+
+    int insertChallengeUser(ChallengeUserDTO dto);
 
 }
