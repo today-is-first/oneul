@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import store.oneul.mvc.challenge.exception.ChallengeAlreadyJoinedException;
 import store.oneul.mvc.common.exception.InvalidParameterException;
 import store.oneul.mvc.common.exception.NotFoundException;
 import store.oneul.mvc.payment.dto.TossErrorInfo;
@@ -64,6 +65,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleNotFoundException(NotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ApiResponse.error("리소스를 찾을 수 없습니다: " + ex.getMessage(), ErrorCode.NOT_FOUND.name()));
+    }
+    
+    @ExceptionHandler(ChallengeAlreadyJoinedException.class)
+    public ResponseEntity<ApiResponse<String>> handleAlreadyJoined(ChallengeAlreadyJoinedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(ApiResponse.error(ex.getMessage(), ErrorCode.CHALLENGE_ALREADY_JOINED.name()));
     }
 
 }
