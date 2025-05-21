@@ -30,7 +30,7 @@ export function useGet<
 }
 
 // mutation hook
-function useMutationHook<TData, TVariables, TError = Error>(
+export function useMutationHook<TData, TVariables, TError = Error>(
   mutationFn: (variables: TVariables) => Promise<TData>,
   options?: UseMutationOptions<TData, TError, TVariables>,
 ) {
