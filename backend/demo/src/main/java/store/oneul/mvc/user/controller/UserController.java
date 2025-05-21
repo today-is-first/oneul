@@ -1,33 +1,40 @@
 package store.oneul.mvc.user.controller;
 
-import java.util.Map;
+import java.io.IOException;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import store.oneul.mvc.security.jwt.JwtProvider;
-import store.oneul.mvc.security.rtr.RefreshTokenService;
+import lombok.Setter;
+import store.oneul.mvc.security.oauth.service.OAuthService;
+import store.oneul.mvc.security.token.TokenHelper;
+import store.oneul.mvc.user.dto.LoginResultDTO;
 import store.oneul.mvc.user.dto.UserDTO;
 import store.oneul.mvc.user.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@ConfigurationProperties(prefix = "frontend")
+@Setter
 public class UserController {
 	
     private final UserService userService;
-    private final JwtProvider jwtProvider;
-    private final RefreshTokenService refreshTokenService;
-
+    private final OAuthService oauthService;
+    private final TokenHelper tokenHelper;
+    private String url;
+    private String redirectPath;
 	
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getMyInfo(@AuthenticationPrincipal UserDTO user) {
@@ -45,30 +52,25 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/guest-login/{guestNo}")
-    public ResponseEntity<?> guestLogin(@PathVariable int guestNo) {
+    @GetMapping("/guest-login/{guestNo}")
+    public ResponseEntity<?> guestLogin(@PathVariable int guestNo, HttpServletResponse response) throws IOException {
+        System.out.println("guestNo: " + guestNo);
+        LoginResultDTO result = oauthService.guestLogin(guestNo);
+        Cookie accessCookie = tokenHelper.createAccessTokenCookie(result.getAccessToken());
+        Cookie refreshCookie = tokenHelper.createRefreshTokenCookie(result.getRefreshToken());
+        System.out.println("accessCookie: " + accessCookie);
+        System.out.println("refreshCookie: " + refreshCookie);
+        response.addCookie(accessCookie);
+        response.addCookie(refreshCookie);
+        String redirectUrl = UriComponentsBuilder
+            .fromUriString(url + redirectPath)
+            .queryParam("signupCompleted", result.isSignupCompleted())
+            .build()
+            .toUriString();
 
-        String email = "guest" + guestNo + "@oneul.store";
-        UserDTO guest = userService.findByEmail(email);
-        if (guest == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body("❌ 해당 게스트 계정이 존재하지 않습니다");
-        }
+        response.sendRedirect(redirectUrl);
+            return ResponseEntity.ok(result);
 
-        Map<String, Object> claims = Map.of(
-            "userId", guest.getUserId(),
-            "username", guest.getUsername(),
-            "nickname", guest.getNickname(),
-            "isGuest", true
-        );
-
-        String accessToken = jwtProvider.createToken(guest.getUserId(), claims);
-        String refreshToken = refreshTokenService.createAndSaveRefreshToken(guest.getUserId()); // ✅ 추가
-
-        return ResponseEntity.ok(Map.of(
-            "accessToken", accessToken,
-            "refreshToken", refreshToken
-        ));
     }
 
 }
