@@ -79,5 +79,17 @@ public class ChallengeServiceImpl implements ChallengeService {
             throw new ChallengeAlreadyJoinedException(challengeId, userId);
         }
     }
+	
+	/**
+	 * 비밀번호 검증 
+	 * */
+	@Override
+    public boolean isRoomPasswordValid(Long challengeId, String roomPassword) {
+        String stored = challengeDAO.getRoomPassword(challengeId);
+        if (stored == null || stored.isEmpty()) {
+            return true;
+        }
+        return stored.equals(roomPassword);
+    }
 
 }

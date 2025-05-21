@@ -23,5 +23,7 @@ public interface ChallengeService {
     public ChallengeDTO getChallenge(Long challengeId);
 
     public void joinChallenge(Long challengeId, Long userId, String roomPassword);
+    
+    boolean isRoomPasswordValid(Long challengeId, String roomPassword);
 
 }
