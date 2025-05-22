@@ -4,22 +4,27 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import store.oneul.mvc.security.jwt.JwtProvider;
 
 @Service
 @RequiredArgsConstructor
+@ConfigurationProperties(prefix = "frontend")
+@Setter
 public class RefreshTokenService {
 
     private final RefreshTokenDao refreshTokenRepository;
     private final JwtProvider jwtProvider;
-    private final Duration REFRESH_TOKEN_EXPIRATION = Duration.ofDays(14);
+    private int refreshTokenExpirationTime;
 
     public String createAndSaveRefreshToken(Long userId) {
         String refreshToken = UUID.randomUUID().toString();
-        //refreshTokenRepository.save(String.valueOf(userId), refreshToken, REFRESH_TOKEN_EXPIRATION);
+        // refreshTokenRepository.save(String.valueOf(userId), refreshToken,
+        // refreshTokenExpirationTime);
         return refreshToken;
     }
 
@@ -47,7 +52,8 @@ public class RefreshTokenService {
 
             refreshTokenRepository.delete(userIdStr);
             String newRefreshToken = UUID.randomUUID().toString();
-           // refreshTokenRepository.save(userIdStr, newRefreshToken, REFRESH_TOKEN_EXPIRATION);
+            // refreshTokenRepository.save(userIdStr, newRefreshToken,
+            // Duration.ofDays(refreshTokenExpirationTime));
 
             System.out.println("[RTR] ✅ Access & Refresh Token reissued for userId = " + userIdStr);
 

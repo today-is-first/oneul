@@ -19,10 +19,11 @@ public class JwtProvider {
     @Value("${jwt.secret}")
     private String secretKeyStr;
 
-    private static final long ACCESS_TOKEN_VALIDITY = 15 * 60 * 1000L;
-    
+    @Value("${frontend.accessTokenExpirationTime}")
+    private int accessTokenExpirationTime;
+
     private SecretKey getSecretKey() {
-    	byte[] keyBytes = Base64.getDecoder().decode(secretKeyStr);
+        byte[] keyBytes = Base64.getDecoder().decode(secretKeyStr);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -30,7 +31,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(String.valueOf(userId))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationTime))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -40,19 +41,18 @@ public class JwtProvider {
                 .setSubject(String.valueOf(userId))
                 .addClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationTime))
                 .signWith(getSecretKey())
                 .compact();
     }
 
     public Long getUserIdFromToken(String token) {
         return Long.parseLong(
-            Jwts.parser()
-                .setSigningKey(getSecretKey())
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject()
-        );
+                Jwts.parser()
+                        .setSigningKey(getSecretKey())
+                        .parseClaimsJws(token)
+                        .getBody()
+                        .getSubject());
     }
 
 }
