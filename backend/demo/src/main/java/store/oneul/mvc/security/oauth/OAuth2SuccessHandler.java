@@ -82,7 +82,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             boolean signupCompleted = Boolean.TRUE.equals(user.getSignupCompleted());
 
             Cookie accessTokenCookie = tokenHelper.createAccessTokenCookie(loginResult.getAccessToken());
-            Cookie refreshTokenCookie = tokenHelper.createRefreshTokenCookie(loginResult.getRefreshToken());
+            Cookie refreshTokenCookie = tokenHelper.createRefreshTokenCookie(loginResult.getRefreshToken(),user.getUserId());
 
             response.addCookie(accessTokenCookie);
             response.addCookie(refreshTokenCookie);
