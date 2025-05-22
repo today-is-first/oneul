@@ -17,7 +17,6 @@ export interface Challenge {
   roomPassword: string; // 삭제 예정
   memberCount: number;
   challengeStatus: ChallengeStatusType;
-  participantCount?: number;
 }
 
 export type ChallengeStatusType = "RECRUITING" | "ENDED" | "IN_PROGRESS";
