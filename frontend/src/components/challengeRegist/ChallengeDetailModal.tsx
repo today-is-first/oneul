@@ -26,8 +26,7 @@ export default function ChallengeDetailModal({
   const [password, setPassword] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // const isPrivate = useMemo(() => !challenge.public, [challenge.public]);
-  const isPrivate = true;
+  const isPrivate = useMemo(() => !challenge.public, [challenge.public]);
   const isPaid = useMemo(() => challenge.entryFee > 0, [challenge.entryFee]);
   const isRecruiting = useMemo(
     () => challenge.challengeStatus === "RECRUITING",
