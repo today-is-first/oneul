@@ -29,7 +29,7 @@ function ChallengeStatus({
         <h4 className="text-lg text-gray-200">나의 달성 현황</h4>
         <div className="flex flex-col gap-6 leading-7 text-gray-400">
           <p>
-            아직 시작하지 않은 챌린지예요!
+            아직 시작하지 않은 챌린지예요
             <br />
             <span className="text-primary-purple-100 font-medium">
               총 {success}일, 100% 달성 중
