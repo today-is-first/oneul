@@ -66,7 +66,6 @@ export default function ChallengeDetailModal({
       // 검증 통과 또는 비밀번호 없는 유료 챌린지
       onClose();
       navigate(`/challenge/${challenge.challengeId}/order`);
-      setPassword("");
       return;
     } else {
       // 무료 챌린지 → 즉시 신청 API 호출
@@ -77,6 +76,7 @@ export default function ChallengeDetailModal({
         });
         Toast.success("챌린지 가입 성공!");
         onClose();
+        navigate(`/challenge/${challenge.challengeId}`);
       } catch (err: unknown) {
         if (axios.isAxiosError(err) && err.response) {
           const code = err.response.data?.errorCode;
