@@ -8,6 +8,7 @@ import { IoMdLock } from "react-icons/io";
 import { useJoinChallenge } from "@/hooks/useChallenge";
 import { validatePassword } from "@/api/challenge";
 import axios from "axios";
+import Toast from "../Toast/Toast";
 
 interface Props {
   isOpen: boolean;
@@ -58,7 +59,7 @@ export default function ChallengeDetailModal({
       if (isPrivate) {
         const ok = await validatePassword(challenge.challengeId, password);
         if (!ok) {
-          alert("비밀번호가 틀렸습니다.");
+          Toast.error("잘못된 비밀번호입니다.");
           setPassword("");
           return;
         }
@@ -75,20 +76,20 @@ export default function ChallengeDetailModal({
           challengeId: challenge.challengeId,
           roomPassword: isPrivate ? password : undefined,
         });
-        alert("챌린지 가입 성공");
+        Toast.success("챌린지 가입 성공!");
         onClose();
       } catch (err: unknown) {
         if (axios.isAxiosError(err) && err.response) {
           const code = err.response.data?.errorCode;
           if (code === "INVALID_PARAMETER") {
-            alert("잘못된 비밀번호입니다.");
+            Toast.error("잘못된 비밀번호입니다.");
           } else if (code === "CHALLENGE_ALREADY_JOINED") {
-            alert("이미 가입한 챌린지입니다.");
+            Toast.error("이미 가입한 챌린지입니다.");
           } else {
-            alert("서버 오류가 발생했습니다.");
+            Toast.error("서버 오류가 발생했습니다.");
           }
         } else {
-          alert("알 수 없는 오류가 발생했습니다.");
+          Toast.error("알 수 없는 에러가 발생했습니다.");
         }
       } finally {
         setPassword("");
