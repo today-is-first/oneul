@@ -1,11 +1,4 @@
-import {
-  FormEvent,
-  FormEventHandler,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatTimeHHMM } from "@/utils/date";
 import { Challenge } from "@/types/Challenge";
@@ -14,6 +7,7 @@ import { FiX } from "react-icons/fi";
 import { IoMdLock } from "react-icons/io";
 import { useJoinChallenge } from "@/hooks/useChallenge";
 import { validatePassword } from "@/api/challenge";
+import axios from "axios";
 
 interface Props {
   isOpen: boolean;
@@ -38,12 +32,13 @@ export default function ChallengeDetailModal({
     () => challenge.challengeStatus === "RECRUITING",
     [challenge.challengeStatus],
   );
-  const { mutate: join, status: joinStatus } = useJoinChallenge();
+  const { mutateAsync: join, status: joinStatus } = useJoinChallenge();
 
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => setShowAnimation(true), 10);
     } else {
+      setPassword("");
       setShowAnimation(false);
     }
   }, [isOpen]);
@@ -61,27 +56,44 @@ export default function ChallengeDetailModal({
       // 비밀번호 있으면 -> 비밀번호 검증 -> 결제페이지로 이동
       // 추후 -> (비밀번호 정보 함께 가지고 감-이중 검증)
       if (isPrivate) {
-        const res = await validatePassword(challenge.challengeId, password);
-        if (res) navigate(`/challenge/${challenge.challengeId}/order`);
-        else alert("비밀번호가 틀렸습니다.");
-      } else {
-        // 비밀번호 없으면 -> 결제 페이지로 이동
-        navigate(`/challenge/${challenge.challengeId}/order`);
+        const ok = await validatePassword(challenge.challengeId, password);
+        if (!ok) {
+          alert("비밀번호가 틀렸습니다.");
+          setPassword("");
+          return;
+        }
       }
+      // 검증 통과 또는 비밀번호 없는 유료 챌린지
+      onClose();
+      navigate(`/challenge/${challenge.challengeId}/order`);
+      setPassword("");
+      return;
     } else {
       // 무료 챌린지 → 즉시 신청 API 호출
       try {
-        join({
+        await join({
           challengeId: challenge.challengeId,
           roomPassword: isPrivate ? password : undefined,
         });
+        alert("챌린지 가입 성공");
         onClose();
-        // TODO: 성공 토스트
-      } catch (err) {
-        console.error(err);
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err) && err.response) {
+          const code = err.response.data?.errorCode;
+          if (code === "INVALID_PARAMETER") {
+            alert("잘못된 비밀번호입니다.");
+          } else if (code === "CHALLENGE_ALREADY_JOINED") {
+            alert("이미 가입한 챌린지입니다.");
+          } else {
+            alert("서버 오류가 발생했습니다.");
+          }
+        } else {
+          alert("알 수 없는 오류가 발생했습니다.");
+        }
+      } finally {
+        setPassword("");
       }
     }
-    setPassword("");
   };
 
   if (!isOpen) return null;
