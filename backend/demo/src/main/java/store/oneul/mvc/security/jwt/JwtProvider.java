@@ -19,7 +19,9 @@ public class JwtProvider {
     @Value("${jwt.secret}")
     private String secretKeyStr;
 
-    private static final long ACCESS_TOKEN_VALIDITY = 15 * 60 * 1000L;
+    @Value("${frontend.access-token-expiration-time}")
+    private long accessTokenExpirationTime;
+
     
     private SecretKey getSecretKey() {
     	byte[] keyBytes = Base64.getDecoder().decode(secretKeyStr);
@@ -30,7 +32,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(String.valueOf(userId))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationTime))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -40,7 +42,7 @@ public class JwtProvider {
                 .setSubject(String.valueOf(userId))
                 .addClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationTime))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -54,5 +56,20 @@ public class JwtProvider {
                 .getSubject()
         );
     }
+    
+ // JwtProvider.java 내부에 추가
+    public boolean isTokenExpired(String token) {
+        try {
+            Date expiration = Jwts.parser()
+                    .setSigningKey(getSecretKey())
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getExpiration();
+            return expiration.before(new Date());
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
 
 }
