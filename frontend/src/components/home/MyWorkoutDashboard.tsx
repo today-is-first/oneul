@@ -56,11 +56,6 @@ const MyWorkoutDashboard = () => {
     setIsModalOpen(true);
   };
 
-  const handleEditFeed = (feed: Feed) => {
-    // TODO: 인증 수정 로직 구현
-    console.log("Edit feed:", feed);
-  };
-
   const handleDetailFeed = (feed: Feed) => {
     setSelectedFeed(feed);
     setIsDetailModalOpen(true);
@@ -104,6 +99,7 @@ const MyWorkoutDashboard = () => {
             onCreate={handleCreateFeed}
             onEdit={() => setIsEditModalOpen(true)}
             onDetail={handleDetailFeed}
+            disabled={false}
           />
         </div>
         <div className="flex w-2/3 flex-col rounded-lg bg-[#1A1A1E] p-6">
