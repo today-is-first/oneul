@@ -18,7 +18,7 @@ function PaymentFailPage() {
       >
         <FiX
           onClick={() => navigate("/challenge/search", { replace: true })}
-          className="absolute right-6 top-6 h-6 w-6 cursor-pointer text-gray-400 hover:text-white"
+          className="absolute right-6 top-6 h-6 w-6 cursor-pointer text-gray-400 hover:text-gray-200"
         />
         <div className="flex flex-col items-center gap-4">
           <FiXCircle className="my-2 h-16 w-16 animate-pulse text-red-400" />

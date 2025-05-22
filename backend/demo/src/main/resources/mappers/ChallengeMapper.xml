@@ -122,6 +122,13 @@
             #{refundAmount}
         )
     </insert>
+    
+    <select id="getRoomPassword" resultType="String" parameterType="long">
+	    SELECT room_password
+	    FROM challenge
+	    WHERE challenge_id = #{challengeId}
+	      AND deleted_at IS NULL
+	  </select>
 	    
 
 </mapper>

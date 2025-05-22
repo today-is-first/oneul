@@ -12,7 +12,7 @@
         )
     </select>
     
-        <insert id="insert" parameterType="PaymentDTO">
+        <insert id="insertPayment" parameterType="PaymentDTO">
         INSERT INTO payment (
             user_id,
             challenge_id,
@@ -29,6 +29,30 @@
             #{status}
         )
     </insert>
+    
+     <insert id="insertRefundReceipt" parameterType="RefundReceiptDTO">
+	    INSERT INTO refund_receipt (
+	      payment_id,
+	      cancel_fail_log_id,
+	      user_id,
+	      challenge_id,
+	      refund_method,
+	      refund_amount,
+	      refunded_at,
+	      transaction_id,
+	      note
+	    ) VALUES (
+	      #{paymentId},
+	      #{cancelFailLogId},
+	      #{userId},
+	      #{challengeId},
+	      #{refundMethod},
+	      #{refundAmount},
+	      #{refundedAt},
+	      #{transactionId},
+	      #{note}
+	    )
+  	</insert>
     
     
 </mapper>

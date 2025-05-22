@@ -18,7 +18,7 @@ public class PaymentValidator {
     private final PaymentDAO paymentDAO;
 
     public PaymentSessionDto validate(Long userId, PaymentConfirmRequest request) {
-        String redisKey = "payment:session:user:" + userId;
+    	String redisKey = "payment:session:user:" + userId + ":challenge:" + request.getChallengeId();
         PaymentSessionDto session = (PaymentSessionDto) jsonRedisTemplate.opsForValue().get(redisKey);
 
         if (session == null) {
