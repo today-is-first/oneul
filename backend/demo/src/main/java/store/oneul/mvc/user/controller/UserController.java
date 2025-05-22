@@ -57,7 +57,7 @@ public class UserController {
         System.out.println("guestNo: " + guestNo);
         LoginResultDTO result = oauthService.guestLogin(guestNo);
         Cookie accessCookie = tokenHelper.createAccessTokenCookie(result.getAccessToken());
-        Cookie refreshCookie = tokenHelper.createRefreshTokenCookie(result.getRefreshToken());
+        Cookie refreshCookie = tokenHelper.createRefreshTokenCookie(result.getRefreshToken(), guestNo);
         System.out.println("accessCookie: " + accessCookie);
         System.out.println("refreshCookie: " + refreshCookie);
         response.addCookie(accessCookie);
