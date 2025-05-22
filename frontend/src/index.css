@@ -81,7 +81,6 @@ input[type="date"]::-moz-calendar-picker-indicator {
   scrollbar-color: #484857 transparent;
 }
 
-
 .scrollbar-custom {
   scrollbar-width: thin;
   scrollbar-color: #484857 transparent;
@@ -96,7 +95,8 @@ input[type="date"]::-moz-calendar-picker-indicator {
 
 .scrollbar-custom::-webkit-scrollbar-thumb:hover {
   background: rgba(168, 85, 247, 0.8);
-  
+}
+
 @layer utilities {
   @keyframes toast {
     0% {
