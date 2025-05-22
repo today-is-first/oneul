@@ -8,7 +8,7 @@ function FeedCreateBtn() {
     <div>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-point rounded-lg px-4 py-2 text-sm text-white shadow-md transition-all hover:opacity-90"
+        className="bg-primary-purple-200 rounded-lg px-4 py-2 text-sm text-white shadow-md transition-all hover:opacity-90"
       >
         작성하기
       </button>
