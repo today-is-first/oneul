@@ -1,34 +1,37 @@
 package store.oneul.mvc.security.token;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.Cookie;
-
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Component
 @RequiredArgsConstructor
+@ConfigurationProperties(prefix = "frontend")
+@Setter
 public class TokenHelper {
-    private final String ACCESS_TOKEN_COOKIE_NAME = "accessToken";
-    private final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
-    private final int ACCESS_TOKEN_EXPIRATION_TIME = 60 * 60; // 1시간
-    private final int REFRESH_TOKEN_EXPIRATION_TIME = 60 * 60 * 24 * 7; // 7일
+    private String accessTokenCookieName;
+    private String refreshTokenCookieName;
+    private int accessTokenExpirationTime;
+    private int refreshTokenExpirationTime;
 
     public Cookie createAccessTokenCookie(String token) {
-        Cookie cookie = new Cookie(ACCESS_TOKEN_COOKIE_NAME, token);
+        Cookie cookie = new Cookie(accessTokenCookieName, token);
         cookie.setHttpOnly(false);
         cookie.setSecure(false);
         cookie.setPath("/");
-        cookie.setMaxAge(ACCESS_TOKEN_EXPIRATION_TIME);
+        cookie.setMaxAge(accessTokenExpirationTime);
         return cookie;
     }
 
     public Cookie createRefreshTokenCookie(String token) {
-        Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, token);
+        Cookie cookie = new Cookie(refreshTokenCookieName, token);
         cookie.setHttpOnly(false);
         cookie.setSecure(false);
         cookie.setPath("/");
-        cookie.setMaxAge(REFRESH_TOKEN_EXPIRATION_TIME);
+        cookie.setMaxAge(refreshTokenExpirationTime);
         return cookie;
     }
 }
