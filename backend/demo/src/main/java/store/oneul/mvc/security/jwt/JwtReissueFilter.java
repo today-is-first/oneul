@@ -30,6 +30,7 @@ public class JwtReissueFilter extends OncePerRequestFilter {
 
         if (accessToken != null && refreshToken != null) {
             try {
+            	System.out.println("doFilterInternal 들어옴??");
                 jwtProvider.getUserIdFromToken(accessToken); // 정상 동작
             } catch (Exception ex) {
                 System.out.println("[FILTER] ⚠️ AccessToken expired or invalid. Attempting reissue.");

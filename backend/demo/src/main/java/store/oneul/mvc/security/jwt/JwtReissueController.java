@@ -25,7 +25,7 @@ public class JwtReissueController {
     public ResponseEntity<?> reissue(@RequestHeader("Authorization") String accessTokenHeader,
                                      @RequestHeader("Refresh") String refreshToken) {
         String accessToken = accessTokenHeader.replace("Bearer ", "");
-
+        
         return refreshTokenService.reissue(refreshToken, accessToken)
             .map(newAccessToken -> ResponseEntity.ok(Map.of("accessToken", newAccessToken)))
             .orElseGet(() -> {
