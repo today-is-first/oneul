@@ -3,6 +3,8 @@ import ChallengeDetail from "./ChellengeDetail";
 import ChallengeStatus from "./ChallengeStatus";
 import { useParams } from "react-router";
 import { useMyChallenge } from "@/hooks/useChallenge";
+import Toast from "../Toast/Toast";
+import { useEffect, useRef } from "react";
 
 function ChallengeDetailPage() {
   const { challengeId } = useParams<{ challengeId: string }>();
@@ -12,6 +14,19 @@ function ChallengeDetailPage() {
     isError,
     error,
   } = useMyChallenge(challengeId ?? "");
+
+  const hasShownToast = useRef(false);
+
+  useEffect(() => {
+    if (
+      challenge &&
+      challenge.challengeStatus === "RECRUITING" &&
+      !hasShownToast.current
+    ) {
+      Toast.caution("아직 시작하지 않은 챌린지입니다.");
+      hasShownToast.current = true;
+    }
+  }, [challenge]);
 
   if (!challengeId) return <p>잘못된 경로입니다.</p>;
 
@@ -44,13 +59,15 @@ function ChallengeDetailPage() {
                   success={challenge.successDay ?? 0}
                   goal={challenge.goalDay ?? 0}
                   endDate={challenge.endDate ?? ""}
+                  startDate={challenge.startDate ?? 0}
+                  status={challenge.challengeStatus}
                 />
               </>
             ) : (
               <p>데이터를 불러오는데 실패했습니다.</p>
             )}
           </div>
-          <ChallengeFeed />
+          {challenge && <ChallengeFeed status={challenge?.challengeStatus} />}
         </div>
       </section>
     </div>

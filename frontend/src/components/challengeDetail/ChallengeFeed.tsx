@@ -10,6 +10,7 @@ import { useParams } from "react-router";
 import { useChallengeFeeds } from "@/hooks/useFeed";
 import { Feed } from "@/types/Feed";
 import { useQueryClient } from "@tanstack/react-query";
+import { ChallengeStatusType } from "@/types/Challenge";
 
 type ModalState =
   | { kind: "create" }
@@ -17,7 +18,11 @@ type ModalState =
   | { kind: "detail"; feed: Feed }
   | null;
 
-function ChallengeFeed() {
+interface ChallengeFeedProps {
+  status: ChallengeStatusType;
+}
+
+function ChallengeFeed({ status }: ChallengeFeedProps) {
   const { challengeId } = useParams<{ challengeId: string }>();
   const [modalState, setModalState] = useState<ModalState>(null);
 
@@ -69,7 +74,7 @@ function ChallengeFeed() {
         <span className="text-center text-xl font-semibold text-gray-200">
           챌린지 피드
         </span>
-        <FeedCreateBtn />
+        {status === "IN_PROGRESS" && <FeedCreateBtn />}
       </div>
       <div className="flex gap-6">
         <div className="flex-1">
@@ -78,6 +83,7 @@ function ChallengeFeed() {
             onCreate={openCreate}
             onEdit={openEdit}
             onDetail={openDetail}
+            disabled={status === "RECRUITING"}
           />
         </div>
 
