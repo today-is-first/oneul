@@ -1,33 +1,38 @@
 package store.oneul.mvc.security.jwt;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 
+import javax.crypto.SecretKey;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 //email 기반 JWT 발급 + 검증
 @Component
+@RequiredArgsConstructor
+@ConfigurationProperties(prefix = "jwt")
+@Setter
 public class JwtProvider {
 
-    @Value("${jwt.secret}")
-    private String secretKeyStr;
-
-    @Value("${frontend.accessTokenExpirationTime}")
+    private String secret;
     private int accessTokenExpirationTime;
 
     private SecretKey getSecretKey() {
-        byte[] keyBytes = Base64.getDecoder().decode(secretKeyStr);
+        byte[] keyBytes = Base64.getDecoder().decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String createToken(Long userId) {
+        System.out.println("[JwtProvider] 액세스 토큰 생성 시작 - userId: " + userId);
+        System.out.println("[JwtProvider] 액세스 토큰 만료 시간: " + System.currentTimeMillis() + accessTokenExpirationTime);
         return Jwts.builder()
                 .setSubject(String.valueOf(userId))
                 .setIssuedAt(new Date())

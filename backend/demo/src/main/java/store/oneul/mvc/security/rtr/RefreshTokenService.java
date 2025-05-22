@@ -17,24 +17,24 @@ import store.oneul.mvc.security.jwt.JwtProvider;
 @Setter
 public class RefreshTokenService {
 
-    private final RefreshTokenDao refreshTokenRepository;
+    private final RefreshTokenDao refreshTokenDao;
     private final JwtProvider jwtProvider;
-    private int refreshTokenExpirationTime;
+    private int refreshTokenExpirationDays;
 
     public String createAndSaveRefreshToken(Long userId) {
         String refreshToken = UUID.randomUUID().toString();
-        // refreshTokenRepository.save(String.valueOf(userId), refreshToken,
-        // refreshTokenExpirationTime);
+        refreshTokenDao.save(String.valueOf(userId), refreshToken,
+                Duration.ofDays(refreshTokenExpirationDays));
         return refreshToken;
     }
 
     public boolean validate(String userId, String providedToken) {
-        String savedToken = refreshTokenRepository.findByUserId(userId);
+        String savedToken = refreshTokenDao.findByUserId(userId);
         return savedToken != null && savedToken.equals(providedToken);
     }
 
     public void delete(String userId) {
-        refreshTokenRepository.delete(userId);
+        refreshTokenDao.delete(userId);
     }
 
     public Optional<String> reissue(String refreshToken, String accessToken) {
@@ -42,7 +42,7 @@ public class RefreshTokenService {
             Long userId = jwtProvider.getUserIdFromToken(accessToken);
             String userIdStr = String.valueOf(userId);
 
-            String saved = refreshTokenRepository.findByUserId(userIdStr);
+            String saved = refreshTokenDao.findByUserId(userIdStr);
             if (!refreshToken.equals(saved)) {
                 System.out.println("[RTR] ❌ RefreshToken mismatch for userId = " + userIdStr);
                 return Optional.empty();
@@ -50,10 +50,10 @@ public class RefreshTokenService {
 
             String newAccessToken = jwtProvider.createToken(userId);
 
-            refreshTokenRepository.delete(userIdStr);
+            refreshTokenDao.delete(userIdStr);
             String newRefreshToken = UUID.randomUUID().toString();
-            // refreshTokenRepository.save(userIdStr, newRefreshToken,
-            // Duration.ofDays(refreshTokenExpirationTime));
+            refreshTokenDao.save(userIdStr, newRefreshToken,
+                    Duration.ofDays(refreshTokenExpirationDays));
 
             System.out.println("[RTR] ✅ Access & Refresh Token reissued for userId = " + userIdStr);
 

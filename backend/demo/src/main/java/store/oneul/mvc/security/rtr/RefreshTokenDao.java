@@ -8,15 +8,15 @@ import java.time.Duration;
 
 @Repository
 @RequiredArgsConstructor
-public class RefreshTokenDao  {
+public class RefreshTokenDao {
 
     private final RedisTemplate<String, String> redisTemplate;
     private static final String PREFIX = "RT:";
 
-//    // 저장
-//    public void save(String userId, String refreshToken, Duration expiration) {
-//        redisTemplate.opsForValue().set(PREFIX + userId, refreshToken, expiration);
-//    }
+    // 저장
+    public void save(String userId, String refreshToken, Duration expiration) {
+        redisTemplate.opsForValue().set(PREFIX + userId, refreshToken, expiration);
+    }
 
     // 조회
     public String findByUserId(String userId) {

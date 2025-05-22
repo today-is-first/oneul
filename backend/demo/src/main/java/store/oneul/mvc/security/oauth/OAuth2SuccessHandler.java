@@ -22,7 +22,6 @@ import store.oneul.mvc.user.dto.LoginResultDTO;
 import store.oneul.mvc.user.dto.UserDTO;
 import store.oneul.mvc.user.service.UserService;
 
-
 // 실제 ID Token 받아서 처리하는 진짜 로그인 후처리 담당
 @Component
 @RequiredArgsConstructor
@@ -36,15 +35,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final TokenHelper tokenHelper;
     private String url;
     private String redirectPath;
-    private String accessTokenCookieName;
-    private String refreshTokenCookieName;
-    private int accessTokenExpirationTime;
-    private int refreshTokenExpirationTime;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        Authentication authentication) throws IOException {
+            HttpServletResponse response,
+            Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
         if (!(oAuth2User instanceof OidcUser oidcUser)) {
@@ -78,7 +73,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 user = userService.findByEmail(email);
             }
             LoginResultDTO loginResult = oauthService.login(user);
-           
+            System.out.println("[OAuth2SuccessHandler] 로그인 결과: " + loginResult);
+            System.out.println("[OAuth2SuccessHandler] 로그인 결과: " + user.getUserId());
             boolean signupCompleted = Boolean.TRUE.equals(user.getSignupCompleted());
 
             Cookie accessTokenCookie = tokenHelper.createAccessTokenCookie(loginResult.getAccessToken());

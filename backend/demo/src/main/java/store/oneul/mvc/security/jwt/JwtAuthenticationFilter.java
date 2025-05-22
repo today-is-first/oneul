@@ -26,24 +26,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain chain) throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
+        System.out.println("[JwtAuthenticationFilter] 헤더: " + header);
 
         if (header != null && header.startsWith("Bearer ")) {
             try {
                 String token = header.substring(7);
                 Long userId = jwtProvider.getUserIdFromToken(token);
-
+                System.out.println("[JwtAuthenticationFilter] 토큰: " + token);
+                System.out.println("[JwtAuthenticationFilter] 유저 아이디: " + userId);
                 UserDTO user = userService.findById(userId);
+                System.out.println("[JwtAuthenticationFilter] 유저: " + user);
                 if (user != null) {
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    user,
-                                    null,
-                                    List.of(new SimpleGrantedAuthority("ROLE_USER"))
-                            );
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            user,
+                            null,
+                            List.of(new SimpleGrantedAuthority("ROLE_USER")));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     System.out.println("[AUTH] ✅ 인증 성공: userId = " + userId);
                 }
