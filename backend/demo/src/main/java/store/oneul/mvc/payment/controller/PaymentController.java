@@ -23,8 +23,8 @@ import store.oneul.mvc.common.exception.InvalidParameterException;
 import store.oneul.mvc.common.exception.NotFoundException;
 import store.oneul.mvc.payment.dto.OrderIdResponse;
 import store.oneul.mvc.payment.dto.PaymentConfirmRequest;
+import store.oneul.mvc.payment.dto.PaymentResultResponse;
 import store.oneul.mvc.payment.dto.PaymentSessionDto;
-import store.oneul.mvc.payment.dto.TossConfirmResponse;
 import store.oneul.mvc.payment.usecase.PaymentUsecase;
 import store.oneul.mvc.user.dto.UserDTO;
 
@@ -55,37 +55,37 @@ public class PaymentController {
         }
 
         LocalDate today = LocalDate.now();
-
         if (challenge.getStartDate() != null && !today.isBefore(challenge.getStartDate())) {
             throw new InvalidParameterException("이미 시작된 챌린지는 참가할 수 없습니다.");
         }
 
-        // 2. Redis 조회
-        String redisKey = "payment:session:user:" + userId;
+        // 2. Redis 조회 - userId + challengeId 조합으로 고유 세션 키 생성
+        String redisKey = "payment:session:user:" + userId + ":challenge:" + challengeId;
         PaymentSessionDto session = (PaymentSessionDto) jsonRedisTemplate.opsForValue().get(redisKey);
 
         if (session != null) {
             return ResponseEntity.ok(new OrderIdResponse(session.getOrderId(), session.getAmount()));
         }
 
-        // 3. orderId 생성
+        // 3. orderId 생성 (userId + challengeId + timestamp)
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         String orderId = "user" + userId + "_challenge" + challengeId + "_" + timestamp;
 
-        // 4. Redis 저장
+        // 4. Redis 저장 (TTL 15분)
         PaymentSessionDto newSession = new PaymentSessionDto(orderId, challengeId, challenge.getEntryFee());
         jsonRedisTemplate.opsForValue().set(redisKey, newSession, Duration.ofMinutes(PAYMENT_SESSION_TTL_MINUTES));
 
         // 5. 응답 반환
         return ResponseEntity.ok(new OrderIdResponse(orderId, challenge.getEntryFee()));
     }
+
     
     @PostMapping("/confirm")
-    public ResponseEntity<TossConfirmResponse> confirmPayment(
+    public ResponseEntity<PaymentResultResponse> confirmPayment(
             @RequestBody PaymentConfirmRequest request,
             @AuthenticationPrincipal UserDTO loginUser
     ) {
-        TossConfirmResponse response = paymentUsecase.confirmPayment(loginUser.getUserId(), request);
+        PaymentResultResponse response = paymentUsecase.confirmPayment(loginUser.getUserId(), request);
         return ResponseEntity.ok(response);
     }
 

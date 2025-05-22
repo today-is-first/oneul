@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.payment.dto.PaymentConfirmRequest;
+import store.oneul.mvc.payment.dto.TossCancelRequest;
 import store.oneul.mvc.payment.dto.TossConfirmRequest;
 import store.oneul.mvc.payment.dto.TossConfirmResponse;
 import store.oneul.mvc.payment.dto.TossErrorInfo;
@@ -55,6 +56,22 @@ public class TossClient {
             } catch (Exception ex) {
                 throw new RuntimeException("결제 실패 응답 파싱 오류", ex);
             }
+        }
+    }
+    public void cancel(String paymentKey, TossCancelRequest request) {
+        String encodedSecret = Base64.getEncoder()
+                .encodeToString((secretKey + ":").getBytes(StandardCharsets.UTF_8));
+
+        try {
+            tossRestClient.post()
+                .uri("/" + paymentKey + "/cancel")
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedSecret)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(request)
+                .retrieve()
+                .toBodilessEntity(); // Toss는 성공 시 response body 없음
+        } catch (HttpClientErrorException e) {
+            throw new RuntimeException("Toss Cancel 실패: " + e.getResponseBodyAsString(), e);
         }
     }
 }
