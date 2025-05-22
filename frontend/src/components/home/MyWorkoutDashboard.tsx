@@ -1,6 +1,6 @@
 import MyFeedCard from "@/components/feed/MyFeedCard";
 import BannerSlider from "@/components/home/BannerSlider";
-import CommunityFeed from "@/components/home/CommunityFeedList";
+import FeedList from "@/components/home/FeedList";
 import { Feed } from "@/types/Feed";
 import { useState } from "react";
 import MonthlyStats from "@/components/home/MonthlyStats";
@@ -11,7 +11,6 @@ import { useFeedStore } from "@/stores/feedStore";
 import { useQueryClient } from "@tanstack/react-query";
 import FeedUpdateModal from "@/components/feed/FeedUpdateModal";
 import FeedDetailModal from "@/components/feed/FeedDetailModal";
-import { isSameDate } from "@/utils/date";
 
 export const getContributionColor = (count: number) => {
   if (count >= 4) return "bg-primary-500"; // 진한 보라색
@@ -95,7 +94,7 @@ const MyWorkoutDashboard = () => {
         onClose={() => setIsDetailModalOpen(false)}
         feed={selectedFeed}
       />
-      <CommunityFeed onFeedClick={handleDetailFeed} />
+      <FeedList onFeedClick={handleDetailFeed} feedType="community" />
       <div className="flex w-full max-w-[1200px] justify-between gap-8">
         {/* 오늘의 인증 섹션 */}
         <div className="w-1/3 rounded-lg bg-[#1A1A1E] p-6">

@@ -10,19 +10,20 @@ import { useSocketStore } from "@stores/socketStore";
 import { useUserStore } from "@stores/userStore";
 import { useEffect } from "react";
 import { Route, Routes } from "react-router";
-import "./App.css";
-import "./chart";
+import "@/App.css";
+import "@/chart";
 
-import { get } from "./api/api";
+import { get } from "@/api/api";
 import { useQuery } from "@tanstack/react-query";
 import { useChallengeStore } from "@/stores/challengeStore";
 import { useFeedStore } from "@/stores/feedStore";
 import { Feed } from "@/types/Feed";
 import { Streak } from "@/types/Streak";
-import { Challenge } from "./types/Challenge";
+import { Challenge } from "@/types/Challenge";
 import ChallengePaymentPage from "@components/payment/ChallengePaymentPage";
-import PaymentSuccessPage from "./components/payment/PaymentSuccessPage";
-import PaymentFailPage from "./components/payment/PaymentFailPage";
+import PaymentSuccessPage from "@components/payment/PaymentSuccessPage";
+import PaymentFailPage from "@components/payment/PaymentFailPage";
+import MyPage from "@components/mypage/MyPage";
 
 function App() {
   const { user } = useUserStore();
@@ -131,6 +132,7 @@ function App() {
           />
           <Route path="/challenge/detail" element={<ChallengeDetailPage />} />
           <Route path="/challenge/search" element={<ChallengeSearchPage />} />
+          <Route path="/mypage" element={<MyPage />} />
         </Route>
 
         {/* MainLayout이 필요없는 라우트들 */}

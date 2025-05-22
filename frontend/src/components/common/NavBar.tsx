@@ -7,7 +7,7 @@ function NavBar() {
         <li>홈</li>
       </Link>
       <Link to="/challenge/search">
-        <li>카테고리</li>
+        <li>챌린지 조회</li>
       </Link>
       <Link to="/mypage">
         <li>마이페이지</li>
