@@ -11,9 +11,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import store.oneul.mvc.security.oauth.service.OAuthService;
+import store.oneul.mvc.security.rtr.RefreshTokenDao;
+import store.oneul.mvc.security.token.TokenHelper;
 import store.oneul.mvc.user.dto.UserDTO;
 import store.oneul.mvc.user.service.UserService;
 
@@ -31,26 +35,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String header = request.getHeader("Authorization");
         System.out.println("[JwtAuthenticationFilter] 헤더: " + header);
+        Cookie[] cookies = request.getCookies();
+        String refreshToken = null;
 
-        if (header != null && header.startsWith("Bearer ")) {
-            try {
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        System.out.println("[JwtAuthenticationFilter] 리프레시 토큰: " + refreshToken);
+        try {
+            if (header != null && header.startsWith("Bearer ")) {
+
                 String token = header.substring(7);
                 Long userId = jwtProvider.getUserIdFromToken(token);
-                System.out.println("[JwtAuthenticationFilter] 토큰: " + token);
-                System.out.println("[JwtAuthenticationFilter] 유저 아이디: " + userId);
                 UserDTO user = userService.findById(userId);
-                System.out.println("[JwtAuthenticationFilter] 유저: " + user);
                 if (user != null) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             user,
                             null,
                             List.of(new SimpleGrantedAuthority("ROLE_USER")));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    System.out.println("[AUTH] ✅ 인증 성공: userId = " + userId);
                 }
-            } catch (Exception e) {
-                System.out.println("[AUTH] ❌ 인증 실패: " + e.getMessage());
+
             }
+        } catch (Exception e) {
+            System.out.println("[JwtAuthenticationFilter] 인증 실패: " + e.getMessage());
         }
 
         chain.doFilter(request, response);

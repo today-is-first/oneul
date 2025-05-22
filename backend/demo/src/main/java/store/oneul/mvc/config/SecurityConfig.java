@@ -27,50 +27,51 @@ import store.oneul.mvc.security.oauth.OAuth2SuccessHandler;
 @Setter
 public class SecurityConfig {
 
-    private final OAuth2SuccessHandler successHandler;
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtReissueFilter jwtReissueFilter;
+        private final OAuth2SuccessHandler successHandler;
+        private final CustomOAuth2UserService customOAuth2UserService;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final JwtReissueFilter jwtReissueFilter;
 
-    private String url;
+        private String url;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors() // 🔹 CORS 설정 추가
-                .and()
-                .csrf().disable()
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/guest-login/**").permitAll()
-                        .requestMatchers("/api/feeds/community").permitAll()
-                        .requestMatchers("/api/**").authenticated()
-                        .anyRequest().permitAll())
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                http
+                                .cors() // 🔹 CORS 설정 추가
+                                .and()
+                                .csrf().disable()
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/api/users/guest-login/**").permitAll()
+                                                .requestMatchers("/api/feeds/community").permitAll()
+                                                .requestMatchers("/api/**").authenticated()
+                                                .anyRequest().permitAll())
 
-                .oauth2Login(oauth -> oauth
-                        .userInfoEndpoint().userService(customOAuth2UserService)
-                        .and()
-                        .successHandler(successHandler))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtReissueFilter, JwtAuthenticationFilter.class)
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint((request, response, authException) -> response
-                                .sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")));
+                                .oauth2Login(oauth -> oauth
+                                                .userInfoEndpoint().userService(customOAuth2UserService)
+                                                .and()
+                                                .successHandler(successHandler))
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                                .addFilterBefore(jwtReissueFilter, JwtAuthenticationFilter.class)
+                                .exceptionHandling(exception -> exception
+                                                .authenticationEntryPoint((request, response, authException) -> response
+                                                                .sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                                                                                "Unauthorized")));
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    // 🔹 CORS 설정 Bean 등록
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
+        // 🔹 CORS 설정 Bean 등록
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of(url)); // 프론트엔드 주소
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("*"));
-        config.setAllowCredentials(true); // 쿠키 포함 여부
+                config.setAllowedOrigins(List.of(url)); // 프론트엔드 주소
+                config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+                config.setAllowedHeaders(Arrays.asList("*"));
+                config.setAllowCredentials(true); // 쿠키 포함 여부
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", config);
+                return source;
+        }
 }

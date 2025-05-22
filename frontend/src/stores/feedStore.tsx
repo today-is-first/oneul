@@ -17,8 +17,17 @@ export const useFeedStore = create<FeedStore>((set) => ({
   myFeeds: [],
   communityFeeds: [],
   streak: [],
-  setMyFeeds: (feeds) => set({ myFeeds: feeds }),
-  setCommunityFeeds: (feeds) => set({ communityFeeds: feeds }),
-  setStreak: (streak) => set({ streak }),
+  setMyFeeds: (feeds) => {
+    console.log("🟣 setting my list", feeds);
+    set({ myFeeds: [...feeds] });
+  },
+  setCommunityFeeds: (feeds) => {
+    console.log("🟣 setting community list", feeds);
+    set({ communityFeeds: [...feeds] });
+  },
+  setStreak: (streak) => {
+    console.log("🟣 setting streak", streak);
+    set({ streak: [...streak] });
+  },
   setInitFeedStore: () => set({ myFeeds: [], streak: [] }),
 }));

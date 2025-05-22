@@ -14,17 +14,25 @@ public class RefreshTokenDao {
     private static final String PREFIX = "RT:";
 
     // 저장
-    public void save(String userId, String refreshToken, Duration expiration) {
+    public void save(String refreshToken, String userId, Duration expiration) {
+        redisTemplate.opsForValue().set(PREFIX + refreshToken, userId, expiration);
         redisTemplate.opsForValue().set(PREFIX + userId, refreshToken, expiration);
     }
 
-    // 조회
+    // 토큰으로 조회
+    public String findByToken(String refreshToken) {
+        return redisTemplate.opsForValue().get(PREFIX + refreshToken);
+    }
+
+    // 유저 아이디로 조회
     public String findByUserId(String userId) {
         return redisTemplate.opsForValue().get(PREFIX + userId);
     }
 
     // 삭제
     public void delete(String userId) {
+        String refreshToken = redisTemplate.opsForValue().get(PREFIX + userId);
         redisTemplate.delete(PREFIX + userId);
+        redisTemplate.delete(PREFIX + refreshToken);
     }
 }

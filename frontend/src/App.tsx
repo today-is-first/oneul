@@ -28,18 +28,17 @@ import MyPage from "@components/mypage/MyPage";
 function App() {
   const { user } = useUserStore();
   const { connect, disconnect } = useSocketStore();
+
   const { data: challengeList } = useQuery<Challenge[]>({
     queryKey: ["challengeList"],
     queryFn: () => get("/challenges"),
     staleTime: 1000 * 60 * 5,
-    enabled: !!user,
   });
 
   const { data: myFeeds } = useQuery<Feed[]>({
     queryKey: ["myFeeds"],
     queryFn: () => get("/feeds/my"),
     staleTime: 1000 * 60 * 5,
-    enabled: !!user,
   });
 
   const { data: communityFeeds } = useQuery<Feed[]>({
@@ -52,36 +51,39 @@ function App() {
     queryKey: ["streak"],
     queryFn: () => get("/feeds/streak"),
     staleTime: 1000 * 60 * 5,
-    enabled: !!user,
   });
 
   const { data: communityChallengeList } = useQuery<Challenge[]>({
     queryKey: ["communityChallengeList"],
     queryFn: () => get("/challenges/community"),
     staleTime: 1000 * 60 * 5,
-    enabled: !!user,
   });
 
   const { data: subscribedChallengeList } = useQuery<Challenge[]>({
     queryKey: ["subscribedChallengeList"],
     queryFn: () => get("/challenges/subscribed"),
     staleTime: 1000 * 60 * 5,
-    enabled: !!user,
   });
+
+  useEffect(() => {
+    if (communityFeeds) {
+      useFeedStore.getState().setCommunityFeeds(communityFeeds);
+    }
+  }, [communityFeeds]);
 
   useEffect(() => {
     useUserStore.getState().initializeFromToken();
   }, []);
 
   useEffect(() => {
-    connect();
-    return () => {
-      disconnect();
-    };
-  }, []);
+    if (user) {
+      connect();
+      return () => disconnect();
+    }
+  }, [user]);
 
   useEffect(() => {
-    if (challengeList) {
+    if (challengeList && Array.isArray(challengeList)) {
       useChallengeStore.getState().setChallenges(challengeList);
     }
   }, [challengeList]);
@@ -93,13 +95,7 @@ function App() {
   }, [myFeeds]);
 
   useEffect(() => {
-    if (communityFeeds) {
-      useFeedStore.getState().setCommunityFeeds(communityFeeds);
-    }
-  }, [communityFeeds]);
-
-  useEffect(() => {
-    if (streak) {
+    if (streak && Array.isArray(streak)) {
       useFeedStore.getState().setStreak(streak);
     }
   }, [streak]);
@@ -113,7 +109,7 @@ function App() {
   }, [communityChallengeList]);
 
   useEffect(() => {
-    if (subscribedChallengeList) {
+    if (subscribedChallengeList && Array.isArray(subscribedChallengeList)) {
       useChallengeStore
         .getState()
         .setSubscribedChallengeList(subscribedChallengeList);

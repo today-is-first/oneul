@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +13,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import store.oneul.mvc.security.rtr.RefreshTokenDao;
 
 //email 기반 JWT 발급 + 검증
 @Component
@@ -24,6 +24,7 @@ public class JwtProvider {
 
     private String secret;
     private int accessTokenExpirationTime;
+    private final RefreshTokenDao refreshTokenDao;
 
     private SecretKey getSecretKey() {
         byte[] keyBytes = Base64.getDecoder().decode(secret);
@@ -51,13 +52,9 @@ public class JwtProvider {
                 .compact();
     }
 
-    public Long getUserIdFromToken(String token) {
-        return Long.parseLong(
-                Jwts.parser()
-                        .setSigningKey(getSecretKey())
-                        .parseClaimsJws(token)
-                        .getBody()
-                        .getSubject());
+    public Long getUserIdFromToken(String refreshToken) {
+        refreshTokenDao.findByToken(refreshToken);
+        return 1L;
     }
 
 }

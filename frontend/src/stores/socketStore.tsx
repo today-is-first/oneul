@@ -1,11 +1,8 @@
-import { create } from "zustand";
-import { Socket } from "socket.io-client";
-import { socket } from "@/utils/socket";
 import { useUserStore } from "@/stores/userStore";
 import ChatMessage from "@/types/ChatMessage";
-import { useFeedStore } from "@/stores/feedStore";
-import { useChallengeStore } from "@/stores/challengeStore";
-import { useQueryClient } from "@tanstack/react-query";
+import { connectSocket, socket } from "@/utils/socket";
+import { Socket } from "socket.io-client";
+import { create } from "zustand";
 
 type SocketState = {
   socket: Socket;
@@ -42,30 +39,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   },
 
   connect: () => {
-    const { isConnected } = get();
-    if (isConnected) return;
-
-    const accessToken = useUserStore.getState().accessToken;
-
-    if (!accessToken) {
-      useUserStore.getState().logout();
-      useFeedStore.getState().setInitFeedStore();
-      useChallengeStore.getState().setInitChallengeStore();
-      useSocketStore.getState().setInitSocketStore();
-      console.log("Access token is not available");
-      return;
-    }
-
-    socket.io.opts.query = {
-      token: `Bearer ${accessToken}`,
-    };
-    socket.connect();
+    if (get().isConnected) return;
+    connectSocket();
 
     socket.on("connect", () => {
       console.log("🟢 Socket connected:", socket.id);
       set({ isConnected: true });
-      socket.emit("messages", {});
-      console.log("🔄 messages");
     });
 
     socket.on("disconnect", () => {

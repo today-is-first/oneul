@@ -40,12 +40,18 @@ export const useChallengeStore = create<ChallengeStore>((set, get) => ({
   getChallenge: (challengeId: number) => get().challengeMap[challengeId],
 
   setCommunityChallengeList: (challengeList: Challenge[]) =>
-    set((state) => ({
-      communityChallengeList: challengeList,
-    })),
+    set((state) => {
+      console.log("🟣 setting community list", challengeList);
+      return {
+        communityChallengeList: challengeList,
+      };
+    }),
 
   setSubscribedChallengeList: (challengeList: Challenge[]) =>
-    set((state) => ({
-      subscribedChallengeList: challengeList,
-    })),
+    set((state) => {
+      console.log("🟣 setting subscribed list", challengeList);
+      return {
+        subscribedChallengeList: challengeList,
+      };
+    }),
 }));

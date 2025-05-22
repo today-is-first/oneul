@@ -19,12 +19,12 @@ public class RefreshTokenService {
 
     private final RefreshTokenDao refreshTokenDao;
     private final JwtProvider jwtProvider;
-    private int refreshTokenExpirationDays;
+    private int refreshTokenExpirationMinutes;
 
     public String createAndSaveRefreshToken(Long userId) {
         String refreshToken = UUID.randomUUID().toString();
         refreshTokenDao.save(String.valueOf(userId), refreshToken,
-                Duration.ofDays(refreshTokenExpirationDays));
+                Duration.ofMinutes(refreshTokenExpirationMinutes));
         return refreshToken;
     }
 
@@ -53,7 +53,7 @@ public class RefreshTokenService {
             refreshTokenDao.delete(userIdStr);
             String newRefreshToken = UUID.randomUUID().toString();
             refreshTokenDao.save(userIdStr, newRefreshToken,
-                    Duration.ofDays(refreshTokenExpirationDays));
+                    Duration.ofMinutes(refreshTokenExpirationMinutes));
 
             System.out.println("[RTR] ✅ Access & Refresh Token reissued for userId = " + userIdStr);
 

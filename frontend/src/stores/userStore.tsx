@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { parseJwt, getCookie } from "@/utils/userUtils";
-import { get } from "@/api/api";
 
 interface User {
   id: number;
@@ -13,17 +12,25 @@ interface User {
 interface UserStore {
   user: User | null;
   accessToken: string | null;
+  isAuthenticated: boolean;
   setUser: (user: User, accessToken: string) => void;
   logout: () => void;
   initializeFromToken: () => void;
+  deleteCookie: (name: string) => void;
 }
 
 export const useUserStore = create<UserStore>((set, get) => ({
   user: null,
   accessToken: null,
+  isAuthenticated: false,
   setUser: (user, accessToken) => set({ user, accessToken }),
   logout: () => {
     set({ user: null, accessToken: null });
+    get().deleteCookie("accessToken");
+    get().deleteCookie("refreshToken");
+  },
+  deleteCookie: (name: string) => {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
   },
   initializeFromToken: () => {
     const token = getCookie("accessToken");
@@ -37,9 +44,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           email: payload.userEmail,
           profile: payload.userProfile,
         };
-        set({ user, accessToken: token });
+        set({ user, accessToken: token, isAuthenticated: true });
       } else {
-        set({ user: null, accessToken: null });
+        set({ user: null, accessToken: null, isAuthenticated: false });
       }
     }
   },

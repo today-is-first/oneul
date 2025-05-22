@@ -12,14 +12,11 @@ function FeedList({
   feedType: "community" | "my";
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const getFeeds = () => {
-    if (feedType === "community") {
-      return useFeedStore((state) => state.communityFeeds);
-    } else {
-      return useFeedStore((state) => state.myFeeds);
-    }
-  };
-  const feeds = getFeeds();
+
+  const feeds = useFeedStore((state) =>
+    feedType === "community" ? state.communityFeeds : state.myFeeds,
+  );
+
   const scrollBy = (offset: number) => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ left: offset, behavior: "smooth" });
@@ -53,13 +50,14 @@ function FeedList({
             className="scrollbar-hide flex w-full gap-4 overflow-x-auto px-1 py-2"
             style={{ scrollBehavior: "smooth" }}
           >
-            {feeds.map((feed) => (
-              <FeedItem
-                key={feed.id}
-                feed={feed}
-                onClick={() => onFeedClick(feed)}
-              />
-            ))}
+            {Array.isArray(feeds) &&
+              feeds.map((feed) => (
+                <FeedItem
+                  key={feed.id}
+                  feed={feed}
+                  onClick={() => onFeedClick(feed)}
+                />
+              ))}
           </div>
         </div>
       </div>

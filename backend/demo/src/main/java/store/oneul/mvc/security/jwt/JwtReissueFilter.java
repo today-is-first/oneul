@@ -1,18 +1,29 @@
 package store.oneul.mvc.security.jwt;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import store.oneul.mvc.security.common.CustomHeaderRequestWrapper;
+import store.oneul.mvc.security.oauth.service.OAuthService;
+import store.oneul.mvc.security.rtr.RefreshTokenDao;
 import store.oneul.mvc.security.rtr.RefreshTokenService;
+import store.oneul.mvc.security.token.TokenHelper;
+import store.oneul.mvc.user.dto.LoginResultDTO;
+import store.oneul.mvc.user.dto.UserDTO;
+import store.oneul.mvc.user.service.UserService;
 
 @Component
 @RequiredArgsConstructor
@@ -20,25 +31,59 @@ public class JwtReissueFilter extends OncePerRequestFilter {
 
     private final RefreshTokenService refreshTokenService;
     private final JwtProvider jwtProvider;
+    private final UserService userService;
+    private final OAuthService oauthService;
+    private final TokenHelper tokenHelper;
+    private final RefreshTokenDao refreshTokenDao;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String accessToken = extractToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-        String refreshToken = request.getHeader("Refresh");
+        Cookie[] cookies = request.getCookies();
+        String refreshToken = null;
 
-        if (accessToken != null && refreshToken != null) {
-            try {
-                jwtProvider.getUserIdFromToken(accessToken); // 정상 동작
-            } catch (Exception ex) {
-                System.out.println("[FILTER] ⚠️ AccessToken expired or invalid. Attempting reissue.");
-                Optional<String> newAccessToken = refreshTokenService.reissue(refreshToken, accessToken);
-                newAccessToken.ifPresent(token -> {
-                    response.setHeader("Authorization", "Bearer " + token);
-                    System.out.println("[FILTER] ✅ New AccessToken set in response header.");
-                });
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                    break;
+                }
             }
+        }
+
+        try {
+            if (accessToken == null && refreshToken != null) {
+                System.out.println("[JwtAuthenticationFilter] 리프레시 토큰: " + refreshToken);
+                String userIdStr = refreshTokenDao.findByToken(refreshToken);
+                Long userId = Long.parseLong(userIdStr);
+                System.out.println("[JwtAuthenticationFilter] 리프레시 토큰: " + refreshToken);
+                System.out.println("[JwtAuthenticationFilter] 유저 아이디: " + userId);
+                UserDTO user = userService.findById(userId);
+                System.out.println("[JwtAuthenticationFilter] 유저: " + user);
+                LoginResultDTO loginResult = oauthService.login(user);
+                System.out.println("[OAuth2SuccessHandler] 로그인 결과: " + loginResult);
+                System.out.println("[OAuth2SuccessHandler] 로그인 결과: " + user.getUserId());
+
+                Cookie accessTokenCookie = tokenHelper.createAccessTokenCookie(loginResult.getAccessToken());
+                Cookie refreshTokenCookie = tokenHelper.createRefreshTokenCookie(loginResult.getRefreshToken());
+
+                response.addCookie(accessTokenCookie);
+                response.addCookie(refreshTokenCookie);
+
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        user,
+                        null,
+                        List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                response.setHeader("Authorization", "Bearer " + loginResult.getAccessToken());
+                CustomHeaderRequestWrapper wrappedRequest = new CustomHeaderRequestWrapper(request,
+                        loginResult.getAccessToken());
+                filterChain.doFilter(wrappedRequest, response);
+            }
+        } catch (Exception e) {
+            System.out.println("[FILTER] ⚠️ AccessToken expired or invalid. Attempting reissue.");
         }
 
         filterChain.doFilter(request, response);
