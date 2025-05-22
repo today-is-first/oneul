@@ -80,3 +80,32 @@ input[type="date"]::-moz-calendar-picker-indicator {
   scrollbar-width: thin; /* auto | thin | none */
   scrollbar-color: #484857 transparent;
 }
+
+@layer utilities {
+  @keyframes toast {
+    0% {
+      margin-bottom: -50px;
+      opacity: 0;
+    }
+    10% {
+      transform: scale(1.05);
+    }
+    15% {
+      margin-bottom: 10px;
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    20%,
+    80% {
+      margin-bottom: 0;
+      opacity: 1;
+    }
+    100% {
+      margin-bottom: -30px;
+      opacity: 0;
+    }
+  }
+  .animate-toast {
+    animation: toast 3s forwards;
+  }
+}
