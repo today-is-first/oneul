@@ -21,7 +21,7 @@ const WorkoutModal = ({ selectedDate, setSelectedDate }: WorkoutModalProps) => {
       >
         <div
           ref={modalRef}
-          className="scrollbar-custom max-h-[80vh] w-[450px] transform overflow-y-auto rounded-2xl text-white shadow-[0_4px_40px_rgba(0,0,0,0.6)] transition-all duration-300"
+          className="max-h-[80vh] w-[450px] transform overflow-y-auto rounded-2xl text-white shadow-[0_4px_40px_rgba(0,0,0,0.6)] transition-all duration-300"
         >
           <ul className="list-inside list-disc space-y-20">
             {selectedDate &&
