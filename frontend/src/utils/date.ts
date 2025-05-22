@@ -18,3 +18,13 @@ export const formatTimeHHMM = (dateString: string) => {
   const minutes = date.getMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
 };
+
+export function isSameDate(dateStr1: string, dateStr2: string): boolean {
+  const d1 = new Date(dateStr1);
+  const d2 = new Date(dateStr2);
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
+}

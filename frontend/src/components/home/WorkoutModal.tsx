@@ -1,26 +1,38 @@
 import { Dialog } from "@components/common/Dialog";
 import { WorkoutModalProps } from "@/types/home";
 import { useFeedStore } from "@/stores/feedStore";
+import { isSameDate } from "@/utils/date";
+import FeedDetailItem from "@/components/feed/FeedDetailItem";
+import { useRef } from "react";
 
 const WorkoutModal = ({ selectedDate, setSelectedDate }: WorkoutModalProps) => {
   const feeds = useFeedStore((state) => state.myFeeds);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+      setSelectedDate(null);
+    }
+  };
   return (
     <Dialog open={!!selectedDate} onOpenChange={() => setSelectedDate(null)}>
-      <div className="flex items-center justify-center bg-opacity-60">
-        <div className="w-full max-w-sm rounded-xl bg-white p-6 text-black">
-          <h3 className="mb-2 text-lg font-semibold">{selectedDate} 피드</h3>
-          <ul className="list-inside list-disc space-y-1">
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md"
+        onClick={handleBackgroundClick}
+      >
+        <div
+          ref={modalRef}
+          className="scrollbar-custom max-h-[80vh] w-[450px] transform overflow-y-auto rounded-2xl text-white shadow-[0_4px_40px_rgba(0,0,0,0.6)] transition-all duration-300"
+        >
+          <ul className="list-inside list-disc space-y-20">
             {selectedDate &&
               feeds
-                .filter((feed) => feed.createdAt === selectedDate)
-                .map((item, idx) => <li key={idx}>{item.content}</li>)}
+                .filter((feed) => isSameDate(feed.createdAt, selectedDate))
+                .map((item, idx) => (
+                  <li key={idx} className="list-none">
+                    <FeedDetailItem key={idx} feed={item} onClose={() => {}} />
+                  </li>
+                ))}
           </ul>
-          <button
-            className="mt-4 rounded bg-neutral-800 px-4 py-2 text-white hover:bg-neutral-700"
-            onClick={() => setSelectedDate(null)}
-          >
-            닫기
-          </button>
         </div>
       </div>
     </Dialog>

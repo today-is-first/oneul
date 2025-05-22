@@ -11,6 +11,7 @@ import { useFeedStore } from "@/stores/feedStore";
 import { useQueryClient } from "@tanstack/react-query";
 import FeedUpdateModal from "@/components/feed/FeedUpdateModal";
 import FeedDetailModal from "@/components/feed/FeedDetailModal";
+import { isSameDate } from "@/utils/date";
 
 export const getContributionColor = (count: number) => {
   if (count >= 4) return "bg-primary-500"; // 진한 보라색
@@ -88,6 +89,7 @@ const MyWorkoutDashboard = () => {
         onUpdate={invalidateFeeds}
       />
       <BannerSlider />
+
       <FeedDetailModal
         isOpen={isDetailModalOpen}
         onClose={() => setIsDetailModalOpen(false)}
