@@ -32,7 +32,7 @@ function ChallengeStatus({
             아직 시작하지 않은 챌린지예요
             <br />
             <span className="text-primary-purple-100 font-medium">
-              총 {success}일, 100% 달성 중
+              총 {goal}일 참여 시 성공!
             </span>
           </p>
           <p>
@@ -55,7 +55,7 @@ function ChallengeStatus({
           챌린지 시작일로부터 지금까지
           <br />
           <span className="text-primary-purple-100 font-medium">
-            총 {success}일, 100% 달성 중
+            총 {success}일, {Math.ceil((success / goal) * 100)}% 달성 중
           </span>
         </p>
         <p>
