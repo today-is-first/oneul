@@ -28,5 +28,7 @@ public interface ChallengeDAO {
 	ChallengeDTO getChallengeById(Long challengeId);
 
     int insertChallengeUser(ChallengeUserDTO dto);
+    
+    String getRoomPassword(Long challengeId);
 
 }

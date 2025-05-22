@@ -25,6 +25,7 @@ html,
   --color-gray-1: #2c2c35;
   --color-logo-white: #eae7e6;
   --color-black-chat: #101014;
+  --color-input-gray: #272932;
   --color-primary-purple-100: #a78bfa;
   --color-primary-purple-200: #8b5cf6;
   --color-primary-purple-300: #7c3aed;
@@ -78,4 +79,33 @@ input[type="date"]::-moz-calendar-picker-indicator {
 .scroll-container {
   scrollbar-width: thin; /* auto | thin | none */
   scrollbar-color: #484857 transparent;
+}
+
+@layer utilities {
+  @keyframes toast {
+    0% {
+      margin-bottom: -50px;
+      opacity: 0;
+    }
+    10% {
+      transform: scale(1.05);
+    }
+    15% {
+      margin-bottom: 10px;
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    20%,
+    80% {
+      margin-bottom: 0;
+      opacity: 1;
+    }
+    100% {
+      margin-bottom: -30px;
+      opacity: 0;
+    }
+  }
+  .animate-toast {
+    animation: toast 3s forwards;
+  }
 }

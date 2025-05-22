@@ -1,22 +1,21 @@
-import { get } from "@/api/api";
+import { ApiResponse } from "@/types/ApiResponse";
+import { post } from "./api";
 
-export interface Challenge {
-  challengeId: number;
-  name: string;
-  ownerId: number;
-  ownerNickname: string;
-  categoryId: number;
-  description: string;
-  startDate: string;
-  endDate: string;
-  totalDay: number;
-  goalDay: number;
-  entryFee: number;
-  isChallenge: boolean;
-  isPublic: boolean;
-  createdAt: string;
-  successDay: number; // 삭제 예정
-  roomPassword: string; // 삭제 예정
-}
+export const joinChallenge = async (
+  challengeId: number,
+  roomPassword?: string,
+) => {
+  const body: { roomPassword?: string } = roomPassword ? { roomPassword } : {};
+  await post<void>(`/challenges/${challengeId}/user`, body);
+};
 
-export const fetchChallengeList = () => get<Challenge[]>("/challenges");
+export const validatePassword = async (
+  challengeId: number,
+  roomPassword?: string,
+): Promise<boolean> => {
+  const res = await post<ApiResponse<boolean>>(
+    `/challenges/${challengeId}/validate-password`,
+    { roomPassword },
+  );
+  return res.data;
+};

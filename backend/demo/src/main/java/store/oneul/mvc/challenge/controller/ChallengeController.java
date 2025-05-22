@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.challenge.dto.ChallengeDTO;
 import store.oneul.mvc.challenge.service.ChallengeService;
+import store.oneul.mvc.config.ApiResponse;
 import store.oneul.mvc.user.dto.UserDTO;
 
 @RestController
@@ -89,4 +91,27 @@ public class ChallengeController {
         return ResponseEntity.ok(challengeDTOs);
     }   
 
+    @PostMapping("/{challengeId}/user")
+    public ResponseEntity<ApiResponse<String>> postChallengeUser(
+    		@PathVariable Long challengeId,
+    		@AuthenticationPrincipal UserDTO loginUser,
+    		@RequestBody(required = false) Map<String, String> body) {
+    	String roomPassword = body != null ? body.get("roomPassword") : null;
+
+        challengeService.joinChallenge(challengeId, loginUser.getUserId(), roomPassword);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.success("null"));
+    }
+    
+    @PostMapping("/{challengeId}/validate-password")
+    public ResponseEntity<ApiResponse<Boolean>> validatePassword(
+            @PathVariable Long challengeId,
+            @RequestBody Map<String, String> body
+    ) {
+        String roomPassword = body.get("roomPassword");
+        boolean valid = challengeService.isRoomPasswordValid(challengeId, roomPassword);
+        return ResponseEntity.ok(ApiResponse.success(valid));
+    }
 }
