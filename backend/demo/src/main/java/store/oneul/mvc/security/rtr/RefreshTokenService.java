@@ -19,13 +19,19 @@ public class RefreshTokenService {
 
     public String createAndSaveRefreshToken(Long userId) {
         String refreshToken = UUID.randomUUID().toString();
-        //refreshTokenRepository.save(String.valueOf(userId), refreshToken, REFRESH_TOKEN_EXPIRATION);
+        refreshTokenRepository.save(String.valueOf(userId), refreshToken, REFRESH_TOKEN_EXPIRATION);
+        System.out.println("Saving refresh token for userId: " + userId + " - Token: " + refreshToken);
+        System.out.println(1111);
         return refreshToken;
     }
-
+    
     public boolean validate(String userId, String providedToken) {
         String savedToken = refreshTokenRepository.findByUserId(userId);
         return savedToken != null && savedToken.equals(providedToken);
+    }
+    
+    public String findByUserId(long userId) {
+        return refreshTokenRepository.findByUserId(String.valueOf(userId));
     }
 
     public void delete(String userId) {
@@ -38,6 +44,7 @@ public class RefreshTokenService {
             String userIdStr = String.valueOf(userId);
 
             String saved = refreshTokenRepository.findByUserId(userIdStr);
+            System.out.println("[RTR] Checking saved token for userId = " + userIdStr + ": " + saved);
             if (!refreshToken.equals(saved)) {
                 System.out.println("[RTR] ❌ RefreshToken mismatch for userId = " + userIdStr);
                 return Optional.empty();
@@ -47,7 +54,7 @@ public class RefreshTokenService {
 
             refreshTokenRepository.delete(userIdStr);
             String newRefreshToken = UUID.randomUUID().toString();
-           // refreshTokenRepository.save(userIdStr, newRefreshToken, REFRESH_TOKEN_EXPIRATION);
+            refreshTokenRepository.save(userIdStr, newRefreshToken, REFRESH_TOKEN_EXPIRATION);
 
             System.out.println("[RTR] ✅ Access & Refresh Token reissued for userId = " + userIdStr);
 
@@ -57,4 +64,5 @@ public class RefreshTokenService {
             return Optional.empty();
         }
     }
+
 }
