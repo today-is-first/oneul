@@ -23,6 +23,7 @@
 		    c.end_date,
 		    c.entry_fee,
 		    c.created_at,
+		    c.challenge_status,
 		    u.nickname AS owner_nickname,
 		    cu.success_day,
 		
