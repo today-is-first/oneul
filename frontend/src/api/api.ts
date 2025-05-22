@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true, // 쿠키 인증 등에 필요
+  withCredentials: true, // HttpOnly 쿠키(refreshToken) 자동 포함
   headers: { "Content-Type": "application/json" },
 });
 
@@ -18,14 +18,20 @@ api.interceptors.request.use((config) => {
 
 // 응답 인터셉터
 api.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    if (err.response?.status === 401) {
-      // 로그아웃 처리 or 리프레시
-      console.error("Unauthorized. Redirecting to login...");
+  (res) => {
+    // 백엔드 필터가 새 토큰을 Authorization 헤더에 담아 내려주면
+    const newToken = res.headers["authorization"] as string | undefined;
+    if (newToken?.startsWith("Bearer ")) {
+      useUserStore
+        .getState()
+        .setUser(
+          useUserStore.getState().user!,
+          newToken.replace("Bearer ", ""),
+        );
     }
-    return Promise.reject(err);
+    return res;
   },
+  (err) => Promise.reject(err),
 );
 
 // 공통 메서드 정의

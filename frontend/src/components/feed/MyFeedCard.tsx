@@ -7,6 +7,7 @@ interface MyFeedCardProps {
   onCreate?: () => void;
   onEdit?: (feed: Feed) => void;
   onDetail?: (feed: Feed) => void;
+  disabled: boolean;
 }
 
 function isFeedToday(feed: Feed | null): boolean {
@@ -20,19 +21,29 @@ function isFeedToday(feed: Feed | null): boolean {
   );
 }
 
-function MyFeedCard({ feed, onCreate, onEdit, onDetail }: MyFeedCardProps) {
+function MyFeedCard({
+  feed,
+  onCreate,
+  onEdit,
+  onDetail,
+  disabled,
+}: MyFeedCardProps) {
   if (!feed || !isFeedToday(feed)) {
     return (
       <>
         <p className="mb-4 text-gray-400">
-          아직 오늘의 인증을 진행하지 않으셨어요.
+          {disabled
+            ? "챌린지가 오픈되면 인증이 가능합니다."
+            : "아직 오늘의 인증을 진행하지 않으셨어요."}
         </p>
-        <button
-          onClick={onCreate}
-          className="flex aspect-square w-full cursor-pointer select-none items-center justify-center rounded-md border border-[#2d2d2d] bg-[#24242c] text-9xl font-extralight text-gray-600"
-        >
-          +
-        </button>
+        {!disabled && (
+          <button
+            onClick={onCreate}
+            className="flex aspect-square w-full cursor-pointer select-none items-center justify-center rounded-md border border-[#2d2d2d] bg-[#24242c] text-9xl font-extralight text-gray-600"
+          >
+            +
+          </button>
+        )}
       </>
     );
   }
