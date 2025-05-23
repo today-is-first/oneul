@@ -5,10 +5,12 @@ function CustomDateInput({
   label,
   selectedDate,
   setSelectedDate,
+  error,
 }: {
   label: string;
   selectedDate: Date | null;
   setSelectedDate: (date: Date | null) => void;
+  error?: string;
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -25,6 +27,7 @@ function CustomDateInput({
         showMonthDropdown
         dropdownMode="select"
       />
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

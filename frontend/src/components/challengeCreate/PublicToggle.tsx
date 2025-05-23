@@ -1,18 +1,11 @@
-function PublicToggle({
-  isPublic,
-  setIsPublic,
-}: {
-  isPublic: boolean;
-  setIsPublic: (value: boolean) => void;
-}) {
+function PublicToggle({ isPublic }: { isPublic: boolean }) {
   return (
     <div className="flex flex-col gap-2">
       <label className="text-lg font-bold">공개방 설정</label>
       <div
-        className={`relative flex h-10 w-28 translate-x-4 translate-y-1 cursor-pointer items-center rounded-full p-1 transition-all duration-500 ${
+        className={`relative flex h-10 w-28 translate-x-4 translate-y-1 items-center rounded-full p-1 transition-all duration-500 ${
           isPublic ? "bg-point" : "bg-gray-500"
         } shadow-inner`}
-        onClick={() => setIsPublic(!isPublic)}
       >
         <span
           className={`font-lg text-sm transition-all duration-500 ${
