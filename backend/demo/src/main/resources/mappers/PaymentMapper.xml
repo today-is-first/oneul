@@ -12,22 +12,9 @@
         )
     </select>
     
-        <insert id="insertPayment" parameterType="PaymentDTO">
-        INSERT INTO payment (
-            user_id,
-            challenge_id,
-            order_id,
-            payment_key,
-            amount,
-            status
-        ) VALUES (
-            #{userId},
-            #{challengeId},
-            #{orderId},
-            #{paymentKey},
-            #{amount},
-            #{status}
-        )
+    <insert id="insertPayment" parameterType="PaymentDTO">
+        INSERT INTO payment (user_id, challenge_id, order_id, payment_key, amount, status ) 
+        VALUES ( #{userId}, #{challengeId}, #{orderId}, #{paymentKey}, #{amount}, #{status})
     </insert>
     
      <insert id="insertRefundReceipt" parameterType="RefundReceiptDTO">
@@ -53,6 +40,78 @@
 	      #{note}
 	    )
   	</insert>
+  	
+  	<insert id="insertCancelFailLog" parameterType="CancelFailLogDTO">
+		INSERT INTO cancel_fail_log (
+            payment_id,
+            order_id,
+            payment_key,
+            user_id,
+            challenge_id,
+            amount,
+            type,
+            error_status,
+            reason,
+            manual_status
+        ) VALUES (
+            #{paymentId},
+            #{orderId},
+            #{paymentKey},
+            #{userId},
+            #{challengeId},
+            #{amount},
+            #{type},
+            #{errorStatus},
+            #{reason},
+            #{manualStatus}
+        )
+	    
+	</insert>
+  	
+  	<select id="findIdByOrderId" parameterType="string" resultType="long">
+	    SELECT id
+	    FROM payment
+	    WHERE order_id = #{orderId}
+	</select>
+	
+	<!-- 환불 영수증 + 결제 테이블 조인 -->
+	<select id="findRefundReceiptByOrderId" resultType="RefundReceiptDTO">
+        SELECT
+            r.payment_id,
+            r.cancel_fail_log_id,
+            r.user_id,
+            r.challenge_id,
+            r.refund_method,
+            r.refund_amount,
+            r.refunded_at,
+            r.transaction_id,
+            r.note,
+            p.order_id,
+            p.payment_key
+        FROM refund_receipt r
+        JOIN payment p ON r.payment_id = p.id
+        WHERE p.order_id = #{orderId}
+    </select>
+    
+        <!-- 취소 실패 로그 단독 조회 (orderId 기준) -->
+    <select id="findCancelFailLogByOrderId" resultType="store.oneul.mvc.payment.dto.CancelFailLogDTO">
+        SELECT
+            c.id,
+            c.payment_id,
+            c.order_id,
+            c.payment_key,
+            c.user_id,
+            c.challenge_id,
+            c.amount,
+            c.type,
+            c.error_status,
+            c.reason,
+            c.manual_status,
+            c.created_at,
+            c.updated_at
+        FROM cancel_fail_log c
+        WHERE c.order_id = #{orderId}
+    </select>
     
     
 </mapper>
