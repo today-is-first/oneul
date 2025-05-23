@@ -70,7 +70,7 @@ public class PaymentUsecase {
                 log.error("❌ TossCancel 또는 환불기록 실패 → 수동 환불 전환 필요", ex);
 
                 // 9. 수동 환불 응답 반환
-                return PaymentResultResponse.manualRefundRequired(tossResponse);
+                return PaymentResultResponse.refundPending(tossResponse);
             }
         }
     }
