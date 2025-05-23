@@ -15,6 +15,7 @@ function FeedCreateBtn() {
       <FeedCreateModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onCreate={() => setIsModalOpen(false)}
       />
     </div>
   );
