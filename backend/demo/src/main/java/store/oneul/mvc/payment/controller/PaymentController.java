@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,8 +31,10 @@ import store.oneul.mvc.common.exception.InvalidParameterException;
 import store.oneul.mvc.common.exception.NotFoundException;
 import store.oneul.mvc.payment.dto.OrderIdResponse;
 import store.oneul.mvc.payment.dto.PaymentConfirmRequest;
+import store.oneul.mvc.payment.dto.PaymentReceiptDTO;
 import store.oneul.mvc.payment.dto.PaymentResultResponse;
 import store.oneul.mvc.payment.dto.PaymentSessionDto;
+import store.oneul.mvc.payment.service.PaymentReceiptService;
 import store.oneul.mvc.payment.service.PaymentStatusService;
 import store.oneul.mvc.payment.usecase.PaymentUsecase;
 import store.oneul.mvc.user.dto.UserDTO;
@@ -47,6 +50,7 @@ public class PaymentController {
     private final ChallengeService challengeService;
     private final PaymentUsecase paymentUsecase;
     private final PaymentStatusService paymentStatusService;
+    private final PaymentReceiptService paymentReceiptService;
     
     @Qualifier("jsonRedisTemplate")
     private final RedisTemplate<String, Object> jsonRedisTemplate;
@@ -153,7 +157,13 @@ public class PaymentController {
         return output;
     }
 
+    @GetMapping("/receipt")
+    public ResponseEntity<List<PaymentReceiptDTO>> receipt(
+            @AuthenticationPrincipal UserDTO loginUser
+    ) {
+        List<PaymentReceiptDTO> receipts = paymentReceiptService.getAllReceiptsByUser(loginUser.getUserId());
+        return ResponseEntity.ok(receipts);
 
-
+    }
 }
 
