@@ -26,12 +26,7 @@
 		    c.challenge_status,
 		    u.nickname AS owner_nickname,
 		    cu.success_day,
-		
-		    (
-		        SELECT COUNT(*) 
-		        FROM challenge_user cu2 
-		        WHERE cu2.challenge_id = c.challenge_id
-		    ) AS participant_count
+		    c.member_count
 		
 		FROM challenge c
 		JOIN user u ON c.owner_id = u.user_id

@@ -5,6 +5,7 @@ import { useParams } from "react-router";
 import { useMyChallenge } from "@/hooks/useChallenge";
 import Toast from "../Toast/Toast";
 import { useEffect, useRef } from "react";
+import { FiClock } from "react-icons/fi";
 
 function ChallengeDetailPage() {
   const { challengeId } = useParams<{ challengeId: string }>();
@@ -67,7 +68,19 @@ function ChallengeDetailPage() {
               <p>데이터를 불러오는데 실패했습니다.</p>
             )}
           </div>
-          {challenge && <ChallengeFeed status={challenge?.challengeStatus} />}
+          {challenge && challenge.challengeStatus !== "RECRUITING" ? (
+            <ChallengeFeed status={challenge?.challengeStatus} />
+          ) : (
+            <div className="flex w-full flex-col items-center justify-center gap-6 rounded-2xl bg-[#1A1A1F] px-8 py-9 text-gray-300">
+              <FiClock className="h-20 w-20" />
+              <div className="flex flex-col items-center gap-3">
+                <h4 className="text-2xl font-semibold">챌린지 오픈 대기중</h4>
+                <span className="text-gray-400">
+                  아직 시작하지 않은 챌린지입니다.
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>

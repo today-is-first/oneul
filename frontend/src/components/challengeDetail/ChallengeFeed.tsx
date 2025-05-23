@@ -83,7 +83,7 @@ function ChallengeFeed({ status }: ChallengeFeedProps) {
             onCreate={openCreate}
             onEdit={openEdit}
             onDetail={openDetail}
-            disabled={status === "RECRUITING"}
+            disabled={!(status === "IN_PROGRESS")}
           />
         </div>
 
