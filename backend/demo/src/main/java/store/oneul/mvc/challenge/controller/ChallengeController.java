@@ -68,9 +68,16 @@ public class ChallengeController {
         paramMap.put("loginUserId", loginUserId);
 
         ChallengeDTO dto = challengeService.getMyChallenge(paramMap);
-        System.out.println("dto: " + dto);
 
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<ChallengeDTO>> getMyChallenges(
+            @AuthenticationPrincipal UserDTO loginUser) {
+        Long loginUserId = loginUser.getUserId();
+        List<ChallengeDTO> challengeDTOs = challengeService.getMyChallenges(loginUserId);
+        return ResponseEntity.ok(challengeDTOs);
     }
 
     @GetMapping
