@@ -27,7 +27,6 @@
 		    u.nickname AS owner_nickname,
 		    cu.success_day,
 		    c.member_count
-		
 		FROM challenge c
 		JOIN user u ON c.owner_id = u.user_id
 		JOIN challenge_user cu 
@@ -88,6 +87,13 @@
         JOIN challenge_user cu ON c.challenge_id = cu.challenge_id
         WHERE cu.user_id = #{userId}
         AND c.challenge_status = 'IN_PROGRESS'
+    </select>
+
+    <select id="getMyChallenges" parameterType="long" resultType="ChallengeDTO">
+        SELECT c.*
+        FROM challenge c
+        JOIN challenge_user cu ON c.challenge_id = cu.challenge_id
+        WHERE cu.user_id = #{userId}
     </select>
     
     <select id="getCommunityChallenges" resultType="ChallengeDTO">

@@ -16,6 +16,8 @@ public interface ChallengeService {
 
     public List<ChallengeDTO> getChallenges();
 
+    public List<ChallengeDTO> getMyChallenges(Long userId);
+
     public List<ChallengeDTO> getSubscribedChallenges(Long userId);
 
     public List<ChallengeDTO> getCommunityChallenges();

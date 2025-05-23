@@ -1,30 +1,43 @@
 import { categories, tabs } from "@/constants/challengeSearchContants";
 import { useChallengeStore } from "@/stores/challengeStore";
 import { Challenge } from "@/types/Challenge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { challengeStatusTranslate } from "@/constants/challengeSearchContants";
 import { FiSearch } from "react-icons/fi";
 import ChallenegeModeTab from "../challengeSearch/ChallenegeModeTab";
 import ChallengeStatusTab from "../challengeSearch/ChallengeStatusTab";
 import CategoryTab from "../challengeSearch/CategoryTab";
 import ChallengeSearchRoomItem from "../challengeSearch/ChallengeSearchRoomItem";
-import ChallengeDetailModal from "../challengeRegist/ChallengeDetailModal";
+import { useQuery } from "@tanstack/react-query";
+import { get } from "@/api/api";
+import { useUserStore } from "@/stores/userStore";
 
 function MyChallengeList() {
   const [activeTab, setActiveTab] = useState("전체");
   const [activeCategory, setActiveCategory] = useState<string | null>("전체");
   const [activeStatus, setActiveStatus] = useState("전체");
   const [keyword, setKeyword] = useState("");
+  const { user } = useUserStore();
+  const { setMyChallengeList } = useChallengeStore();
 
-  const challengeList = useChallengeStore(
-    (state) => state.subscribedChallengeList,
-  );
+  const { data: myChallengeList } = useQuery<Challenge[]>({
+    queryKey: ["myChallengeList"],
+    queryFn: () => get("/challenges/my"),
+    staleTime: 1000 * 60 * 5,
+    enabled: !!user,
+  });
+
+  useEffect(() => {
+    if (myChallengeList) {
+      setMyChallengeList(myChallengeList);
+    }
+  }, [myChallengeList]);
 
   const onChallengeClick = (challenge: Challenge) => {
     window.location.href = `/challenge/${challenge.challengeId}`;
   };
 
-  const filteredList = challengeList.filter((c) => {
+  const filteredList = myChallengeList?.filter((c) => {
     const matchTab =
       activeTab === "전체"
         ? true
@@ -114,7 +127,7 @@ function MyChallengeList() {
             추천 챌린지 목록
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredList.map((challenge) => (
+            {filteredList?.map((challenge) => (
               <ChallengeSearchRoomItem
                 key={challenge.challengeId}
                 challenge={challenge}
@@ -122,7 +135,7 @@ function MyChallengeList() {
                 setIsModalOpen={() => {}}
               />
             ))}
-            {filteredList.length === 0 && (
+            {filteredList?.length === 0 && (
               <div className="col-span-full py-12 text-center text-sm text-gray-500">
                 조건에 맞는 챌린지가 없습니다.
               </div>

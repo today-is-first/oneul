@@ -47,6 +47,11 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
+    public List<ChallengeDTO> getMyChallenges(Long userId) {
+        return challengeDAO.getMyChallenges(userId);
+    }
+
+    @Override
     public List<ChallengeDTO> getChallenges() {
         return challengeDAO.getChallenges();
     }
