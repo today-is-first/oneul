@@ -1,16 +1,11 @@
-import { useChallengeFeeds } from "@/hooks/useFeed";
-import { ChallengeStatusType } from "@/types/Challenge";
-import { Feed } from "@/types/Feed";
-import { useMemo, useState } from "react";
+import { useChallengeFeeds, useEvaluateFeed } from "@/hooks/useFeed";
+import { CheckStatus, Feed } from "@/types/Feed";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import FeedCheckItem from "./FeedCheckItem";
 import { formatTimeAgo } from "@/utils/date";
 
-interface ChallengeFeedCheckProps {
-  status: ChallengeStatusType;
-}
-
-function ChallengeFeedCheck({ status }: ChallengeFeedCheckProps) {
+function ChallengeFeedCheck() {
   const { challengeId } = useParams<{ challengeId: string }>();
   const {
     data: feeds,
@@ -20,10 +15,19 @@ function ChallengeFeedCheck({ status }: ChallengeFeedCheckProps) {
   } = useChallengeFeeds(challengeId ?? "");
 
   const [selectedFeed, setSelectedFeed] = useState<Feed | null>(null);
-  const [filter, setFilter] = useState<
-    "ALL" | "PENDING" | "APPROVED" | "REJECTED"
-  >("ALL");
+  const [localStatus, setLocalStatus] = useState<CheckStatus>(
+    selectedFeed?.checkStatus ?? "PENDING",
+  );
+  const [filter, setFilter] = useState<"ALL" | CheckStatus>("ALL");
   const [sortKey, setSortKey] = useState<"DATE" | "UPDATED">("DATE");
+
+  const { mutate: evaluateFeed, status: patchStatus } = useEvaluateFeed();
+
+  useEffect(() => {
+    if (selectedFeed) {
+      setLocalStatus(selectedFeed.checkStatus);
+    }
+  }, [selectedFeed]);
 
   const filtered = useMemo(() => {
     if (!feeds) return [];
@@ -38,6 +42,22 @@ function ChallengeFeedCheck({ status }: ChallengeFeedCheckProps) {
       return new Date(bKey).getTime() - new Date(aKey).getTime();
     });
   }, [filtered, sortKey]);
+
+  const handleConfirm = () => {
+    if (!selectedFeed || !challengeId) return;
+    evaluateFeed(
+      {
+        challengeId,
+        feedId: selectedFeed.id,
+        checkStatus: localStatus,
+      },
+      {
+        onSuccess: (updated) => {
+          setSelectedFeed(updated);
+        },
+      },
+    );
+  };
 
   if (isLoading) {
     return (
@@ -56,7 +76,6 @@ function ChallengeFeedCheck({ status }: ChallengeFeedCheckProps) {
 
   return (
     <section className="flex h-[800px] w-full gap-6 rounded-2xl bg-[#1A1A1F] px-8 py-10">
-      {/* 왼쪽: 선택된 피드 크게 */}
       <div className="flex-1 bg-[#1A1A1F]">
         <span className="mb-6 inline-block text-xl font-semibold text-gray-200">
           챌린지 승인
@@ -79,15 +98,21 @@ function ChallengeFeedCheck({ status }: ChallengeFeedCheckProps) {
               </div>
               <div className="flex items-center justify-end">
                 <select
-                  value={selectedFeed.checkStatus}
-                  onChange={() => {}}
+                  value={localStatus}
+                  onChange={(e) =>
+                    setLocalStatus(e.target.value as CheckStatus)
+                  }
                   className="focus:border-primary-purple-200 w-32 rounded-lg border border-gray-700 bg-[#2A2A2D] px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none"
                 >
                   <option value="APPROVED">승인</option>
                   <option value="REJECTED">거절</option>
                 </select>
-                <button className="bg-primary-purple-200 ml-2 cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50">
-                  확인
+                <button
+                  onClick={handleConfirm}
+                  disabled={patchStatus === "pending"}
+                  className="bg-primary-purple-200 ml-2 cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+                >
+                  {patchStatus === "pending" ? "처리중…" : "확인"}
                 </button>
               </div>
             </div>
@@ -109,7 +134,6 @@ function ChallengeFeedCheck({ status }: ChallengeFeedCheckProps) {
         )}
       </div>
 
-      {/* 오른쪽: 필터/소트 + 리스트 */}
       <div className="flex w-80 flex-col gap-2">
         {/* 필터 & 소트 */}
         <div className="mb-4 h-[60px] space-y-2">
@@ -159,6 +183,7 @@ function ChallengeFeedCheck({ status }: ChallengeFeedCheckProps) {
           {sorted.length > 0 ? (
             sorted.map((feed) => (
               <FeedCheckItem
+                key={feed.id}
                 onClick={() => setSelectedFeed(feed)}
                 feed={feed}
               />
