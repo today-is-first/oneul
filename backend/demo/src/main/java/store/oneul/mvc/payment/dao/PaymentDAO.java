@@ -1,9 +1,12 @@
 package store.oneul.mvc.payment.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import store.oneul.mvc.payment.dto.CancelFailLogDTO;
 import store.oneul.mvc.payment.dto.PaymentDTO;
+import store.oneul.mvc.payment.dto.PaymentReceiptDTO;
 import store.oneul.mvc.payment.dto.RefundReceiptDTO;
 
 @Mapper
@@ -21,4 +24,6 @@ public interface PaymentDAO {
     RefundReceiptDTO findRefundReceiptByOrderId(String orderId);
     
     CancelFailLogDTO findCancelFailLogByOrderId(String orderId);
+
+	List<PaymentReceiptDTO> findReceiptDTOsByUserId(long userId);
 }
