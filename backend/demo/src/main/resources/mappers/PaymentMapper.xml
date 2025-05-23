@@ -113,5 +113,20 @@
         WHERE c.order_id = #{orderId}
     </select>
     
+    <select id="findReceiptDTOsByUserId" resultType="PaymentReceiptDTO">
+        SELECT 
+            p.id AS paymentId,
+            c.name AS challengeName,
+            p.updated_at AS updatedAt,
+            p.amount,
+            p.status,
+            p.method
+        FROM payment p
+        JOIN challenge c ON p.challenge_id = c.challenge_id
+        WHERE p.user_id = #{userId}
+          AND p.deleted_at IS NULL
+        ORDER BY p.updated_at DESC
+    </select>
+    
     
 </mapper>
