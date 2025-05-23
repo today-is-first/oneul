@@ -120,7 +120,6 @@ function ChallengeRoomForm() {
       setFormErrors(errors);
       return;
     }
-    console.log(formData);
     try {
       // API 요청 데이터 준비
       const requestData = {
@@ -132,11 +131,9 @@ function ChallengeRoomForm() {
         roomPassword: formData.roomPassword || undefined,
       };
       // API 호출
-      const response = await post("/challenges", requestData);
+      await post("/challenges", requestData);
 
-      console.log(response);
-
-      // window.location.href = "/challenge/search";
+      window.location.href = "/challenge/search";
     } catch (error) {
       console.error("Error creating challenge room:", error);
       setFormErrors({ submit: "챌린지 룸 생성에 실패했습니다" });
