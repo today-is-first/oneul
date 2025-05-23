@@ -124,7 +124,7 @@ function MyChallengeList() {
         {/* 챌린지 리스트 */}
         <div className="rounded-xl bg-[#1A1A1E] p-6 shadow-md">
           <h2 className="mb-4 text-lg font-semibold text-white">
-            추천 챌린지 목록
+            나의 챌린지 목록
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {filteredList?.map((challenge) => (
