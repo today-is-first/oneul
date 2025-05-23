@@ -1,9 +1,9 @@
 package store.oneul.mvc.payment.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import store.oneul.mvc.payment.enums.RefundReason;
 import store.oneul.mvc.payment.event.PaymentConfirmedEvent;
 
@@ -14,7 +14,8 @@ public class CompensationServiceImpl implements CompensationService {
 
     private final TossCancelService tossCancelService;
     private final RefundReceiptService refundReceiptService;
-
+    private final CancelDLQService cancelDLQService;
+    
     @Override
     public void handleConfirmFail(PaymentConfirmedEvent event) {
         try {
@@ -28,6 +29,7 @@ public class CompensationServiceImpl implements CompensationService {
         } catch (Exception e) {
             log.error("❌ Toss Cancel 실패 - DLQ 적재 예정", e);
             // TODO: Redis DLQ 적재
+            cancelDLQService.pushToQueue(event);
         }
     }
 }
