@@ -6,11 +6,14 @@
 <mapper namespace="store.oneul.mvc.feed.dao.FeedDAO">
 
     <!-- SELECT ONE -->
-    <select id="getFeed" parameterType="map" resultType="FeedDTO">
-        SELECT f.*, u.nickname 
+    <select id="getFeed" parameterType="map" resultType="ChallengeFeedDTO">
+        SELECT 
+        	f.*, 
+        	u.nickname,
+        	u.profile_img
         FROM feed f
         LEFT JOIN user u
-          ON f.user_id = u.user.id
+          ON f.user_id = u.user_id
         WHERE f.challenge_id = #{challengeId} 
           AND f.id = #{id}
     </select>

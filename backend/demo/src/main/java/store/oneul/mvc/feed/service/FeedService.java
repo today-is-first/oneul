@@ -17,7 +17,7 @@ public interface FeedService {
 
     public void deleteFeed(Long challengeId, Long id);
 
-    public FeedDTO getFeed(Long challengeId, Long id);
+    public ChallengeFeedDTO getFeed(Long challengeId, Long id);
 
     public List<FeedDTO> getFeeds(Long challengeId);
 
