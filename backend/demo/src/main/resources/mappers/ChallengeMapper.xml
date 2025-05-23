@@ -46,7 +46,8 @@
     </select>
 
     <!-- INSERT -->
-    <insert id="insertChallenge" parameterType="ChallengeDTO">
+    <insert id="insertChallenge" parameterType="ChallengeDTO"
+            useGeneratedKeys="true" keyProperty="challengeId">
         INSERT INTO challenge (
             name, owner_id, category_id, description,
             total_day, goal_day, is_challenge, is_public,

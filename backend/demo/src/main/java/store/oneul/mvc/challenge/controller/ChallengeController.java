@@ -29,7 +29,9 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping
-    public ResponseEntity<ChallengeDTO> postChallenge(@RequestBody ChallengeDTO challengeDTO) {
+    public ResponseEntity<ChallengeDTO> postChallenge(@RequestBody ChallengeDTO challengeDTO, @AuthenticationPrincipal UserDTO loginUser) {
+        Long loginUserId = loginUser.getUserId();
+        challengeDTO.setOwnerId(loginUserId);
         challengeService.insertChallenge(challengeDTO);
         return ResponseEntity.ok(challengeDTO);
     }
