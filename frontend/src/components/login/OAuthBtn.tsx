@@ -1,5 +1,4 @@
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
 import GuestLoginBtn from "@components/login/GuestLoginBtn";
 
 function OAuthBtn() {
