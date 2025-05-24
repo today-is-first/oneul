@@ -38,12 +38,12 @@ function LoginButton() {
           className={buttonBaseClass}
         >
           <img
-            src={user.profile || "/svgs/default-profile.svg"}
+            src={user.profileImg || "/svgs/default-profile.svg"}
             alt="프로필"
             className="h-8 w-8 rounded-full object-cover"
           />
           <span className="mt-1 max-w-[64px] truncate text-center text-xs text-gray-300">
-            {user.nickname || user.name || "사용자"}
+            {user.nickname || user.username || "사용자"}
           </span>
         </button>
 
