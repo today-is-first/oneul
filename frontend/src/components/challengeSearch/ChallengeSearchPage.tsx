@@ -4,7 +4,6 @@ import {
   challengeStatusTranslate,
   tabs,
 } from "@/constants/challengeSearchContants";
-import { useChallengeStore } from "@/stores/challengeStore";
 import { Challenge } from "@/types/Challenge";
 import ChallengeDetailModal from "@components/challengeRegist/ChallengeDetailModal";
 import CategoryTab from "@components/challengeSearch/CategoryTab";
@@ -14,6 +13,8 @@ import { FiSearch } from "react-icons/fi";
 import ChallengeSearchRoomItem from "@components/challengeSearch/ChallengeSearchRoomItem";
 import ChallengeStatusTab from "@components/challengeSearch/ChallengeStatusTab";
 import ChallegeCreateBtn from "@components/challengeSearch/ChallegeCreateBtn";
+import { useCommunityChallengeList } from "@/hooks/useChallenge";
+import { filteredList } from "@/utils/challengeUtil";
 
 const ChallengeSearchPage = () => {
   const [activeTab, setActiveTab] = useState("전체");
@@ -23,36 +24,16 @@ const ChallengeSearchPage = () => {
   const [selected, setSelected] = useState<Challenge | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const challengeList = useChallengeStore(
-    (state) => state.communityChallengeList,
-  );
-
-  const filteredList = challengeList.filter((c) => {
-    const matchTab =
-      activeTab === "전체"
-        ? true
-        : (activeTab === "챌린지" && c.challenge) ||
-          (activeTab === "일반" && !c.challenge);
-
-    const category = categories[c.categoryId];
-    const matchCategory =
-      activeCategory === "전체" ? true : category === activeCategory;
-
-    const matchStatus =
-      activeStatus === "전체"
-        ? true
-        : (activeStatus === "모집중" &&
-            c.challengeStatus === challengeStatusTranslate["모집중"]) ||
-          (activeStatus === "진행중" &&
-            c.challengeStatus === challengeStatusTranslate["진행중"]) ||
-          (activeStatus === "종료" &&
-            c.challengeStatus === challengeStatusTranslate["종료"]);
-
-    const matchKeyword =
-      keyword === "" || c.name.toLowerCase().includes(keyword.toLowerCase());
-
-    return matchTab && matchCategory && matchKeyword && matchStatus;
-  });
+  const communityChallengeList = useCommunityChallengeList();
+  const list = Array.isArray(communityChallengeList)
+    ? filteredList(
+        communityChallengeList,
+        activeTab,
+        activeCategory || "전체",
+        activeStatus,
+        keyword,
+      )
+    : [];
 
   return (
     <div className="flex justify-center bg-[#0E0E11] px-4 py-10 text-white">
@@ -128,7 +109,7 @@ const ChallengeSearchPage = () => {
             추천 챌린지 목록
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredList.map((challenge) => (
+            {list?.map((challenge) => (
               <ChallengeSearchRoomItem
                 key={challenge.challengeId}
                 challenge={challenge}
@@ -136,7 +117,7 @@ const ChallengeSearchPage = () => {
                 setIsModalOpen={setIsModalOpen}
               />
             ))}
-            {filteredList.length === 0 && (
+            {list?.length === 0 && (
               <div className="col-span-full py-12 text-center text-sm text-gray-500">
                 조건에 맞는 챌린지가 없습니다.
               </div>
