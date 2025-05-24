@@ -7,6 +7,7 @@
 </p>
 
 <br/>
+<br/>
 
 ## 👋 프로젝트 소개
 
@@ -20,6 +21,7 @@
 - 참여자 간에는 **실시간 채팅으로 소통**하며 도전을 이어갑니다.
 
 <br/>
+<br/>
 
 ## 🎯 주요 기능 소개
 
@@ -28,10 +30,11 @@
 
 **유저는 Toss 결제 API를 통해 챌린지 참가비를 결제**하고,  
 **목표를 달성하면 서버가 자동으로 환급 처리를 수행**합니다.  
-→ 결제 상태는 **Redis에 임시 저장**, **MySQL에 영구 반영**됩니다.
+결제 상태는 **Redis에 임시 저장**, **MySQL에 영구 반영**됩니다.
 
 <img src="https://github.com/user-attachments/assets/5cc53e62-af0a-4739-9584-cbf5bc7840da" width="700" alt="결제 시스템" />
 
+<br/>
 <br/>
 
 ### 💬 실시간 채팅  
@@ -43,6 +46,7 @@
 <img src="https://github.com/user-attachments/assets/4266943a-b60a-467a-8dc4-bb53de4a4151" width="700" alt="실시간 채팅" />
 
 <br/>
+<br/>
 
 ### 📸 인증 피드 업로드  
 > **"하루 한 장, 당신의 변화가 시작됩니다."**
@@ -52,6 +56,7 @@
 
 <img src="https://github.com/user-attachments/assets/d31e4ee0-f1cf-4f3a-b682-ced059f33208" width="700" alt="인증 피드" />
 
+<br/>
 <br/>
 
 ### 👑 방장 검수 기능  
@@ -63,6 +68,7 @@
 <img src="https://github.com/user-attachments/assets/b7bf69de-2438-426e-968f-b2b727db4131" width="700" alt="방장 승인 기능" />
 
 <br/>
+<br/>
 
 ### 👥 팔로우 & 커뮤니티  
 > **"함께하면 더 오래갑니다!"**
@@ -71,6 +77,7 @@
 
 <img src="https://github.com/user-attachments/assets/b20e262b-a40e-4507-b1f9-4510fbb707e1" width="700" alt="팔로우 시스템" />
 
+<br/>
 <br/>
 
 ### 🧾 마이페이지  
@@ -82,11 +89,13 @@
 <img src="https://github.com/user-attachments/assets/a3968855-0335-4d7d-a2cc-797bd29f1c74" width="700" alt="마이페이지" />
 
 <br/>
+<br/>
 
 ## ✅ 서비스 구조도
 
 <img src="https://github.com/user-attachments/assets/93069da6-e930-4185-b0d2-d85e5e3ad024" width="700" alt="오늘 서비스 아키텍처" />
 
+<br/>
 <br/>
 
 ## ⚒️ Tech Stacks
@@ -94,12 +103,13 @@
 | 분류 | 기술 스택 |
 |------|-----------|
 | **공통** | [![My Skills](https://skillicons.dev/icons?i=ts,github)](https://skillicons.dev) |
-| **Frontend** | [![My Skills](https://skillicons.dev/icons?i=react,vite,tailwind)](https://skillicons.dev) <br/> **Zustand**, **React Query** |
-| **Backend** | [![My Skills](https://skillicons.dev/icons?i=java,spring)](https://skillicons.dev) <br/> **Netty-Socket.IO** |
-| **DB / Infra** | [![My Skills](https://skillicons.dev/icons?i=mysql,redis,nginx,aws)](https://skillicons.dev) <br/> **EC2** |
+| **Frontend** | [![My Skills](https://skillicons.dev/icons?i=react,vite,tailwind)](https://skillicons.dev) |
+| **Backend** | [![My Skills](https://skillicons.dev/icons?i=java,spring)](https://skillicons.dev)  |
+| **DB / Infra** | [![My Skills](https://skillicons.dev/icons?i=mysql,redis,nginx,aws)](https://skillicons.dev) |
 | **배포** | [![My Skills](https://skillicons.dev/icons?i=githubactions,docker)](https://skillicons.dev) |
 | **협업** | [![My Skills](https://skillicons.dev/icons?i=figma,git,github,notion)](https://skillicons.dev) |
 
+<br/>
 <br/>
 
 ## 🤼 팀원 소개
