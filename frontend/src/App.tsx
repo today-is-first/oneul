@@ -24,6 +24,7 @@ import ChallengePaymentPage from "@components/payment/ChallengePaymentPage";
 import PaymentSuccessPage from "@components/payment/PaymentSuccessPage";
 import PaymentFailPage from "@components/payment/PaymentFailPage";
 import MyPage from "@components/mypage/MyPage";
+import ProtectedLayout from "./layouts/ProtectedLayout";
 
 function App() {
   const { user } = useUserStore();
@@ -126,26 +127,29 @@ function App() {
         {/* MainLayout이 필요한 라우트들 */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
-          <Route
-            path="/challenge/:challengeId"
-            element={<ChallengeDetailPage />}
-          />
-          <Route path="/challenge/detail" element={<ChallengeDetailPage />} />
           <Route path="/challenge/search" element={<ChallengeSearchPage />} />
-          <Route path="/challenge/create" element={<ChallengeCreatePage />} />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route element={<ProtectedLayout />}>
+            <Route path="/challenge/create" element={<ChallengeCreatePage />} />
+            <Route
+              path="/challenge/:challengeId"
+              element={<ChallengeDetailPage />}
+            />
+            <Route path="/mypage" element={<MyPage />} />
+          </Route>
         </Route>
 
         {/* MainLayout이 필요없는 라우트들 */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<RegistPage />} />
         <Route path="/oauth/redirect" element={<OAuthRedirectPage />} />
-        <Route
-          path="challenge/:challengeId/order"
-          element={<ChallengePaymentPage />}
-        />
-        <Route path="/payment/success" element={<PaymentSuccessPage />} />
-        <Route path="/payment/fail" element={<PaymentFailPage />} />
+        <Route element={<ProtectedLayout />}>
+          <Route
+            path="challenge/:challengeId/order"
+            element={<ChallengePaymentPage />}
+          />
+          <Route path="/payment/success" element={<PaymentSuccessPage />} />
+          <Route path="/payment/fail" element={<PaymentFailPage />} />
+        </Route>
       </Routes>
     </div>
   );
