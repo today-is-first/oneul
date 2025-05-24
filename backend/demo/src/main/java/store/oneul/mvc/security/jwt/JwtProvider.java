@@ -53,8 +53,16 @@ public class JwtProvider {
     }
 
     public Long getUserIdFromToken(String refreshToken) {
-        refreshTokenDao.findByToken(refreshToken);
-        return 1L;
+        Long userId = Long.parseLong(refreshTokenDao.findByToken(refreshToken));
+        return userId;
     }
 
+    public Long parseUserIdFromToken(String token) {
+        return Long.parseLong(Jwts.parserBuilder()
+                .setSigningKey(getSecretKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject());
+    }
 }

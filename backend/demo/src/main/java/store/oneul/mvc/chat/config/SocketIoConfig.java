@@ -42,7 +42,7 @@ public class SocketIoConfig {
             System.out.println("[Socket.IO] 토큰: " + token);
             if (token != null && token.startsWith("Bearer ")) {
                 try {
-                    Long userId = jwtProvider.getUserIdFromToken(token.substring(7));
+                    Long userId = jwtProvider.parseUserIdFromToken(token.substring(7));
                     client.set("userId", userId);
                     System.out.println("[Socket.IO] ✅ 인증 성공: userId = " + userId);
                 } catch (Exception e) {
