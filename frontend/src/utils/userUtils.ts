@@ -17,6 +17,7 @@ export function parseJwt(token: string) {
     );
     return JSON.parse(jsonPayload);
   } catch (e) {
+    console.error("🔐 Error parsing JWT:", e);
     return null;
   }
 }
