@@ -1,9 +1,11 @@
 // src/hooks/useChallenge.ts
 import { Challenge } from "@/types/Challenge";
 import { useGet, useMutationHook } from "./useApiHooks";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { joinChallenge } from "@/api/challenge";
+import { get } from "@/api/api";
+import { useUserStore } from "@/stores/userStore";
 
 /** 챌린지 정보 호출 */
 // 내가 가입한 챌린지의 정보
@@ -70,3 +72,23 @@ export function useJoinChallenge() {
     },
   );
 }
+
+export const useCommunityChallengeList = () => {
+  const { data: communityChallengeList } = useQuery<Challenge[]>({
+    queryKey: ["communityChallengeList"],
+    queryFn: () => get("/challenges/community"),
+    staleTime: 1000 * 60 * 5,
+  });
+  return communityChallengeList;
+};
+
+export const useSubscribedChallengeList = () => {
+  const { user } = useUserStore();
+  const { data: subscribedChallengeList } = useQuery<Challenge[]>({
+    queryKey: ["subscribedChallengeList"],
+    queryFn: () => get("/challenges/subscribed"),
+    staleTime: 1000 * 60 * 5,
+    enabled: !!user,
+  });
+  return subscribedChallengeList;
+};
