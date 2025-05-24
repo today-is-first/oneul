@@ -31,7 +31,6 @@
 **목표 달성 시 환급 리워드**를 받을 수 있는 **챌린지 기반 웹 서비스**입니다.
 
 - 사용자는 **인증 피드를 업로드**하며 도전 현황을 기록할 수 있어요.  
-- 방장은 **인증을 검수**하고, **관리에 따른 보상**을 받아요.  
 - 참여자 간에는 **실시간 채팅으로 소통**하며 도전을 이어갑니다.
 
 <br/>
@@ -116,8 +115,7 @@
 
 | 분류 | 기술 스택 |
 |------|-----------|
-| **공통** | [![My Skills](https://skillicons.dev/icons?i=ts,github)](https://skillicons.dev) |
-| **Frontend** | [![My Skills](https://skillicons.dev/icons?i=react,vite,tailwind)](https://skillicons.dev) |
+| **Frontend** | [![My Skills](https://skillicons.dev/icons?i=react,vite,tailwind,ts)](https://skillicons.dev) |
 | **Backend** | [![My Skills](https://skillicons.dev/icons?i=java,spring)](https://skillicons.dev)  |
 | **DB / Infra** | [![My Skills](https://skillicons.dev/icons?i=mysql,redis,nginx,aws)](https://skillicons.dev) |
 | **배포** | [![My Skills](https://skillicons.dev/icons?i=githubactions,docker)](https://skillicons.dev) |
