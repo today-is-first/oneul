@@ -1,7 +1,6 @@
 export interface StreakCalendarProps {
   currentYear: number;
   setCurrentYear: (year: number) => void;
-  contributionsByDate: Record<string, number>;
   setSelectedDate: (date: string | null) => void;
 }
 
