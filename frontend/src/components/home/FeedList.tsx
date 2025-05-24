@@ -1,4 +1,3 @@
-import { useFeedStore } from "@/stores/feedStore";
 import { useRef } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import FeedItem from "@/components/home/FeedItem";
@@ -6,16 +5,14 @@ import { Feed } from "@/types/Feed";
 
 function FeedList({
   onFeedClick,
+  feeds,
   feedType,
 }: {
   onFeedClick: (feed: Feed) => void;
+  feeds: Feed[];
   feedType: "community" | "my";
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const feeds = useFeedStore((state) =>
-    feedType === "community" ? state.communityFeeds : state.myFeeds,
-  );
 
   const scrollBy = (offset: number) => {
     if (scrollRef.current) {
