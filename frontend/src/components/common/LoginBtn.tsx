@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
-import { useUserStore } from "@stores/userStore";
+import { useUserStore } from "@/stores/userStore";
 import { useState, useRef, useEffect } from "react";
 import { useChallengeStore } from "@/stores/challengeStore";
 import { useSocketStore } from "@/stores/socketStore";
 import { useFeedStore } from "@/stores/feedStore";
 import { useQueryClient } from "@tanstack/react-query";
+import { useMeQuery } from "@/hooks/useUser";
 
 function LoginButton() {
-  const { user } = useUserStore();
+  const { data: user } = useMeQuery();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();

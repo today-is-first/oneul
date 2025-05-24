@@ -1,12 +1,11 @@
 import { Dialog } from "@components/common/Dialog";
 import { WorkoutModalProps } from "@/types/home";
-import { useFeedStore } from "@/stores/feedStore";
 import { isSameDate } from "@/utils/date";
 import FeedDetailItem from "@/components/feed/FeedDetailItem";
 import { useRef } from "react";
-
+import { useMyFeeds } from "@/hooks/useFeed";
 const WorkoutModal = ({ selectedDate, setSelectedDate }: WorkoutModalProps) => {
-  const feeds = useFeedStore((state) => state.myFeeds);
+  const myFeeds = useMyFeeds();
   const modalRef = useRef<HTMLDivElement>(null);
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -25,8 +24,8 @@ const WorkoutModal = ({ selectedDate, setSelectedDate }: WorkoutModalProps) => {
         >
           <ul className="list-inside list-disc space-y-20">
             {selectedDate &&
-              feeds
-                .filter((feed) => isSameDate(feed.createdAt, selectedDate))
+              myFeeds
+                ?.filter((feed) => isSameDate(feed.createdAt, selectedDate))
                 .map((item, idx) => (
                   <li key={idx} className="list-none">
                     <FeedDetailItem key={idx} feed={item} onClose={() => {}} />

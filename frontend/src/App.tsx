@@ -17,21 +17,27 @@ import PaymentFailPage from "@components/payment/PaymentFailPage";
 import MyPage from "@components/mypage/MyPage";
 
 import { useUserStore } from "./stores/userStore";
+import { useMeQuery } from "./hooks/useUser";
+import { getCookie } from "./utils/userUtils";
 
 function App() {
-  const { connect, disconnect } = useSocketStore();
-  const { user } = useUserStore();
-
-  useEffect(() => {
-    useUserStore.getState().initializeFromToken();
-  }, []);
+  const { connect, disconnect, isConnected } = useSocketStore();
+  const { data: user } = useMeQuery();
+  const { setUser } = useUserStore();
 
   useEffect(() => {
     if (user) {
+      const accessToken = getCookie("accessToken") || "";
+      setUser(user, accessToken);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user && isConnected) {
       connect();
       return () => disconnect();
     }
-  }, [user]);
+  }, [user, isConnected]);
 
   return (
     <div className="bg-background h-full w-full">
