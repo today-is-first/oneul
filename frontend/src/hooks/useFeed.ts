@@ -1,6 +1,8 @@
 import { Feed } from "@/types/Feed";
 import { useGet, usePatch } from "./useApiHooks";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { get } from "@/api/api";
+import { useUserStore } from "@/stores/userStore";
 
 export function useChallengeFeeds(challengeId: string) {
   return useGet<Feed[]>(
@@ -52,3 +54,23 @@ export function useUpdateFeed() {
     },
   );
 }
+
+export const useCommunityFeeds = () => {
+  const { data: communityFeeds } = useQuery<Feed[]>({
+    queryKey: ["communityFeeds"],
+    queryFn: () => get("/feeds/community"),
+    staleTime: 1000 * 60 * 5,
+  });
+  return communityFeeds;
+};
+
+export const useMyFeeds = () => {
+  const { user } = useUserStore();
+  const { data: myFeeds } = useQuery<Feed[]>({
+    queryKey: ["myFeeds"],
+    queryFn: () => get("/feeds/my"),
+    staleTime: 1000 * 60 * 5,
+    enabled: !!user,
+  });
+  return myFeeds;
+};
