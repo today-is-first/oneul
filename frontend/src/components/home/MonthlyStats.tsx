@@ -2,9 +2,32 @@ import Card from "@/components/common/Card";
 import CardContent from "@/components/common/CardContent";
 import { Line } from "react-chartjs-2";
 import { monthLabels } from "@/constants/homeConstants";
-import { MonthlyStatsProps } from "@/types/home";
+import { useStreak } from "@/hooks/useStreak";
 
-const MonthlyStats = ({ monthAchievementRate }: MonthlyStatsProps) => {
+const MonthlyStats = () => {
+  const streak = useStreak();
+  const currentYear = new Date().getFullYear();
+
+  const feedDateSetByMonth = Array.from(
+    { length: 12 },
+    () => new Set<string>(),
+  );
+
+  streak?.forEach((item) => {
+    const d = new Date(item.date);
+    if (d.getFullYear() === currentYear) {
+      const month = d.getMonth();
+      feedDateSetByMonth[month].add(item.date);
+    }
+  });
+
+  const feedDayCountByMonth = feedDateSetByMonth.map((set) => set.size);
+
+  const monthAchievementRate = feedDayCountByMonth.map((dayCount, i) => {
+    const daysInMonth = new Date(currentYear, i + 1, 0).getDate();
+    return Math.round((dayCount / daysInMonth) * 100);
+  });
+
   return (
     <Card className="w-full rounded-2xl bg-neutral-900 p-6 text-white shadow-md">
       <CardContent>

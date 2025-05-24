@@ -30,21 +30,6 @@ const MyWorkoutDashboard = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedFeed, setSelectedFeed] = useState<Feed | null>(null);
-  const streak = useFeedStore((state) => state.streak);
-
-  const feedCountByMonth = Array(12).fill(0);
-
-  streak.forEach((item) => {
-    const d = new Date(item.date);
-    if (d.getFullYear() === currentYear) {
-      feedCountByMonth[d.getMonth()] += item.count;
-    }
-  });
-
-  const monthAchievementRate = feedCountByMonth.map((count, i) => {
-    const daysInMonth = new Date(currentYear, i + 1, 0).getDate();
-    return Math.round((count / daysInMonth) * 100);
-  });
 
   const handleCreateFeed = () => {
     // TODO: 인증 생성 로직 구현
@@ -104,7 +89,7 @@ const MyWorkoutDashboard = () => {
               한 해 동안 오늘의 인증 달성률을 확인해보세요!
             </p>
           </div>
-          <MonthlyStats monthAchievementRate={monthAchievementRate} />
+          <MonthlyStats />
         </div>
       </div>
 
