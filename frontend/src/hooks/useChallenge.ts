@@ -45,19 +45,15 @@ export function useJoinChallenge() {
 
     {
       onSuccess: async (_data, variables) => {
-        // queryClient.invalidateQueries({
-        //   queryKey: ["subscribedChallengeList", "communityChallengeList"], // 내가 가입한 챌린지 리스트 stale 처리
-        // });
-        // console.log("챌린지 참여 완료");
         await queryClient.refetchQueries({
           queryKey: ["subscribedChallengeList"],
-          exact: true, // 정확히 이 키만
-          stale: false, // (선택) refetch 이후에도 stale 상태로 남지 않게
+          exact: true,
+          stale: false,
         });
         await queryClient.refetchQueries({
           queryKey: ["communityChallengeList"],
-          exact: true, // 정확히 이 키만
-          stale: false, // (선택) refetch 이후에도 stale 상태로 남지 않게
+          exact: true,
+          stale: false,
         });
       },
       onError: (error, variables) => {

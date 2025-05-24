@@ -21,7 +21,7 @@ public interface FeedDAO {
 
     public void deleteFeed(@Param("challengeId") Long challengeId, @Param("id") Long id);
 
-    public FeedDTO getFeed(@Param("challengeId") Long challengeId, @Param("id") Long id);
+    public ChallengeFeedDTO getFeed(@Param("challengeId") Long challengeId, @Param("id") Long id);
 
     public List<FeedDTO> getMyFeeds(@Param("userId") Long userId);
 

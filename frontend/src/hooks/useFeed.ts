@@ -1,6 +1,7 @@
-import { Feed } from "@/types/Feed";
+import { CheckStatus, Feed } from "@/types/Feed";
 import { useGet, usePatch } from "./useApiHooks";
 import { useQueryClient } from "@tanstack/react-query";
+import { patch } from "@/api/api";
 
 export function useChallengeFeeds(challengeId: string) {
   return useGet<Feed[]>(
@@ -51,4 +52,26 @@ export function useUpdateFeed() {
       },
     },
   );
+}
+
+export interface EvaluateFeedVariables {
+  challengeId: string;
+  feedId: number;
+  checkStatus: CheckStatus;
+}
+
+export function useEvaluateFeed() {
+  const qc = useQueryClient();
+  return usePatch<Feed, EvaluateFeedVariables>("", {
+    mutationFn: async ({ challengeId, feedId, checkStatus }) =>
+      patch<Feed>(`/challenges/${challengeId}/feeds/${feedId}/checks`, {
+        checkStatus,
+      }),
+    onSuccess: (feed, { challengeId }) => {
+      qc.setQueryData<Feed[]>(
+        ["feeds", challengeId],
+        (oldFeeds) => oldFeeds?.map((f) => (f.id === feed.id ? feed : f)) ?? [],
+      );
+    },
+  });
 }

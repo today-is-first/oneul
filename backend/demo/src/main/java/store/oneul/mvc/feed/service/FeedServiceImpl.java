@@ -3,6 +3,7 @@ package store.oneul.mvc.feed.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.feed.dao.FeedDAO;
@@ -44,8 +45,8 @@ public class FeedServiceImpl implements FeedService {
     }
 
     @Override
-    public FeedDTO getFeed(Long challengeId, Long id) {
-        FeedDTO feed = feedDAO.getFeed(challengeId, id);
+    public ChallengeFeedDTO getFeed(Long challengeId, Long id) {
+        ChallengeFeedDTO feed = feedDAO.getFeed(challengeId, id);
         if (!feed.getImageUrl().startsWith("uploads")) {
             return feed;
         }
@@ -112,15 +113,17 @@ public class FeedServiceImpl implements FeedService {
         return feedDAO.getStreak(userId);
     }
 
+    @Transactional
     @Override
-    public void evaluateFeed(FeedEvaluationRequest feedEvaluationRequest, Long userId) {
-        feedDAO.evaluateFeed(feedEvaluationRequest);
-		if(CheckStatus.APPROVED == feedEvaluationRequest.getCheckStatus()) {
-			WorkoutLogInsertRequestDTO workoutLogRequest = new WorkoutLogInsertRequestDTO();
-			workoutLogRequest.setChallengeId(feedEvaluationRequest.getChallengeId());
-			workoutLogRequest.setFeedId(feedEvaluationRequest.getId());
-			workoutLogRequest.setUserId(userId);
-			workoutLogDAO.insertWorkoutLog(workoutLogRequest);
+    public void evaluateFeed(FeedEvaluationRequest req, Long userId) {
+        feedDAO.evaluateFeed(req);
+		if(CheckStatus.APPROVED == req.getCheckStatus()) {
+			WorkoutLogInsertRequestDTO workoutLogReq = WorkoutLogInsertRequestDTO.builder()
+	                .challengeId(req.getChallengeId())
+	                .feedId(req.getId())
+	                .userId(userId)
+	                .build();
+			workoutLogDAO.insertWorkoutLog(workoutLogReq);
 		}
 	}
 

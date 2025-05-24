@@ -59,7 +59,7 @@ function ChallengeDetailPage() {
         );
       case "feedCheck":
         if (!isManager) return;
-        return <ChallengeFeedCheck status={challenge!.challengeStatus} />;
+        return <ChallengeFeedCheck />;
     }
   };
 
