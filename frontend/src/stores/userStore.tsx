@@ -1,13 +1,6 @@
 import { create } from "zustand";
 import { parseJwt, getCookie } from "@/utils/userUtils";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  nickname: string;
-  profile: string;
-}
+import { User } from "@/types/User";
 
 interface UserStore {
   user: User | null;
@@ -38,11 +31,14 @@ export const useUserStore = create<UserStore>((set, get) => ({
       const payload = parseJwt(token);
       if (payload) {
         const user: User = {
-          id: payload.userId,
-          nickname: payload.userNickname,
-          name: payload.userName,
+          userId: payload.userId,
+          username: payload.userName,
           email: payload.userEmail,
-          profile: payload.userProfile,
+          nickname: payload.userNickname,
+          profileImg: payload.userProfile,
+          userTel: payload.userTel,
+          signupCompleted: payload.signupCompleted,
+          createdAt: payload.createdAt,
         };
         set({ user, accessToken: token, isAuthenticated: true });
       } else {
