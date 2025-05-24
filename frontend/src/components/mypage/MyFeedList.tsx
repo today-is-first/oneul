@@ -1,11 +1,14 @@
 import FeedDetailModal from "@/components/feed/FeedDetailModal";
 import FeedList from "@/components/home/FeedList";
+import { useMyFeeds } from "@/hooks/useFeed";
 import { Feed } from "@/types/Feed";
 import { useState } from "react";
 
 function MyFeedList() {
   const [selectedFeed, setSelectedFeed] = useState<Feed | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+
+  const myFeeds = useMyFeeds();
 
   const handleDetailFeed = (feed: Feed) => {
     setSelectedFeed(feed);
@@ -19,7 +22,11 @@ function MyFeedList() {
           onClose={() => setIsDetailModalOpen(false)}
           feed={selectedFeed}
         />
-        <FeedList onFeedClick={handleDetailFeed} feedType="my" />
+        <FeedList
+          onFeedClick={handleDetailFeed}
+          feeds={myFeeds || []}
+          feedType="my"
+        />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useChallengeStore } from "@/stores/challengeStore";
+import { useSubscribedChallengeList } from "@/hooks/useChallenge";
 import { useSocketStore } from "@/stores/socketStore";
 import ChatRoom from "@components/chat/ChatRoom";
 import SidePanel from "@components/sideBar/SidePanel";
@@ -18,9 +18,7 @@ function SideBar() {
   };
 
   const messages = useSocketStore((state) => state.messages);
-  const subscribedChallengeList = useChallengeStore(
-    (state) => state.subscribedChallengeList,
-  );
+  const subscribedChallengeList = useSubscribedChallengeList();
 
   return (
     <>
@@ -30,7 +28,7 @@ function SideBar() {
           <div className="flex flex-col items-center space-y-4 overflow-y-auto">
             <LoginBtn />
             <div className="h-px w-12 rounded-full bg-[#23232a]" />
-            {subscribedChallengeList.map((item) => (
+            {subscribedChallengeList?.map((item) => (
               <SidePanelToggleButton
                 key={item.challengeId}
                 icon={<FaHeart size={18} />}
@@ -43,7 +41,7 @@ function SideBar() {
       </div>
 
       {/* 동적 챌린지 패널들 */}
-      {subscribedChallengeList.map((item) => {
+      {subscribedChallengeList?.map((item) => {
         const messageList = messages[Number(item.challengeId)] ?? [];
         return (
           <SidePanel

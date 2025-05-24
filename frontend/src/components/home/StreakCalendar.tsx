@@ -4,6 +4,7 @@ import CardContent from "@/components/common/CardContent";
 import { StreakCalendarProps } from "@/types/home";
 import { monthLabels } from "@/constants/homeConstants";
 import { getYearDays } from "@/utils/dateUtils";
+import { useStreak } from "@/hooks/useStreak";
 
 const weekdayLabels = ["일", "", "화", "", "목", "", "토"];
 
@@ -15,12 +16,17 @@ const getContributionColor = (count: number) => {
   return "bg-neutral-700";
 };
 
-const StreakCalendar = ({
+function StreakCalendar({
   currentYear,
   setCurrentYear,
-  contributionsByDate,
   setSelectedDate,
-}: StreakCalendarProps) => {
+}: StreakCalendarProps) {
+  const streak = useStreak();
+
+  const contributionsByDate: Record<string, number> = {};
+  streak?.forEach((item) => {
+    contributionsByDate[item.date] = item.count;
+  });
   const firstDate = new Date(currentYear, 0, 1);
   const firstDay = getDay(firstDate);
   const yearDays = getYearDays(currentYear);
@@ -119,6 +125,6 @@ const StreakCalendar = ({
       </CardContent>
     </Card>
   );
-};
+}
 
 export default StreakCalendar;
