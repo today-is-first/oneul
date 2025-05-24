@@ -48,12 +48,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         System.out.println("[JwtAuthenticationFilter] 리프레시 토큰: " + refreshToken);
         try {
-            if (header != null && header.startsWith("Bearer ")) {
-
+            if (refreshToken == null && header == null) {
+                System.out.println("[JwtAuthenticationFilter] 토큰이 없습니다.");
+                throw new Exception("토큰이 없습니다.");
+            } else if (header != null && header.startsWith("Bearer ")) {
+                System.out.println("[JwtAuthenticationFilter] 헤더가 있습니다.");
                 String token = header.substring(7);
-                Long userId = jwtProvider.getUserIdFromToken(token);
+                System.out.println("[JwtAuthenticationFilter] 토큰: " + token);
+                Long userId = jwtProvider.parseUserIdFromToken(token);
+                System.out.println("[JwtAuthenticationFilter] 유저 아이디: " + userId);
                 UserDTO user = userService.findById(userId);
+
                 if (user != null) {
+                    System.out.println("[JwtAuthenticationFilter] 유저: " + user);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             user,
                             null,

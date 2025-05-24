@@ -53,18 +53,26 @@ public class JwtReissueFilter extends OncePerRequestFilter {
             }
         }
 
+        System.out.println("[JwtReissueFilter] 리프레시 토큰: " + refreshToken);
+        System.out.println("[JwtReissueFilter] 액세스 토큰: " + accessToken);
+        if (accessToken == null && refreshToken == null) {
+            System.out.println("[JwtReissueFilter] 토큰이 모두 없습니다. 다음 필터로 진행합니다.");
+            filterChain.doFilter(request, response);
+            return;
+        }
         try {
-            if (accessToken == null && refreshToken != null) {
-                System.out.println("[JwtAuthenticationFilter] 리프레시 토큰: " + refreshToken);
+            if (((accessToken != null && jwtProvider.isTokenExpired(accessToken)) || accessToken == null)
+                    && refreshToken != null) {
+                System.out.println("[JwtReissueFilter] 재발행 로직 실행: " + refreshToken);
                 String userIdStr = refreshTokenDao.findByToken(refreshToken);
                 Long userId = Long.parseLong(userIdStr);
-                System.out.println("[JwtAuthenticationFilter] 리프레시 토큰: " + refreshToken);
-                System.out.println("[JwtAuthenticationFilter] 유저 아이디: " + userId);
+                System.out.println("[JwtReissueFilter] 리프레시 토큰: " + refreshToken);
+                System.out.println("[JwtReissueFilter] 유저 아이디: " + userId);
                 UserDTO user = userService.findById(userId);
-                System.out.println("[JwtAuthenticationFilter] 유저: " + user);
+                System.out.println("[JwtReissueFilter] 유저: " + user);
                 LoginResultDTO loginResult = oauthService.login(user);
-                System.out.println("[OAuth2SuccessHandler] 로그인 결과: " + loginResult);
-                System.out.println("[OAuth2SuccessHandler] 로그인 결과: " + user.getUserId());
+                System.out.println("[JwtReissueFilter] 로그인 결과: " + loginResult);
+                System.out.println("[JwtReissueFilter] 유저 아이디: " + user.getUserId());
 
                 Cookie accessTokenCookie = tokenHelper.createAccessTokenCookie(loginResult.getAccessToken());
                 Cookie refreshTokenCookie = tokenHelper.createRefreshTokenCookie(loginResult.getRefreshToken());
@@ -80,10 +88,11 @@ public class JwtReissueFilter extends OncePerRequestFilter {
                 response.setHeader("Authorization", "Bearer " + loginResult.getAccessToken());
                 CustomHeaderRequestWrapper wrappedRequest = new CustomHeaderRequestWrapper(request,
                         loginResult.getAccessToken());
+                System.out.println("[JwtReissueFilter] 헤더 설정: " + loginResult.getAccessToken());
                 filterChain.doFilter(wrappedRequest, response);
             }
         } catch (Exception e) {
-            System.out.println("[FILTER] ⚠️ AccessToken expired or invalid. Attempting reissue.");
+            System.out.println("[JwtReissueFilter] ⚠️ AccessToken expired or invalid. Attempting reissue.");
         }
 
         filterChain.doFilter(request, response);

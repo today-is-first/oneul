@@ -92,3 +92,14 @@ export const useSubscribedChallengeList = () => {
   });
   return subscribedChallengeList;
 };
+
+export const useMyChallengeList = () => {
+  const { user } = useUserStore();
+  const { data: myChallengeList } = useQuery<Challenge[]>({
+    queryKey: ["myChallengeList"],
+    queryFn: () => get("/challenges/my"),
+    staleTime: 1000 * 60 * 5,
+    enabled: !!user,
+  });
+  return myChallengeList;
+};

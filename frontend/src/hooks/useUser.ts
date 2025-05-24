@@ -6,6 +6,6 @@ export const useMeQuery = () => {
   return useQuery<User>({
     queryKey: ["me"],
     queryFn: () => get("/users/me"),
-    refetchOnWindowFocus: true,
+    staleTime: 1000 * 60 * 5,
   });
 };

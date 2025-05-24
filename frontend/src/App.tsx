@@ -21,7 +21,7 @@ import { useMeQuery } from "./hooks/useUser";
 import { getCookie } from "./utils/userUtils";
 
 function App() {
-  const { connect, disconnect, isConnected } = useSocketStore();
+  const { connect, disconnect } = useSocketStore();
   const { data: user } = useMeQuery();
   const { setUser } = useUserStore();
 
@@ -33,11 +33,17 @@ function App() {
   }, [user]);
 
   useEffect(() => {
-    if (user && isConnected) {
+    console.log("user", user);
+    if (user) {
+      console.log("연결 시도");
       connect();
       return () => disconnect();
     }
-  }, [user, isConnected]);
+  }, [user]);
+
+  useEffect(() => {
+    useUserStore.getState().initializeFromToken();
+  }, []);
 
   return (
     <div className="bg-background h-full w-full">

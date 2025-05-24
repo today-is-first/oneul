@@ -7,6 +7,7 @@ interface UserStore {
   accessToken: string | null;
   isAuthenticated: boolean;
   setUser: (user: User, accessToken: string) => void;
+  setAuthenticated: (isAuthenticated: boolean) => void;
   logout: () => void;
   initializeFromToken: () => void;
   deleteCookie: (name: string) => void;
@@ -17,8 +18,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
   accessToken: null,
   isAuthenticated: false,
   setUser: (user, accessToken) => set({ user, accessToken }),
+  setAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
   logout: () => {
-    set({ user: null, accessToken: null });
+    set({ user: null, accessToken: null, isAuthenticated: false });
     get().deleteCookie("accessToken");
     get().deleteCookie("refreshToken");
   },
@@ -41,8 +43,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
           createdAt: payload.createdAt,
         };
         set({ user, accessToken: token, isAuthenticated: true });
-      } else {
-        set({ user: null, accessToken: null, isAuthenticated: false });
       }
     }
   },

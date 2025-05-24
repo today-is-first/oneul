@@ -116,7 +116,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         challengeId: challengeId,
         createdAt: new Date().toISOString(),
         nickname: user.nickname,
-        userId: user.id,
+        userId: user.userId,
       };
 
       socket.emit("chat", message);

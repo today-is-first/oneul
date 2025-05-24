@@ -18,7 +18,7 @@ function SideBar() {
   };
 
   const messages = useSocketStore((state) => state.messages);
-  const subscribedChallengeList = useSubscribedChallengeList();
+  const subscribedChallengeList = useSubscribedChallengeList() ?? [];
 
   return (
     <>

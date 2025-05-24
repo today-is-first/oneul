@@ -5,14 +5,12 @@ import { useChallengeStore } from "@/stores/challengeStore";
 import { useSocketStore } from "@/stores/socketStore";
 import { useFeedStore } from "@/stores/feedStore";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMeQuery } from "@/hooks/useUser";
 
-function LoginButton() {
-  const { data: user } = useMeQuery();
+function LoginBtn() {
+  const { user } = useUserStore();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -28,10 +26,17 @@ function LoginButton() {
     };
   }, []);
 
+  const nickname = user?.nickname || user?.username || "사용자";
+  const profileImg = user?.profileImg || "/svgs/default-profile.svg";
+
   const buttonBaseClass =
     "flex w-17 h-17 flex-col items-center justify-center rounded-2xl transition hover:bg-[#2d2d35] px-2 py-2";
 
   if (user) {
+    console.log("user 로그인 버튼 렌더링", user);
+    console.log("user 로그인 버튼 렌더링", Object.keys(user));
+    console.log("user 로그인 버튼 렌더링", nickname);
+    console.log("user 로그인 버튼 렌더링", profileImg);
     return (
       <div className="relative" ref={dropdownRef}>
         <button
@@ -39,12 +44,12 @@ function LoginButton() {
           className={buttonBaseClass}
         >
           <img
-            src={user.profileImg || "/svgs/default-profile.svg"}
+            src={profileImg}
             alt="프로필"
             className="h-8 w-8 rounded-full object-cover"
           />
           <span className="mt-1 max-w-[64px] truncate text-center text-xs text-gray-300">
-            {user.nickname || user.username || "사용자"}
+            {nickname}
           </span>
         </button>
 
@@ -98,4 +103,4 @@ function LoginButton() {
   );
 }
 
-export default LoginButton;
+export default LoginBtn;

@@ -1,7 +1,6 @@
 import Header from "@components/common/Header";
 import Logo from "@components/common/Logo";
 import OAuthBtn from "@components/login/OAuthBtn";
-import GuestLoginBtn from "@components/login/GuestLoginBtn";
 
 function LoginPage() {
   return (

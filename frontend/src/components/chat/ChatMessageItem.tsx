@@ -15,7 +15,8 @@ function ChatMessageItem({
   createdAt,
   id,
 }: ChatMessageItemProps) {
-  const isMe = nickname === useUserStore.getState().user?.nickname;
+  const { user } = useUserStore();
+  const isMe = nickname === user?.nickname;
   return (
     <div
       data-id={id}

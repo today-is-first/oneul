@@ -1,68 +1,33 @@
 import { categories, tabs } from "@/constants/challengeSearchContants";
-import { useChallengeStore } from "@/stores/challengeStore";
 import { Challenge } from "@/types/Challenge";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { challengeStatusTranslate } from "@/constants/challengeSearchContants";
 import { FiSearch } from "react-icons/fi";
 import ChallenegeModeTab from "../challengeSearch/ChallenegeModeTab";
 import ChallengeStatusTab from "../challengeSearch/ChallengeStatusTab";
 import CategoryTab from "../challengeSearch/CategoryTab";
 import ChallengeSearchRoomItem from "../challengeSearch/ChallengeSearchRoomItem";
-import { useQuery } from "@tanstack/react-query";
-import { get } from "@/api/api";
-import { useUserStore } from "@/stores/userStore";
+import { useMyChallengeList } from "@/hooks/useChallenge";
+import { filteredList } from "@/utils/challengeUtil";
 
 function MyChallengeList() {
   const [activeTab, setActiveTab] = useState("전체");
   const [activeCategory, setActiveCategory] = useState<string | null>("전체");
   const [activeStatus, setActiveStatus] = useState("전체");
   const [keyword, setKeyword] = useState("");
-  const { user } = useUserStore();
-  const { setMyChallengeList } = useChallengeStore();
-
-  const { data: myChallengeList } = useQuery<Challenge[]>({
-    queryKey: ["myChallengeList"],
-    queryFn: () => get("/challenges/my"),
-    staleTime: 1000 * 60 * 5,
-    enabled: !!user,
-  });
-
-  useEffect(() => {
-    if (myChallengeList) {
-      setMyChallengeList(myChallengeList);
-    }
-  }, [myChallengeList]);
+  const myChallengeList = useMyChallengeList();
 
   const onChallengeClick = (challenge: Challenge) => {
     window.location.href = `/challenge/${challenge.challengeId}`;
   };
 
-  const filteredList = myChallengeList?.filter((c) => {
-    const matchTab =
-      activeTab === "전체"
-        ? true
-        : (activeTab === "챌린지" && c.challenge) ||
-          (activeTab === "일반" && !c.challenge);
-
-    const category = categories[c.categoryId];
-    const matchCategory =
-      activeCategory === "전체" ? true : category === activeCategory;
-
-    const matchStatus =
-      activeStatus === "전체"
-        ? true
-        : (activeStatus === "모집중" &&
-            c.challengeStatus === challengeStatusTranslate["모집중"]) ||
-          (activeStatus === "진행중" &&
-            c.challengeStatus === challengeStatusTranslate["진행중"]) ||
-          (activeStatus === "종료" &&
-            c.challengeStatus === challengeStatusTranslate["종료"]);
-
-    const matchKeyword =
-      keyword === "" || c.name.toLowerCase().includes(keyword.toLowerCase());
-
-    return matchTab && matchCategory && matchKeyword && matchStatus;
-  });
+  const list = filteredList(
+    myChallengeList ?? [],
+    activeTab,
+    activeCategory ?? "전체",
+    activeStatus,
+    keyword,
+  );
   return (
     <div className="flex justify-center bg-[#0E0E11] px-4 py-10 text-white">
       <div className="flex w-full max-w-6xl flex-col gap-8">
@@ -127,7 +92,7 @@ function MyChallengeList() {
             나의 챌린지 목록
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredList?.map((challenge) => (
+            {list?.map((challenge) => (
               <ChallengeSearchRoomItem
                 key={challenge.challengeId}
                 challenge={challenge}
@@ -135,7 +100,7 @@ function MyChallengeList() {
                 setIsModalOpen={() => {}}
               />
             ))}
-            {filteredList?.length === 0 && (
+            {list?.length === 0 && (
               <div className="col-span-full py-12 text-center text-sm text-gray-500">
                 조건에 맞는 챌린지가 없습니다.
               </div>
