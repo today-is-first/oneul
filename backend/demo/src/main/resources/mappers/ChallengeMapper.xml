@@ -26,13 +26,7 @@
 		    c.challenge_status,
 		    u.nickname AS owner_nickname,
 		    cu.success_day,
-		
-		    (
-		        SELECT COUNT(*) 
-		        FROM challenge_user cu2 
-		        WHERE cu2.challenge_id = c.challenge_id
-		    ) AS participant_count
-		
+		    c.member_count
 		FROM challenge c
 		JOIN user u ON c.owner_id = u.user_id
 		JOIN challenge_user cu 
@@ -51,7 +45,8 @@
     </select>
 
     <!-- INSERT -->
-    <insert id="insertChallenge" parameterType="ChallengeDTO">
+    <insert id="insertChallenge" parameterType="ChallengeDTO"
+            useGeneratedKeys="true" keyProperty="challengeId">
         INSERT INTO challenge (
             name, owner_id, category_id, description,
             total_day, goal_day, is_challenge, is_public,
@@ -92,6 +87,13 @@
         JOIN challenge_user cu ON c.challenge_id = cu.challenge_id
         WHERE cu.user_id = #{userId}
         AND c.challenge_status = 'IN_PROGRESS'
+    </select>
+
+    <select id="getMyChallenges" parameterType="long" resultType="ChallengeDTO">
+        SELECT c.*
+        FROM challenge c
+        JOIN challenge_user cu ON c.challenge_id = cu.challenge_id
+        WHERE cu.user_id = #{userId}
     </select>
     
     <select id="getCommunityChallenges" resultType="ChallengeDTO">

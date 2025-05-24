@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import store.oneul.mvc.challenge.dao.ChallengeDAO;
@@ -18,9 +19,16 @@ import store.oneul.mvc.common.exception.InvalidParameterException;
 public class ChallengeServiceImpl implements ChallengeService {
     private final ChallengeDAO challengeDAO;
 
+    @Transactional
     @Override
     public void insertChallenge(ChallengeDTO challengeDTO) {
         challengeDAO.insertChallenge(challengeDTO);
+
+        Long generatedChallengeId = challengeDTO.getChallengeId();
+        Long ownerId = challengeDTO.getOwnerId();
+
+        ChallengeUserDTO dto = new ChallengeUserDTO(generatedChallengeId, ownerId, 0, false, 0);
+        challengeDAO.insertChallengeUser(dto);
     }
 
     @Override
@@ -36,6 +44,11 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public ChallengeDTO getMyChallenge(Map<String, Object> paramMap) {
         return challengeDAO.getMyChallenge(paramMap);
+    }
+
+    @Override
+    public List<ChallengeDTO> getMyChallenges(Long userId) {
+        return challengeDAO.getMyChallenges(userId);
     }
 
     @Override

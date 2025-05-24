@@ -33,17 +33,17 @@ function MyFeedCard({
       <>
         <p className="mb-4 text-gray-400">
           {disabled
-            ? "챌린지가 오픈되면 인증이 가능합니다."
+            ? "종료된 챌린지예요."
             : "아직 오늘의 인증을 진행하지 않으셨어요."}
         </p>
-        {!disabled && (
-          <button
-            onClick={onCreate}
-            className="flex aspect-square w-full cursor-pointer select-none items-center justify-center rounded-md border border-[#2d2d2d] bg-[#24242c] text-9xl font-extralight text-gray-600"
-          >
-            +
-          </button>
-        )}
+
+        <button
+          onClick={onCreate}
+          disabled={disabled}
+          className={`flex aspect-square w-full select-none items-center justify-center rounded-md border border-[#2d2d2d] bg-[#24242c] text-9xl font-extralight text-gray-600 ${!disabled && "cursor-pointer"} ${disabled && "cursor-not-allowed"}`}
+        >
+          +
+        </button>
       </>
     );
   }

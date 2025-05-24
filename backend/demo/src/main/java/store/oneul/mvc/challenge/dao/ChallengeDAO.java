@@ -13,6 +13,8 @@ public interface ChallengeDAO {
 
     ChallengeDTO getMyChallenge(Map<String, Object> paramMap);
 
+    List<ChallengeDTO> getMyChallenges(Long userId);
+
     List<ChallengeDTO> getChallenges();
 
     void insertChallenge(ChallengeDTO challengeDTO);

@@ -128,13 +128,13 @@ function App() {
           />
           <Route path="/challenge/detail" element={<ChallengeDetailPage />} />
           <Route path="/challenge/search" element={<ChallengeSearchPage />} />
+          <Route path="/challenge/create" element={<ChallengeCreatePage />} />
           <Route path="/mypage" element={<MyPage />} />
         </Route>
 
         {/* MainLayout이 필요없는 라우트들 */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<RegistPage />} />
-        <Route path="/challenge/create" element={<ChallengeCreatePage />} />
         <Route path="/oauth/redirect" element={<OAuthRedirectPage />} />
         <Route
           path="challenge/:challengeId/order"

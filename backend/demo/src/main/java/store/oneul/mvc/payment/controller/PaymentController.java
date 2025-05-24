@@ -4,9 +4,15 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,19 +21,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import store.oneul.mvc.challenge.dto.ChallengeDTO;
 import store.oneul.mvc.challenge.service.ChallengeService;
 import store.oneul.mvc.common.exception.InvalidParameterException;
 import store.oneul.mvc.common.exception.NotFoundException;
 import store.oneul.mvc.payment.dto.OrderIdResponse;
 import store.oneul.mvc.payment.dto.PaymentConfirmRequest;
+import store.oneul.mvc.payment.dto.PaymentReceiptDTO;
 import store.oneul.mvc.payment.dto.PaymentResultResponse;
 import store.oneul.mvc.payment.dto.PaymentSessionDto;
+import store.oneul.mvc.payment.service.PaymentReceiptService;
+import store.oneul.mvc.payment.service.PaymentStatusService;
 import store.oneul.mvc.payment.usecase.PaymentUsecase;
 import store.oneul.mvc.user.dto.UserDTO;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
@@ -37,6 +49,8 @@ public class PaymentController {
 
     private final ChallengeService challengeService;
     private final PaymentUsecase paymentUsecase;
+    private final PaymentStatusService paymentStatusService;
+    private final PaymentReceiptService paymentReceiptService;
     
     @Qualifier("jsonRedisTemplate")
     private final RedisTemplate<String, Object> jsonRedisTemplate;
@@ -88,7 +102,68 @@ public class PaymentController {
         PaymentResultResponse response = paymentUsecase.confirmPayment(loginUser.getUserId(), request);
         return ResponseEntity.ok(response);
     }
+    
+    @GetMapping("/result/{orderId}")
+    public DeferredResult<ResponseEntity<PaymentResultResponse>> getPaymentResult(@PathVariable String orderId) {
+        // 최대 3분 대기
+        DeferredResult<ResponseEntity<PaymentResultResponse>> output = new DeferredResult<>(180000L);
 
+        // 매 요청마다 독립 스케줄러 (부하 없으면 이 구조 OK)
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        final AtomicInteger checkCount = new AtomicInteger(0);
 
+        executor.scheduleAtFixedRate(() -> {
+            if (output.isSetOrExpired()) return;
+
+            try {
+                // 서비스로부터 상태 조회
+                PaymentResultResponse res = paymentStatusService.getResultByOrderId(orderId);
+
+                if (!"ROLLBACK_PENDING".equals(res.getStatus())) {
+                    log.info("✅ 최종 상태 도달 → 응답 반환 (orderId: {}, status: {})", orderId, res.getStatus());
+                    output.setResult(ResponseEntity.ok(res));
+                    executor.shutdownNow();
+                    return;
+                }
+
+                // 최대 3분 동안 polling (1초마다)
+                if (checkCount.incrementAndGet() >= 180) {
+                    log.warn("⚠️ ROLLBACK_PENDING 유지 → fallback 응답 (orderId: {})", orderId);
+                    output.setResult(ResponseEntity.ok(res)); // 팬딩 그대로 반환
+                    executor.shutdownNow();
+                } else {
+                    log.debug("⏳ 환불 대기 중... (orderId: {}, retry: {})", orderId, checkCount.get());
+                }
+
+            } catch (Exception e) {
+                log.error("❌ 상태 조회 중 예외 발생 (orderId: {})", orderId, e);
+                output.setResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(PaymentResultResponse.systemError(orderId)));
+                executor.shutdownNow();
+            }
+
+        }, 0, 1, TimeUnit.SECONDS);
+
+        // 종료 이벤트 핸들링
+        output.onCompletion(executor::shutdownNow);
+        output.onTimeout(executor::shutdownNow);
+        output.onError(e -> {
+            log.error("❌ 롱폴링 처리 중 예외", e);
+            output.setResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(PaymentResultResponse.systemError(orderId)));
+            executor.shutdownNow();
+        });
+
+        return output;
+    }
+
+    @GetMapping("/receipt")
+    public ResponseEntity<List<PaymentReceiptDTO>> receipt(
+            @AuthenticationPrincipal UserDTO loginUser
+    ) {
+        List<PaymentReceiptDTO> receipts = paymentReceiptService.getAllReceiptsByUser(loginUser.getUserId());
+        return ResponseEntity.ok(receipts);
+
+    }
 }
 

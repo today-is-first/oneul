@@ -3,15 +3,15 @@ interface BadgeProps {
 }
 
 const badgeStyles: Record<BadgeProps["type"], string> = {
-  PENDING: "bg-yellow-100/80 text-yellow-800",
-  APPROVED: "bg-green-100/80 text-green-800",
-  REJECTED: "bg-red-100/80 text-red-800",
+  PENDING: "bg-gray-500/25 text-gray-400",
+  APPROVED: "bg-green-300/15 text-green-600",
+  REJECTED: "bg-red-300/25 text-red-500",
 };
 
 const textContent: Record<BadgeProps["type"], string> = {
-  PENDING: "검토중",
+  PENDING: "대기",
   APPROVED: "승인",
-  REJECTED: "미승인",
+  REJECTED: "거절",
 };
 
 function CheckStatus({ type }: BadgeProps) {

@@ -5,9 +5,10 @@ interface ChallengeStore {
   challengeMap: Record<number, Challenge>;
   subscribedChallengeList: Challenge[];
   communityChallengeList: Challenge[];
-
+  myChallengeList: Challenge[];
   setSubscribedChallengeList: (challengeList: Challenge[]) => void;
   setCommunityChallengeList: (challengeList: Challenge[]) => void;
+  setMyChallengeList: (challengeList: Challenge[]) => void;
   setChallenges: (challengeList: Challenge[]) => void;
   getChallenge: (challengeId: number) => Challenge | undefined;
   setInitChallengeStore: () => void;
@@ -17,12 +18,14 @@ export const useChallengeStore = create<ChallengeStore>((set, get) => ({
   challengeMap: {},
   subscribedChallengeList: [],
   communityChallengeList: [],
+  myChallengeList: [],
 
   setInitChallengeStore: () => {
     set({
       challengeMap: {},
       subscribedChallengeList: [],
       communityChallengeList: [],
+      myChallengeList: [],
     });
   },
 
@@ -38,6 +41,11 @@ export const useChallengeStore = create<ChallengeStore>((set, get) => ({
     })),
 
   getChallenge: (challengeId: number) => get().challengeMap[challengeId],
+
+  setMyChallengeList: (challengeList: Challenge[]) =>
+    set((state) => ({
+      myChallengeList: challengeList,
+    })),
 
   setCommunityChallengeList: (challengeList: Challenge[]) =>
     set((state) => {

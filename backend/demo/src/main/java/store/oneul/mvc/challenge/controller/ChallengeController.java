@@ -29,7 +29,9 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping
-    public ResponseEntity<ChallengeDTO> postChallenge(@RequestBody ChallengeDTO challengeDTO) {
+    public ResponseEntity<ChallengeDTO> postChallenge(@RequestBody ChallengeDTO challengeDTO, @AuthenticationPrincipal UserDTO loginUser) {
+        Long loginUserId = loginUser.getUserId();
+        challengeDTO.setOwnerId(loginUserId);
         challengeService.insertChallenge(challengeDTO);
         return ResponseEntity.ok(challengeDTO);
     }
@@ -66,9 +68,16 @@ public class ChallengeController {
         paramMap.put("loginUserId", loginUserId);
 
         ChallengeDTO dto = challengeService.getMyChallenge(paramMap);
-        System.out.println("dto: " + dto);
 
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<ChallengeDTO>> getMyChallenges(
+            @AuthenticationPrincipal UserDTO loginUser) {
+        Long loginUserId = loginUser.getUserId();
+        List<ChallengeDTO> challengeDTOs = challengeService.getMyChallenges(loginUserId);
+        return ResponseEntity.ok(challengeDTOs);
     }
 
     @GetMapping

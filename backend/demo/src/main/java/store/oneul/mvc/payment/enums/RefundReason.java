@@ -1,7 +1,26 @@
 package store.oneul.mvc.payment.enums;
 
 public enum RefundReason {
-    TX_FAIL,             // 트랜잭션 롤백 시 자동 환불
-    USER_CANCEL,         // 유저가 자발적으로 환불 요청
-    CHALLENGE_SUCCESS    // 챌린지 성공 → 세금 제외 환급
+    TX_FAIL("AUTO_REFUND"),
+    USER_CANCEL("USER_CANCEL"),
+    CHALLENGE_SUCCESS("COMPENSATION");
+
+    private final String dbValue;
+
+    RefundReason(String dbValue) {
+        this.dbValue = dbValue;
+    }
+
+    public String toDbValue() {
+        return dbValue;
+    }
+
+    public static RefundReason fromDbValue(String dbValue) {
+        for (RefundReason reason : values()) {
+            if (reason.dbValue.equalsIgnoreCase(dbValue)) {
+                return reason;
+            }
+        }
+        throw new IllegalArgumentException("Unknown DB refund type: " + dbValue);
+    }
 }

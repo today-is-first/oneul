@@ -52,7 +52,7 @@ public class PaymentResultResponse {
                 .build();
     }
 
-    // ✅ TossCancel 실패 → 수동 환불 유도
+    // ✅ TossCancel 실패 → 최종 실패 -> 수동 환불 유도
     public static PaymentResultResponse manualRefundRequired(TossConfirmResponse res) {
         return PaymentResultResponse.builder()
                 .status("ROLLBACK_FAILED")
@@ -64,4 +64,28 @@ public class PaymentResultResponse {
                 .approvedAt(res.getApprovedAt())
                 .build();
     }
+    
+    // ✅ TossCancel 실패 → 스케줄링 중 -> 팬딩 상태
+    public static PaymentResultResponse refundPending(TossConfirmResponse res) {
+        return PaymentResultResponse.builder()
+                .status("ROLLBACK_PENDING")
+                .message("환불 처리 중입니다. 잠시 후 다시 확인해주세요.")
+                .manualRefundRequired(false)
+                .orderId(res.getOrderId())
+                .paymentKey(res.getPaymentKey())
+                .paidAmount(res.getAmount())
+                .approvedAt(res.getApprovedAt())
+                .build();
+    }
+    
+    // ✅ DLQ 3회 시도 후에도 아무 결과 없음 → 시스템 예외 상태
+    public static PaymentResultResponse systemError(String orderId) {
+        return PaymentResultResponse.builder()
+                .status("SYSTEM_ERROR")
+                .message("시스템 문제로 인해 환불 상태를 확인할 수 없습니다. 고객센터로 문의해 주세요.")
+                .manualRefundRequired(true)
+                .orderId(orderId)
+                .build();
+    }
+
 }
