@@ -1,137 +1,126 @@
-# Oneul
+# 🏋️ 오늘(oneul) - 운동 인증 챌린지 플랫폼
 
-**🏃 운동을 습관으로, 오늘의 도전을 기록하는 oneul**
+**"오늘도 인증했나요? 운동도 돈도, 함께 챌린지!"**
 
-&nbsp;
+**oneul**은 운동 인증, 실시간 소통, 그리고 목표 달성 시 리워드 환급까지 가능한  
+**보상 기반의 챌린지 플랫폼**입니다.
+
+---
 
 ## 🗂️ 팀 문서 & 자료 링크
 
-<p align=center>
-  <a href="https://oneul-pjt.notion.site/SSAFY-1d2bc43cad598007adaff9d1b7e0235f"> 📒 팀 노션</a>
-  &nbsp; | &nbsp; 
-  <!-- <a href="">🎨 피그마</a>
-  &nbsp; | &nbsp; -->
-  <a href="https://oneul-pjt.notion.site/1d2bc43cad598052b36ce17db47ef476">📚 개발 위키</a>
-  &nbsp; | &nbsp; 
+<p align="center">
+  <a href="https://oneul-pjt.notion.site/SSAFY-1d2bc43cad598007adaff9d1b7e0235f">📒 팀 노션</a> &nbsp;|&nbsp;
+  <a href="https://oneul-pjt.notion.site/1d2bc43cad598052b36ce17db47ef476">📚 개발 위키</a> &nbsp;|&nbsp;
   <a href="https://oneul-pjt.notion.site/Ground-Rule-1d2bc43cad59801abca2d92893ca7093">📏 그라운드 룰</a>
 </p>
 
-&nbsp;
+---
 
 ## 🤼 팀원 소개
 
-|                             이찬                             |                             강설민                             |                             유아름                             |
-| :----------------------------------------------------------: | :------------------------------------------------------------: | :------------------------------------------------------------: |
-| <img src="https://github.com/user-attachments/assets/3bc958ec-4303-4559-b20e-465fe1776e17" width="120" height="120"> | <img src="https://github.com/user-attachments/assets/ef01bd70-5a43-4264-b496-3b0874d108de" width="120" height="120"> | <img src="https://github.com/user-attachments/assets/259b607f-5a92-4d14-bdc6-91c98ed50149" width="120" height="120"> |
-|                  **Frontend / Backend**                   |                         **Backend**                          |                  **Frontend / Backend**                   |
+| 이찬 | 강설민 | 유아름 |
+|:---:|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/3bc958ec-4303-4559-b20e-465fe1776e17" width="120"> | <img src="https://github.com/user-attachments/assets/ef01bd70-5a43-4264-b496-3b0874d108de" width="120"> | <img src="https://github.com/user-attachments/assets/259b607f-5a92-4d14-bdc6-91c98ed50149" width="120"> |
+| **Frontend / Backend** | **Backend** | **Frontend / Backend** |
 | [@today-is-first](https://github.com/today-is-first) | [@seolminkkang](https://github.com/seolminkkang) | [@aoooec](https://github.com/aoooec) |
 
+---
 
-&nbsp;
-
-## 👋🏻 프로젝트 소개
-
+## 👋 프로젝트 소개
 
 ### 🏆 *"오늘의 운동을 인증하고, 리워드를 받는 챌린지 플랫폼"*
 
-**🏋️‍♀️ 운동 인증 기반 웹 서비스**  
-사용자는 **챌린지 룸에 참여**하여 *개인 운동 목표*를 설정하고, **인증 사진**을 업로드함으로써 진행 상황을 **직접 기록하고 공유**할 수 있습니다.
+**oneul**은 사용자가 운동 인증을 통해 챌린지에 참여하고,  
+목표 달성 시 환급 리워드를 받을 수 있는 **챌린지 기반 웹 서비스**입니다.
 
-**💰 인증하면 리워드!**  
-- 참여자는 **목표를 달성**하면, **입장료에 비례한 리워드**를 획득합니다.  
-- 방장은 **인증 판단에 대한 수고**에 대해 **보상**을 받습니다.
+- 사용자는 인증 피드를 업로드하며 도전 현황을 기록할 수 있어요.  
+- 방장은 인증을 검수하고, 관리에 따른 보상을 받아요.  
+- 참여자 간에는 실시간 채팅으로 소통하며 도전을 이어갑니다.
 
-**🧑‍🤝‍🧑 함께 도전하는 챌린지 룸**  
-- 각 챌린지 룸은 *운동 목표*와 *진행 기간*을 설정할 수 있습니다.  
-- **방장은** 참가자의 인증 사진을 검토하고, **적합/부적합 여부를 판단**합니다.  
-- **참가자는** 인증 게시물을 **피드 형식으로 열람**하며 다른 사람의 인증도 확인할 수 있습니다.
+---
 
-**🧠 추천 + 소통 기능**  
-- 사용자 관심도와 참여율을 반영한 **인기 챌린지 추천 알고리즘**이 적용됩니다.  
-- 챌린지 룸 내에서는 **실시간 채팅**을 통해 **참가자 간 소통**이 가능합니다.
+## 🎯 주요 기능 소개
 
-&nbsp;
+---
 
-## 🏠 메인 페이지
+### 💳 결제 및 환급 시스템  
+**"목표 달성, 그 자체가 리워드!"**
 
-> "처음 도착한 이곳에서부터 챌린지 여정은 시작됩니다!"
+유료 챌린지에 참여하면 Toss API 기반으로 결제를 진행합니다.  
+챌린지를 성공하면 참가비 일부 또는 전부를 자동 환급받을 수 있어요.
 
-- ✨ **방 추천 리스트**
-    
-    인기 챌린지와 주목할 만한 방들을 홈에서 바로 확인할 수 있어요.
-    
-- 🔥 **나의 스트릭**
-    
-    매일의 인증을 통해 이어가는 스트릭! 도전의 기록을 한눈에 보여줍니다.
-    
-- 🌟 **인플루언서 피드**
-    
-    현재 **팔로워가 많고**, **최근 업로드한 피드에서 좋아요가 많은 사용자**들의 콘텐츠를 모아볼 수 있어요.
-    
-- 🔍 **검색 기능**
-    
-    원하는 방을 검색할 수 있어요.
-    
+![오늘_결제](https://github.com/user-attachments/assets/5cc53e62-af0a-4739-9584-cbf5bc7840da)
 
-&nbsp;
+---
 
-## 📋 챌린지 목록
+### 💬 실시간 채팅  
+**"운동 인증 뒤엔, 응원과 피드백이 바로바로!"**
 
-> "참여할 챌린지를 골라보세요! 다양한 필터링으로 원하는 방을 찾을 수 있어요."
-> 
-- 💡 **방 추천 리스트**
-    
-    인기있는 챌린지 방 리스트를 제공합니다.
-    
-- 🧩 **필터링**
-    
-    챌린지 카테고리, 챌린지 타입 등을 기반으로 원하는 방을 쉽게 찾을 수 있어요.
-    
-- ➕ **방 생성**
-    
-    내가 원하는 주제로 챌린지를 직접 만들어볼 수 있습니다.
-    
-- 🔐 **비밀방 참가**
-    
-    비밀번호 입력을 통해 비공개 방에 입장할 수 있어요.
-    
-- 💳 **참여 금액 결제**
-    
-    유료 챌린지의 경우 결제 페이지로 이동 후, 결제가 완료되면 참여할 수 있어요.
-    
+모든 페이지에서 챌린지별 채팅을 제공해  
+언제 어디서나 실시간 소통이 가능합니다.
 
-&nbsp;
+![오늘_채팅](https://github.com/user-attachments/assets/4266943a-b60a-467a-8dc4-bb53de4a4151)
 
-## 🏕 방 디테일 페이지
+---
 
-> "같이 도전하고, 함께 성장하는 공간"
+### 📸 인증 피드 업로드  
+**"하루 한 장, 당신의 변화가 시작됩니다."**
 
-<img src="https://github.com/user-attachments/assets/a0ca0f3a-777f-4a49-832b-1406b221123c" width="700"/>
+사진과 내용을 피드 형식으로 업로드해 운동을 인증합니다.  
+다른 사용자들과 좋아요를 주고받으며 도전 의지를 키워보세요.
 
-- 📸 **나의 피드 업로드**
-    
-    오늘의 인증을 기록하고 공유할 수 있어요.
-    
-- 🗂 **오늘의 인증 피드 리스트**
-    
-    챌린지 참여자들이 올린 오늘의 피드를 모아서 보여줍니다.
-    
-    👉 **좋아요 기능**으로 서로 응원하며 챌린지를 이어갈 수 있어요.
-    
-- ❤️ **피드 좋아요 기능**
-    
-    마음에 드는 피드에 ‘좋아요’를 눌러 응원의 마음을 표현하세요.
-    
-    좋아요가 많은 피드는 **인플루언서 추천 피드**에도 반영됩니다.
-    
-- 👑 **방장 피드 검수**
-    
-    방장은 참여자들의 인증 피드를 **승인 또는 반려**할 수 있습니다.
-    
-- 💬 **챌린지 전용 채팅**
-    
-    같은 챌린지에 참여한 사람들과 실시간으로 소통해요.
-    
-- 🏁 **챌린지 종료 시 리워드 분배**
-    
-    챌린지를 끝까지 완료하면 일정 금액이 **환급**됩니다. 도전의 뿌듯한 보상!
+![오늘_인증](https://github.com/user-attachments/assets/d31e4ee0-f1cf-4f3a-b682-ced059f33208)
+
+---
+
+### 👑 방장 검수 기능  
+**"진짜 인증만, 진짜로 인정받는다!"**
+
+방장은 참여자의 인증 피드를 승인 또는 반려할 수 있어요.  
+공정한 챌린지를 위해 인증의 신뢰도를 높이는 핵심 기능입니다.
+
+![오늘_승인](https://github.com/user-attachments/assets/b7bf69de-2438-426e-968f-b2b727db4131)
+
+---
+
+### 👥 팔로우 & 커뮤니티  
+**"함께하면 더 오래갑니다!"**
+
+사용자 간 팔로우, 피드 좋아요를 통해  
+함께 성장하는 커뮤니티를 만들어갑니다.
+
+![오늘_사용자](https://github.com/user-attachments/assets/b20e262b-a40e-4507-b1f9-4510fbb707e1)
+
+---
+
+### 🧾 마이페이지  
+**"내 운동, 내 챌린지, 내 리워드까지 한 눈에!"**
+
+참여 챌린지, 내가 올린 피드, 결제 영수증까지  
+모든 기록을 한 곳에서 간편하게 관리할 수 있어요.
+
+![오늘_마이페이지_영수증](https://github.com/user-attachments/assets/a3968855-0335-4d7d-a2cc-797bd29f1c74)
+
+---
+---
+
+## ✅ 서비스 구조도
+
+![오늘 서비스 아키텍쳐](https://github.com/user-attachments/assets/93069da6-e930-4185-b0d2-d85e5e3ad024)
+
+---
+
+## ⚒️ Tech Stacks
+
+| 분류 | 기술 스택 |
+|------|-----------|
+| 공통 | [![My Skills](https://skillicons.dev/icons?i=ts,github)](https://skillicons.dev) |
+| FE | [![My Skills](https://skillicons.dev/icons?i=react,vite,tailwind)](https://skillicons.dev) <br/> Zustand, React Query |
+| BE | [![My Skills](https://skillicons.dev/icons?i=java,spring)](https://skillicons.dev) <br/> Netty-Socket.IO |
+| DB/Infra | [![My Skills](https://skillicons.dev/icons?i=mysql,redis,nginx,aws)](https://skillicons.dev) <br/> EC2 |
+| 배포 | [![My Skills](https://skillicons.dev/icons?i=githubactions,docker)](https://skillicons.dev) |
+| 협업 | [![My Skills](https://skillicons.dev/icons?i=figma,git,github,notion)](https://skillicons.dev) |
+
+
+
