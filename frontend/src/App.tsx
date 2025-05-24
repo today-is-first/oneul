@@ -9,7 +9,7 @@ import RegistPage from "@components/regist/RegistPage";
 import { useSocketStore } from "@stores/socketStore";
 import { useUserStore } from "@stores/userStore";
 import { useEffect } from "react";
-import { Route, Routes } from "react-router";
+import { Route, Routes } from "react-router-dom";
 import "@/App.css";
 import "@/chart";
 

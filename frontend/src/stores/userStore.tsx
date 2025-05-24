@@ -14,6 +14,7 @@ interface UserStore {
   user: User | null;
   accessToken: string | null;
   setUser: (user: User, accessToken: string) => void;
+  isInitializing: boolean;
   logout: () => void;
   initializeFromToken: () => void;
 }
@@ -22,6 +23,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
   user: null,
   accessToken: null,
   setUser: (user, accessToken) => set({ user, accessToken }),
+  isInitializing: true,
   logout: () => {
     set({ user: null, accessToken: null });
   },
@@ -42,5 +44,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
         set({ user: null, accessToken: null });
       }
     }
+    set({ isInitializing: false });
   },
 }));
