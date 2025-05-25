@@ -24,6 +24,7 @@ function ChallengeFeedCheck() {
   const { mutate: evaluateFeed, status: patchStatus } = useEvaluateFeed();
 
   useEffect(() => {
+    // PENDING
     if (selectedFeed) {
       setLocalStatus(selectedFeed.checkStatus);
     }
@@ -104,13 +105,14 @@ function ChallengeFeedCheck() {
                   }
                   className="focus:border-primary-purple-200 w-32 rounded-lg border border-gray-700 bg-[#2A2A2D] px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none"
                 >
+                  <option value="PENDING">대기</option>
                   <option value="APPROVED">승인</option>
                   <option value="REJECTED">거절</option>
                 </select>
                 <button
                   onClick={handleConfirm}
                   disabled={patchStatus === "pending"}
-                  className="bg-primary-purple-200 ml-2 cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+                  className="bg-primary-purple-200 ml-2 w-20 cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
                 >
                   {patchStatus === "pending" ? "처리중…" : "확인"}
                 </button>
