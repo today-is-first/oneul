@@ -60,9 +60,10 @@ function ChallengeStatus({
           </span>
         </p>
         <p>
-          챌린지 종료일까지 {elapsedDays > 0 ? elapsedDays : 0}일 중<br />
+          챌린지 종료일까지 {elapsedDays > 0 ? elapsedDays : 0}일,
+          <br />
           <span className="text-primary-purple-100 font-medium">
-            {goal - success > 0 ? goal - success : 0}일 남았어요!
+            달성까지 {goal - success > 0 ? goal - success : 0}번 남았어요!
           </span>
         </p>
       </div>
