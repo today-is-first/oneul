@@ -37,11 +37,11 @@ function ChallengeDetail({ data }: ChallengeDetailProps) {
         <div className="mt-1 flex items-center gap-2">
           <h3 className="text-xl font-bold text-gray-200">{name}</h3>
           <button
-            onClick={() => {
-              /** TODO: 모달 등록 */
-            }}
-            className="flex cursor-pointer items-center gap-1 p-1 text-gray-500 hover:text-gray-200"
-            aria-label="인원수 보기"
+            // onClick={() => {
+            //   /** TODO: 모달 등록 */
+            // }}
+            className="flex items-center gap-1 p-1 text-gray-500"
+            // aria-label="인원수 보기"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
