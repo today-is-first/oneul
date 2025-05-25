@@ -5,7 +5,7 @@
 
 <mapper namespace="store.oneul.mvc.payment.dao.PaymentDAO">
 
-    <select id="existsByPaymentKey" parameterType="string" resultType="boolean">
+    <select id="existsByPaymentKey" parameterType="String" resultType="boolean">
         SELECT EXISTS (
             SELECT * FROM payment
             WHERE payment_key = #{paymentKey}
