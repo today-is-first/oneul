@@ -201,7 +201,7 @@ export default function ChallengeDetailModal({
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="비밀번호 입력"
+              placeholder="비밀번호 입력(ex: 1234)"
               className="focus:border-primary-purple-100 border-input-gray bg-input-gray h-10 flex-1 rounded-md border px-3 py-2 text-sm text-white placeholder-gray-400 focus:outline-none"
             />
           )}
