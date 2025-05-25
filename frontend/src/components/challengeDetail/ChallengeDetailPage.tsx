@@ -38,6 +38,7 @@ function ChallengeDetailPage() {
       Toast.caution("아직 시작하지 않은 챌린지입니다.");
       hasShownToast.current = true;
     }
+    setActiveTab("challenge"); // 내부 액티브 탭 상태 초기화
   }, [challenge]);
 
   const renderContent = () => {
