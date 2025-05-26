@@ -1,13 +1,15 @@
 import ChallengeFeed from "./ChallengeFeed";
 import ChallengeDetail from "./ChellengeDetail";
 import ChallengeStatus from "./ChallengeStatus";
-import { useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import { useMyChallenge } from "@/hooks/useChallenge";
 import Toast from "../Toast/Toast";
 import { useEffect, useRef, useState } from "react";
 import { FiClock } from "react-icons/fi";
 import { useUserStore } from "@/stores/userStore";
 import ChallengeFeedCheck from "../feedCheck/ChallengeFeedCheck";
+import NotFoundPage from "../common/NotFoundPage";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const tabs = [
   { key: "challenge", label: "챌린지 디테일" },
@@ -16,12 +18,15 @@ const tabs = [
 
 function ChallengeDetailPage() {
   const { challengeId } = useParams<{ challengeId: string }>();
+  const idNum = Number(challengeId);
   const {
     data: challenge,
     isLoading,
     isError,
     error,
+    statusCode,
   } = useMyChallenge(challengeId ?? "");
+  const navigate = useNavigate();
 
   const hasShownToast = useRef(false);
   const [activeTab, setActiveTab] = useState("challenge");
@@ -64,19 +69,31 @@ function ChallengeDetailPage() {
     }
   };
 
-  if (!challengeId) return <p>잘못된 경로입니다.</p>;
+  if (Number.isNaN(idNum) || statusCode === 404) {
+    return <NotFoundPage />;
+  }
+
+  if (statusCode === 403) {
+    Toast.caution("참여중인 챌린지가 아닙니다.");
+    navigate("/challenge/search", { replace: true });
+  }
+
+  if (statusCode === 401) {
+    return <Navigate to="/login" replace state={{ showAuthToast: true }} />;
+  }
 
   // 로딩 또는 에러시
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center text-white">
-        로딩 중
+      <div className="mt-[-60px] flex h-screen flex-col items-center justify-center gap-6">
+        <AiOutlineLoading3Quarters className="text-primary-purple-100 h-10 w-10 animate-spin" />
+        <p className="text-gray-300">챌린지 정보 불러오는 중</p>
       </div>
     );
   }
   if (isError) {
     return (
-      <div className="flex h-screen items-center justify-center text-red-400">
+      <div className="mt-[-60px] flex h-screen items-center justify-center text-red-400">
         에러: {(error as Error).message}
       </div>
     );
