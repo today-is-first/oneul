@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 function NotFoundPage() {
   const navigate = useNavigate();
   return (
-    <div className="mt-[-60px] flex h-screen w-full flex-col items-center justify-center gap-10 p-[200px]">
+    <div className="mt-[-60px] flex h-screen w-full flex-col items-center justify-center gap-6 p-[200px]">
       <svg
         version="1.0"
         xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +57,7 @@ function NotFoundPage() {
         </p>
       </div>
       <button
-        className="bg-primary-purple-200 hover:bg-primary-purple-200/80 rounded-lg px-6 py-3 text-white transition"
+        className="bg-primary-purple-200 hover:bg-primary-purple-200/80 mt-2 rounded-lg px-6 py-3 text-white transition"
         onClick={() => navigate("/", { replace: true })}
       >
         홈페이지로 돌아가기
