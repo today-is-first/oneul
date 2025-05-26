@@ -9,4 +9,5 @@ public enum ErrorCode {
     // 필요에 따라 추가
     NOT_FOUND,
     CHALLENGE_ALREADY_JOINED,
+    FORBIDDEN
 } 

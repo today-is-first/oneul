@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import store.oneul.mvc.challenge.exception.ChallengeAlreadyJoinedException;
+import store.oneul.mvc.common.exception.ForbiddenException;
 import store.oneul.mvc.common.exception.InvalidParameterException;
 import store.oneul.mvc.common.exception.NotFoundException;
 import store.oneul.mvc.payment.dto.TossErrorInfo;
@@ -71,6 +72,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleAlreadyJoined(ChallengeAlreadyJoinedException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(ApiResponse.error(ex.getMessage(), ErrorCode.CHALLENGE_ALREADY_JOINED.name()));
+    }
+    
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ApiResponse<String>> handleForbidden(ForbiddenException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(ApiResponse.error(ex.getMessage(), ErrorCode.FORBIDDEN.name()));
     }
 
 }

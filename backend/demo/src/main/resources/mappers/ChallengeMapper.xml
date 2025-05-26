@@ -29,7 +29,7 @@
 		    c.member_count
 		FROM challenge c
 		JOIN user u ON c.owner_id = u.user_id
-		JOIN challenge_user cu 
+		LEFT JOIN challenge_user cu 
 		    ON cu.challenge_id = c.challenge_id AND cu.user_id = #{loginUserId}
 		WHERE c.challenge_id = #{challengeId}
     </select>
