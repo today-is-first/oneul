@@ -15,6 +15,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import store.oneul.mvc.security.jwt.JwtAuthenticationFilter;
 import store.oneul.mvc.security.jwt.JwtReissueFilter;
 import store.oneul.mvc.security.oauth.CustomOAuth2UserService;
@@ -23,6 +24,7 @@ import store.oneul.mvc.security.oauth.OAuth2SuccessHandler;
 @Configuration
 @RequiredArgsConstructor
 @ConfigurationProperties(prefix = "frontend")
+@Setter
 public class SecurityConfig {
 
     private final OAuth2SuccessHandler successHandler;
