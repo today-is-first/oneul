@@ -6,8 +6,9 @@ import SelectBlock from "@components/challengeCreate/SelectBlock";
 import PublicToggle from "@components/challengeCreate/PublicToggle";
 import CustomDateInput from "@components/challengeCreate/CustomDateInput";
 import { categories } from "@/constants/challengeSearchContants";
-import { get, post } from "@/api/api";
+import { post } from "@/api/api";
 import { useNavigate } from "react-router-dom";
+import { Challenge } from "@/types/Challenge";
 
 interface ChallengeRoomFormData {
   name: string;
@@ -133,7 +134,10 @@ function ChallengeRoomForm() {
         roomPassword: formData.roomPassword || undefined,
       };
       // API 호출
-      const createdChallenge = await post("/challenges", requestData);
+      const createdChallenge: Challenge = await post(
+        "/challenges",
+        requestData,
+      );
 
       navigate(`/challenge/${createdChallenge.challengeId}`);
     } catch (error) {
