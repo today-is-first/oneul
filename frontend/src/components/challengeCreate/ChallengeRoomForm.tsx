@@ -6,7 +6,8 @@ import SelectBlock from "@components/challengeCreate/SelectBlock";
 import PublicToggle from "@components/challengeCreate/PublicToggle";
 import CustomDateInput from "@components/challengeCreate/CustomDateInput";
 import { categories } from "@/constants/challengeSearchContants";
-import { post } from "@/api/api";
+import { get, post } from "@/api/api";
+import { useNavigate } from "react-router-dom";
 
 interface ChallengeRoomFormData {
   name: string;
@@ -44,7 +45,6 @@ function ChallengeRoomForm() {
     field: keyof ChallengeRoomFormData,
     value: any,
   ) => {
-    console.log(field, value);
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -85,6 +85,8 @@ function ChallengeRoomForm() {
       handleInputChange("isChallenge", false);
     }
   }, [formData.entryFee]);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,9 +133,9 @@ function ChallengeRoomForm() {
         roomPassword: formData.roomPassword || undefined,
       };
       // API 호출
-      await post("/challenges", requestData);
+      const createdChallenge = await post("/challenges", requestData);
 
-      window.location.href = "/challenge/search";
+      navigate(`/challenge/${createdChallenge.challengeId}`);
     } catch (error) {
       console.error("Error creating challenge room:", error);
       setFormErrors({ submit: "챌린지 룸 생성에 실패했습니다" });

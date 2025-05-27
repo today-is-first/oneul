@@ -5,7 +5,8 @@
 <p align="center">
   <a href="https://oneul-pjt.notion.site/SSAFY-1d2bc43cad598007adaff9d1b7e0235f">📒 팀 노션</a> &nbsp;|&nbsp;
   <a href="https://oneul-pjt.notion.site/1d2bc43cad598052b36ce17db47ef476">📚 개발 위키</a> &nbsp;|&nbsp;
-  <a href="https://oneul-pjt.notion.site/Ground-Rule-1d2bc43cad59801abca2d92893ca7093">📏 그라운드 룰</a>
+  <a href="https://oneul-pjt.notion.site/Ground-Rule-1d2bc43cad59801abca2d92893ca7093">📏 그라운드 룰</a> &nbsp;|&nbsp;
+  <a href="http://oneul.store/">🚀 데모 페이지</a>
 </p>
 
 <br/>
@@ -36,6 +37,29 @@
 <br/>
 <br/>
 
+## 🧩 **고민과 해결 방안**
+
+### 🚀 **임시 주문서 저장 전략 설계**
+
+임시 주문서 생성은 결제 검증을 위한 필수 과정이지만, 이 데이터가 적절히 삭제되지 않으면 고아 데이터로 누적되어 스토리지·인덱스 부하 증가, 쿼리 응답 지연 등 성능 저하가 발생할 수 있었습니다.
+
+이런 잠재적 리스크를 줄이기 위해 순수 RDBMS, 서버 세션, Redis 세 가지 옵션을 비교·분석했고, Redis에 15분 TTL을 적용한 하이브리드 방식을 선택했습니다.
+
+결제 완료 시 MySQL에 영구 저장함으로써 빠른 응답 속도와 데이터 무결성을 동시에 확보했습니다.
+
+<br/>
+
+### 🛡️ **보상 트랜잭션 설계로 무결성 보장**
+
+결제 플로우는 외부 Toss 결제 서비스와 내부 MySQL 저장이라는 두 개의 분리된 트랜잭션으로 구성되기 때문에, 외부 결제는 정상 커밋됐지만 내부 DB 트랜잭션이 롤백되면 원자성이 깨지고 데이터 불일치가 발생할 수 있었습니다.
+
+이를 해결하기 위해 Saga 패턴 기반의 **보상 트랜잭션(compensation transaction)** 구조를 도입했습니다. 내부 DB 저장이 실패하면 곧바로 Toss Cancel API를 호출해 외부 결제를 취소하며, 요청 ID를 활용해 멱등성을 보장합니다.
+
+재시도 상태와 회차는 Redis에 기록하고 최대 3회까지 자동 재시도하며, 이후에는 DLQ(Dead Letter Queue)로 이관해 운영자가 수동으로 환불하도록 설계해 안정성과 운영 효율을 모두 확보했습니다.
+
+<br/>
+<br/>
+
 ## 🎯 주요 기능 소개
 
 ### 💳 결제 및 환급 시스템  
@@ -45,7 +69,7 @@
 **목표를 달성하면 서버가 자동으로 환급 처리를 수행**합니다.  
 결제 상태는 **Redis에 임시 저장**, **MySQL에 영구 반영**됩니다.
 
-<img src="https://github.com/user-attachments/assets/5cc53e62-af0a-4739-9584-cbf5bc7840da" width="700" alt="결제 시스템" />
+<img src="https://github.com/user-attachments/assets/94e09687-cfa2-4914-9742-0b6d472b9814" width="700" alt="결제 시스템" />
 
 <br/>
 <br/>
@@ -56,7 +80,7 @@
 **채팅은 Netty-Socket.io 기반 WebSocket 서버**와 연결되어 있으며,  
 메시지는 **방별로 실시간 브로드캐스팅** 됩니다.
 
-<img src="https://github.com/user-attachments/assets/4266943a-b60a-467a-8dc4-bb53de4a4151" width="700" alt="실시간 채팅" />
+<img src="https://github.com/user-attachments/assets/7090104a-25a5-4c2a-8081-a1e445ce6988" width="700" alt="실시간 채팅" />
 
 <br/>
 <br/>
@@ -67,7 +91,7 @@
 **사용자가 이미지와 내용을 업로드**하면,  
 **S3 Presigned URL로 이미지 업로드**, 메타데이터는 **MySQL에 저장**됩니다.
 
-<img src="https://github.com/user-attachments/assets/d31e4ee0-f1cf-4f3a-b682-ced059f33208" width="700" alt="인증 피드" />
+<img src="https://github.com/user-attachments/assets/b2049261-6ced-4be9-82ef-6c1eee523804" width="700" alt="인증 피드" />
 
 <br/>
 <br/>
@@ -78,17 +102,7 @@
 **방장은 각 피드에 대해 승인/반려 상태를 변경**할 수 있으며,  
 변경된 상태는 **DB에 저장**, **리워드 조건에 직접 반영**됩니다.
 
-<img src="https://github.com/user-attachments/assets/b7bf69de-2438-426e-968f-b2b727db4131" width="700" alt="방장 승인 기능" />
-
-<br/>
-<br/>
-
-### 👥 팔로우 & 커뮤니티  
-> **"함께하면 더 오래갑니다!"**
-
-**팔로우와 좋아요는 각각 `follow`, `feed_like` 테이블에 기록**됩니다.
-
-<img src="https://github.com/user-attachments/assets/b20e262b-a40e-4507-b1f9-4510fbb707e1" width="700" alt="팔로우 시스템" />
+<img src="https://github.com/user-attachments/assets/0a298cd3-cefe-4032-9cdc-21a6ccc7405a" width="700" alt="방장 승인 기능" />
 
 <br/>
 <br/>
@@ -99,7 +113,7 @@
 서버에서 **JWT 기반으로 인증된 사용자의 모든 활동 데이터를 통합 조회**하여  
 **챌린지, 피드, 결제 내역** 등을 **한눈에 마이페이지에 표시**합니다.
 
-<img src="https://github.com/user-attachments/assets/a3968855-0335-4d7d-a2cc-797bd29f1c74" width="700" alt="마이페이지" />
+<img src="https://github.com/user-attachments/assets/51a9d143-a0a7-49c0-ba44-060dda54f7d1" width="700" alt="마이페이지" />
 
 <br/>
 <br/>

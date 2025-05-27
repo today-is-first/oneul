@@ -101,7 +101,11 @@ function ChallengeFeed({ status }: ChallengeFeedProps) {
 
       {/* --- 모달 분기 --- */}
       {modalState?.kind === "create" && (
-        <FeedCreateModal isOpen onClose={closeAll} onCreate={invalidateFeeds} />
+        <FeedCreateModal
+          isOpen
+          onClose={closeAll}
+          onCreate={() => invalidateFeeds(challengeId)}
+        />
       )}
 
       {modalState?.kind === "edit" && myFeed && (
@@ -109,7 +113,7 @@ function ChallengeFeed({ status }: ChallengeFeedProps) {
           isOpen
           onClose={closeAll}
           initialData={myFeed}
-          onUpdate={invalidateFeeds}
+          onUpdate={() => invalidateFeeds(challengeId)}
         />
       )}
 

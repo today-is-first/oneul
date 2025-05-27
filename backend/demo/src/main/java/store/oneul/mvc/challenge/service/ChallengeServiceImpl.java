@@ -12,7 +12,9 @@ import store.oneul.mvc.challenge.dao.ChallengeDAO;
 import store.oneul.mvc.challenge.dto.ChallengeDTO;
 import store.oneul.mvc.challenge.dto.ChallengeUserDTO;
 import store.oneul.mvc.challenge.exception.ChallengeAlreadyJoinedException;
+import store.oneul.mvc.common.exception.ForbiddenException;
 import store.oneul.mvc.common.exception.InvalidParameterException;
+import store.oneul.mvc.common.exception.NotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +45,14 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public ChallengeDTO getMyChallenge(Map<String, Object> paramMap) {
-        return challengeDAO.getMyChallenge(paramMap);
+    	ChallengeDTO dto = challengeDAO.getMyChallenge(paramMap);
+    	if(dto == null) {
+    		throw new NotFoundException("챌린지를 찾을 수 없습니다.");
+    	} 
+    	if(dto.getSuccessDay() == null) {
+    		throw new ForbiddenException("챌린지 조회 권한이 없습니다.");
+    	}
+        return dto;
     }
 
     @Override

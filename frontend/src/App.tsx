@@ -25,6 +25,7 @@ import PaymentSuccessPage from "@components/payment/PaymentSuccessPage";
 import PaymentFailPage from "@components/payment/PaymentFailPage";
 import MyPage from "@components/mypage/MyPage";
 import ProtectedLayout from "./layouts/ProtectedLayout";
+import NotFoundPage from "./components/common/NotFoundPage";
 
 function App() {
   const { user } = useUserStore();
@@ -136,6 +137,7 @@ function App() {
             />
             <Route path="/mypage" element={<MyPage />} />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
 
         {/* MainLayout이 필요없는 라우트들 */}
