@@ -104,7 +104,7 @@ function ChallengeFeed({ status }: ChallengeFeedProps) {
         <FeedCreateModal
           isOpen
           onClose={closeAll}
-          onCreate={() => invalidateFeeds(challengeId)}
+          onCreate={() => invalidateFeeds()}
         />
       )}
 
@@ -113,7 +113,7 @@ function ChallengeFeed({ status }: ChallengeFeedProps) {
           isOpen
           onClose={closeAll}
           initialData={myFeed}
-          onUpdate={() => invalidateFeeds(challengeId)}
+          onUpdate={() => invalidateFeeds()}
         />
       )}
 

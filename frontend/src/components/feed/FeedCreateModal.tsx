@@ -107,10 +107,11 @@ function FeedCreateModal({
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries([
-            "feeds",
-            selectedChallengeIdRef.current,
-          ]);
+          if (selectedChallengeIdRef.current !== null) {
+            queryClient.invalidateQueries({
+              queryKey: ["feeds", selectedChallengeIdRef.current],
+            });
+          }
           onCreate(); // 외부 캐시 무효화 (추가적인 리스트 조회 invalidate)
           setImage(null);
           setPreviewUrl(null);
