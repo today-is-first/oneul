@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Feed } from "@/types/Feed";
 import { useUserStore } from "@/stores/userStore";
 import axios from "axios";
+import { debounce } from "lodash";
 
 interface FeedUpdateModalProps {
   isOpen: boolean;
@@ -21,6 +22,16 @@ function FeedUpdateModal({
   const [content, setContent] = useState("");
   const [showAnimation, setShowAnimation] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const previewUrlRef = useRef(previewUrl);
+  const contentRef = useRef(content);
+  const imageFileRef = useRef(imageFile);
+
+  useEffect(() => {
+    previewUrlRef.current = previewUrl;
+    contentRef.current = content;
+    imageFileRef.current = imageFile;
+  }, [previewUrl, content, imageFile]);
 
   useEffect(() => {
     if (isOpen) {
@@ -46,7 +57,7 @@ function FeedUpdateModal({
   };
 
   const handleUpdate = async () => {
-    if (!previewUrl || !content.trim()) {
+    if (!previewUrlRef.current || !contentRef.current.trim()) {
       alert("내용을 입력해주세요.");
       return;
     }
@@ -58,13 +69,13 @@ function FeedUpdateModal({
     try {
       let finalImageUrl = initialData.imageUrl;
 
-      if (imageFile) {
+      if (imageFileRef.current) {
         // 이미지가 바뀐 경우에만 presigned URL 업로드
         const presignRes = await axios.post(
           `${import.meta.env.VITE_API_URL}/presigned/upload`,
           {
-            filename: imageFile.name,
-            contentType: imageFile.type,
+            filename: imageFileRef.current.name,
+            contentType: imageFileRef.current.type,
           },
           {
             headers: {
@@ -76,9 +87,9 @@ function FeedUpdateModal({
 
         const { presignedUrl, objectKey } = presignRes.data;
 
-        await axios.put(presignedUrl, imageFile, {
+        await axios.put(presignedUrl, imageFileRef.current, {
           headers: {
-            "Content-Type": imageFile.type,
+            "Content-Type": imageFileRef.current.type,
           },
         });
 
@@ -88,7 +99,7 @@ function FeedUpdateModal({
         await axios.patch(
           `${import.meta.env.VITE_API_URL}/challenges/${challengeId}/feeds/${initialData.id}`,
           {
-            content,
+            content: contentRef.current,
             imageUrl: finalImageUrl,
             userId,
           },
@@ -100,7 +111,7 @@ function FeedUpdateModal({
         await axios.patch(
           `${import.meta.env.VITE_API_URL}/challenges/${challengeId}/feeds/${initialData.id}/content`,
           {
-            content,
+            content: contentRef.current,
           },
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -118,6 +129,8 @@ function FeedUpdateModal({
       alert("수정 중 오류가 발생했습니다.");
     }
   };
+
+  const debouncedUpdate = useRef(debounce(handleUpdate, 500)).current;
 
   if (!isOpen) return null;
 
@@ -178,7 +191,7 @@ function FeedUpdateModal({
             취소
           </button>
           <button
-            onClick={handleUpdate}
+            onClick={debouncedUpdate}
             className="bg-point w-1/2 cursor-pointer rounded-full py-2 text-sm font-bold text-white hover:opacity-90"
           >
             수정하기
