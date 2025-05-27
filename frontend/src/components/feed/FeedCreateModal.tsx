@@ -2,6 +2,10 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/stores/userStore";
 import { useChallengeStore } from "@/stores/challengeStore";
+import { debounce } from "lodash";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCreateFeed } from "@/hooks/useFeed";
+
 function FeedCreateModal({
   isOpen,
   onClose,
@@ -20,6 +24,21 @@ function FeedCreateModal({
   const modalRef = useRef<HTMLDivElement>(null);
   const [showAnimation, setShowAnimation] = useState(false);
   const { subscribedChallengeList } = useChallengeStore();
+
+  const previewUrlRef = useRef(previewUrl);
+  const contentRef = useRef(content);
+  const imageRef = useRef(image);
+  const selectedChallengeIdRef = useRef(selectedChallengeId);
+
+  const createFeed = useCreateFeed();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    previewUrlRef.current = previewUrl;
+    contentRef.current = content;
+    imageRef.current = image;
+    selectedChallengeIdRef.current = selectedChallengeId;
+  }, [previewUrl, content, image, selectedChallengeId]);
 
   useEffect(() => {
     if (isOpen) {
@@ -45,7 +64,11 @@ function FeedCreateModal({
   };
 
   const handleSubmit = async () => {
-    if (!image || !content || !selectedChallengeId) {
+    if (
+      !imageRef.current ||
+      !contentRef.current.trim() ||
+      !selectedChallengeIdRef.current
+    ) {
       alert("이미지와 내용 및 챌린지를 모두 입력해주세요.");
       return;
     }
@@ -56,8 +79,8 @@ function FeedCreateModal({
     const presignRes = await axios.post(
       `${import.meta.env.VITE_API_URL}/presigned/upload`,
       {
-        filename: image.name,
-        contentType: image.type,
+        filename: imageRef.current.name,
+        contentType: imageRef.current.type,
       },
       {
         headers: {
@@ -69,32 +92,39 @@ function FeedCreateModal({
 
     const { presignedUrl, objectKey } = presignRes.data;
 
-    await axios.put(presignedUrl, image, {
+    await axios.put(presignedUrl, imageRef.current, {
       headers: {
-        "Content-Type": image.type,
+        "Content-Type": imageRef.current.type,
       },
     });
 
-    await axios.post(
-      `${import.meta.env.VITE_API_URL}/challenges/${selectedChallengeId}/feeds`,
+    createFeed.mutate(
       {
-        content: content,
+        challengeId: selectedChallengeIdRef.current,
+        content: contentRef.current,
         imageUrl: objectKey,
-        userId: userId,
+        userId: userId!,
       },
       {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        onSuccess: () => {
+          queryClient.invalidateQueries([
+            "feeds",
+            selectedChallengeIdRef.current,
+          ]);
+          onCreate(); // 외부 캐시 무효화 (추가적인 리스트 조회 invalidate)
+          setImage(null);
+          setPreviewUrl(null);
+          setContent("");
+          onClose();
+        },
+        onError: () => {
+          alert("피드 등록 중 오류가 발생했습니다.");
+        },
       },
     );
-
-    onCreate();
-
-    // 등록 완료 후 초기화 + 모달 닫기
-    setImage(null);
-    setPreviewUrl(null);
-    setContent("");
-    onClose();
   };
+
+  const debouncedSubmit = useRef(debounce(handleSubmit, 500)).current;
 
   if (!isOpen) return null;
 
@@ -171,7 +201,7 @@ function FeedCreateModal({
             취소
           </button>
           <button
-            onClick={handleSubmit}
+            onClick={debouncedSubmit}
             className="bg-point w-1/2 rounded-full py-2 text-sm font-bold text-white hover:opacity-90"
           >
             등록하기

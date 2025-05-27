@@ -29,7 +29,11 @@ const WorkoutModal = ({ selectedDate, setSelectedDate }: WorkoutModalProps) => {
                 .filter((feed) => isSameDate(feed.createdAt, selectedDate))
                 .map((item, idx) => (
                   <li key={idx} className="list-none">
-                    <FeedDetailItem key={idx} feed={item} onClose={() => {}} />
+                    <FeedDetailItem
+                      key={idx}
+                      feed={item}
+                      onClose={() => setSelectedDate(null)}
+                    />
                   </li>
                 ))}
           </ul>

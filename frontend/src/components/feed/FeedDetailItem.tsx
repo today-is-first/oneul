@@ -31,7 +31,10 @@ function FeedDetailItem({
           <span className="text-sm font-semibold">{feed.nickname}</span>
         </div>
         <button
-          onClick={onClose}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
           className="text-lg text-gray-400 hover:text-white"
         >
           ✕

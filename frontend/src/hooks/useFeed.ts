@@ -1,14 +1,15 @@
 import { CheckStatus, Feed } from "@/types/Feed";
-import { useGet, usePatch } from "./useApiHooks";
+import { useGet, usePatch, usePost } from "./useApiHooks";
 import { useQueryClient } from "@tanstack/react-query";
-import { patch } from "@/api/api";
+import { patch, post } from "@/api/api";
+import axios from "axios";
 
 export function useChallengeFeeds(challengeId: string) {
   return useGet<Feed[]>(
     ["feeds", challengeId],
     `/challenges/${challengeId}/feeds/challenge`,
     {
-      staleTime: 1000 * 60 * 1,
+      staleTime: 0,
       gcTime: 1000 * 60 * 5,
       enabled: Boolean(challengeId),
     },
@@ -52,6 +53,29 @@ export function useUpdateFeed() {
       },
     },
   );
+}
+
+interface CreateFeedVariables {
+  challengeId: number;
+  content: string;
+  imageUrl: string;
+  userId: number;
+}
+
+export function useCreateFeed() {
+  const queryClient = useQueryClient();
+  return usePost<Feed, CreateFeedVariables>("", {
+    mutationFn: async ({ challengeId, ...body }) => {
+      return await post(`/challenges/${challengeId}/feeds`, body);
+    },
+    onSuccess: (createdFeed, variables) => {
+      const { challengeId } = variables;
+
+      queryClient.setQueryData<Feed[]>(["feeds", challengeId], (oldFeeds) =>
+        oldFeeds ? [...oldFeeds, createdFeed] : [createdFeed],
+      );
+    },
+  });
 }
 
 export interface EvaluateFeedVariables {
