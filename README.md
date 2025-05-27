@@ -5,7 +5,8 @@
 <p align="center">
   <a href="https://oneul-pjt.notion.site/SSAFY-1d2bc43cad598007adaff9d1b7e0235f">📒 팀 노션</a> &nbsp;|&nbsp;
   <a href="https://oneul-pjt.notion.site/1d2bc43cad598052b36ce17db47ef476">📚 개발 위키</a> &nbsp;|&nbsp;
-  <a href="https://oneul-pjt.notion.site/Ground-Rule-1d2bc43cad59801abca2d92893ca7093">📏 그라운드 룰</a>
+  <a href="https://oneul-pjt.notion.site/Ground-Rule-1d2bc43cad59801abca2d92893ca7093">📏 그라운드 룰</a> &nbsp;|&nbsp;
+  <a href="http://oneul.store/">🚀 데모 페이지</a>
 </p>
 
 <br/>
@@ -45,7 +46,7 @@
 **목표를 달성하면 서버가 자동으로 환급 처리를 수행**합니다.  
 결제 상태는 **Redis에 임시 저장**, **MySQL에 영구 반영**됩니다.
 
-<img src="https://github.com/user-attachments/assets/5cc53e62-af0a-4739-9584-cbf5bc7840da" width="700" alt="결제 시스템" />
+<img src="https://github.com/user-attachments/assets/94e09687-cfa2-4914-9742-0b6d472b9814" width="700" alt="결제 시스템" />
 
 <br/>
 <br/>
@@ -56,7 +57,7 @@
 **채팅은 Netty-Socket.io 기반 WebSocket 서버**와 연결되어 있으며,  
 메시지는 **방별로 실시간 브로드캐스팅** 됩니다.
 
-<img src="https://github.com/user-attachments/assets/4266943a-b60a-467a-8dc4-bb53de4a4151" width="700" alt="실시간 채팅" />
+<img src="https://github.com/user-attachments/assets/7090104a-25a5-4c2a-8081-a1e445ce6988" width="700" alt="실시간 채팅" />
 
 <br/>
 <br/>
@@ -67,7 +68,7 @@
 **사용자가 이미지와 내용을 업로드**하면,  
 **S3 Presigned URL로 이미지 업로드**, 메타데이터는 **MySQL에 저장**됩니다.
 
-<img src="https://github.com/user-attachments/assets/d31e4ee0-f1cf-4f3a-b682-ced059f33208" width="700" alt="인증 피드" />
+<img src="https://github.com/user-attachments/assets/b2049261-6ced-4be9-82ef-6c1eee523804" width="700" alt="인증 피드" />
 
 <br/>
 <br/>
@@ -78,17 +79,7 @@
 **방장은 각 피드에 대해 승인/반려 상태를 변경**할 수 있으며,  
 변경된 상태는 **DB에 저장**, **리워드 조건에 직접 반영**됩니다.
 
-<img src="https://github.com/user-attachments/assets/b7bf69de-2438-426e-968f-b2b727db4131" width="700" alt="방장 승인 기능" />
-
-<br/>
-<br/>
-
-### 👥 팔로우 & 커뮤니티  
-> **"함께하면 더 오래갑니다!"**
-
-**팔로우와 좋아요는 각각 `follow`, `feed_like` 테이블에 기록**됩니다.
-
-<img src="https://github.com/user-attachments/assets/b20e262b-a40e-4507-b1f9-4510fbb707e1" width="700" alt="팔로우 시스템" />
+<img src="https://github.com/user-attachments/assets/0a298cd3-cefe-4032-9cdc-21a6ccc7405a" width="700" alt="방장 승인 기능" />
 
 <br/>
 <br/>
@@ -99,7 +90,7 @@
 서버에서 **JWT 기반으로 인증된 사용자의 모든 활동 데이터를 통합 조회**하여  
 **챌린지, 피드, 결제 내역** 등을 **한눈에 마이페이지에 표시**합니다.
 
-<img src="https://github.com/user-attachments/assets/a3968855-0335-4d7d-a2cc-797bd29f1c74" width="700" alt="마이페이지" />
+<img src="https://github.com/user-attachments/assets/51a9d143-a0a7-49c0-ba44-060dda54f7d1" width="700" alt="마이페이지" />
 
 <br/>
 <br/>
