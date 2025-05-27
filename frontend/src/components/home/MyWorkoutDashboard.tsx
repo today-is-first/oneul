@@ -76,12 +76,14 @@ const MyWorkoutDashboard = () => {
         onClose={() => setIsModalOpen(false)}
         onCreate={invalidateFeeds}
       />
-      <FeedUpdateModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        initialData={myFeeds[0]}
-        onUpdate={invalidateFeeds}
-      />
+      {myFeeds[0] && (
+        <FeedUpdateModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          initialData={myFeeds[0]}
+          onUpdate={invalidateFeeds}
+        />
+      )}
       <BannerSlider />
 
       <FeedDetailModal

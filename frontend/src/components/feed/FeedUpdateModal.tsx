@@ -132,7 +132,7 @@ function FeedUpdateModal({
 
   const debouncedUpdate = useRef(debounce(handleUpdate, 500)).current;
 
-  if (!isOpen) return null;
+  if (!isOpen || !initialData) return null;
 
   return (
     <div
