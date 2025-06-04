@@ -6,7 +6,7 @@
   <a href="https://oneul-pjt.notion.site/SSAFY-1d2bc43cad598007adaff9d1b7e0235f">📒 팀 노션</a> &nbsp;|&nbsp;
   <a href="https://oneul-pjt.notion.site/1d2bc43cad598052b36ce17db47ef476">📚 개발 위키</a> &nbsp;|&nbsp;
   <a href="https://oneul-pjt.notion.site/Ground-Rule-1d2bc43cad59801abca2d92893ca7093">📏 그라운드 룰</a> &nbsp;|&nbsp;
-  <a href="http://oneul.store/">🚀 데모 페이지</a>
+<!--   <a href="http://oneul.store/">🚀 데모 페이지</a> -->
 </p>
 
 <br/>
