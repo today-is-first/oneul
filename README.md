@@ -58,7 +58,9 @@
 이를 해결하기 위해 Saga 패턴 기반의 보상 트랜잭션(compensation transaction) 구조를 도입했습니다. 내부 DB 저장이 실패하면 곧바로 Toss Cancel API를 호출해 외부 결제를 취소하며, 요청 ID를 활용해 멱등성을 보장합니다.
 
 재시도 상태와 회차는 Redis에 기록하고 최대 3회까지 자동 재시도하며, 이후에는 DLQ(Dead Letter Queue)로 이관해 운영자가 수동으로 환불하도록 설계해 안정성과 운영 효율을 모두 확보했습니다.
+
 [Wiki로 자세히 보기](https://github.com/today-is-first/oneul/wiki/%EC%84%A4%EB%AF%BC%EC%9D%98-%EA%B3%A0%EB%AF%BC%EA%B3%BC-%ED%95%B4%EA%B2%B0)
+
 <br />
 
 ### 🚀 사용자 경험과 성능 향상을 위한 서비스 고도화
